@@ -29,10 +29,37 @@ class ServerCommandManagerAuthTest {
         assertFalse("ServerClient must not start sending media", manager.mayStream)
     }
 
+    /**
+     * Media3 encodes Basic credentials with android.util.Base64.DEFAULT, which breaks the line
+     * every 76 characters and ends it with "\n". A node id plus a ticket is longer than that.
+     */
+    @Test
+    fun describeAcceptsBasicCredentialsWrappedByMedia3() {
+        val longManager = ServerCommandManager().apply {
+            authenticator = { user, password -> user == NODE_ID && password == TICKET }
+            // No encoder here: an empty SDP lets DESCRIBE answer once authentication passes.
+            videoDisabled = true
+            audioDisabled = true
+        }
+        val encoded = Base64.getMimeEncoder(76, "\n".toByteArray()).encodeToString("$NODE_ID:$TICKET".toByteArray())
+        assertTrue("credentials must span two lines to exercise the bug", encoded.contains('\n'))
+        val wrapped = "Authorization: Basic $encoded\n\r\nAccept: application/sdp\r\n"
+
+        val response = longManager.createResponse(Method.DESCRIBE, request("DESCRIBE", wrapped), 2, "1.2.3.4")
+
+        assertTrue(response, response.startsWith("RTSP/1.0 200"))
+        assertTrue(longManager.mayStream)
+    }
+
     @Test
     fun describeWithWrongOrMissingCredentialsIsRefused() {
         assertTrue(manager.createResponse(Method.DESCRIBE, request("DESCRIBE"), 2, "1.2.3.4").startsWith("RTSP/1.0 401"))
         assertTrue(manager.createResponse(Method.DESCRIBE, request("DESCRIBE", basic("viewer", "adivinanza")), 2, "1.2.3.4").startsWith("RTSP/1.0 401"))
         assertTrue(manager.createResponse(Method.DESCRIBE, request("DESCRIBE", basic("otro", "ticket")), 2, "1.2.3.4").startsWith("RTSP/1.0 401"))
+    }
+
+    private companion object {
+        const val NODE_ID = "611b5776-6b93-49a9-94fd-fd254ff59fb4"
+        const val TICKET = "abcdefghijklmnopqrstuvwxyz012345"
     }
 }

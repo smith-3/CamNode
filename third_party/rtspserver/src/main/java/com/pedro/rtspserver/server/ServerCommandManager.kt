@@ -102,15 +102,20 @@ class ServerCommandManager: CommandsManager() {
     return authenticator != null || (!user.isNullOrEmpty() && !password.isNullOrEmpty())
   }
 
+  /**
+   * Media3 encodes the credentials with android.util.Base64.DEFAULT, which wraps every 76
+   * characters, so a long user:password continues on the following lines. Those lines are
+   * bare base64 (no ':'), unlike the next header, so they are joined back.
+   */
   private fun getAuth(request: String): String {
-    val rtspPattern = Pattern.compile("Authorization: Basic ([\\w+/=]+)")
-    val matcher = rtspPattern.matcher(request)
-    return if (matcher.find()) {
-      matcher.group(1) ?: ""
-    } else {
-      ""
-    }
+    val lines = request.split(Regex("\r?\n"))
+    val start = lines.indexOfFirst { it.startsWith("Authorization: Basic ") }
+    if (start < 0) return ""
+    val continuation = lines.drop(start + 1).takeWhile { base64Line.matches(it) }
+    return (listOf(lines[start].removePrefix("Authorization: Basic ")) + continuation).joinToString("").trim()
   }
+
+  private val base64Line = Regex("[A-Za-z0-9+/=]+")
 
   private fun getProtocol(request: String, track: Int): Protocol {
     return if (request.contains("UDP", true) || loadPorts(request, track)) {
