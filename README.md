@@ -1,64 +1,68 @@
+<div align="center">
+
 # CamNode
 
-Convierte teléfonos Android viejos en cámaras de seguridad privadas. Cada
-teléfono del hogar puede transmitir video o ver las demás cámaras. En la misma
-Wi-Fi se encuentran solos; fuera de casa se conectan por Tailscale. No hay
-servidor ni nube intermedia.
+**Tus teléfonos Android pueden cuidar de tu hogar.**
+
+Convierte teléfonos que ya no usas en cámaras y míralas desde otros dispositivos,
+con conexión directa en tu red o acceso remoto mediante Tailscale.
+
+[Primeros pasos](#primeros-pasos) · [Grabación en PC](#grabación-en-una-pc) · [Desarrollo](#desarrollo) · [Arquitectura](docs/arquitectura.md)
+
+</div>
+
+## Qué puedes hacer
+
+- **Ver video en vivo.** Usa un teléfono como cámara y consulta las cámaras de tu hogar desde otro. Cambia de lente y activa el sonido desde el visor.
+- **Conectarte desde casa o fuera.** En la misma red Wi-Fi, las cámaras se descubren automáticamente. Para el acceso remoto, conecta los dispositivos a la misma red de Tailscale.
+- **Recibir alertas.** Designa un teléfono para recibir una notificación cuando se mueva una cámara.
+- **Grabar en una PC.** Guarda segmentos de video y recibe alertas con el grabador de escritorio.
+- **Administrar el hogar.** Invita dispositivos con un código QR, consulta su batería y configura el acceso con PIN.
+- **Personalizar la app.** Elige entre diez idiomas y, si quieres, disfraza la app de calculadora, reloj, calendario o notas.
+
+Los dispositivos se comunican directamente, sin un servidor ni una nube intermedia de CamNode.
 
 ## Requisitos
 
 - Android 9 (API 28) o superior en cada teléfono.
-- Misma Wi-Fi para usar la app dentro de casa.
-- Para ver las cámaras desde fuera: la app de Tailscale conectada en cada
-  teléfono, con la misma cuenta o tailnet.
-- Para uso continuo, el teléfono cámara conectado al cargador.
+- Una red Wi-Fi compartida para el uso dentro de casa.
+- Tailscale conectado a la misma cuenta o tailnet en cada teléfono para el acceso remoto.
+- Un cargador para cada teléfono que transmita de forma continua.
 
-## Uso
+## Primeros pasos
 
-1. En el primer teléfono: **Crear mi hogar**.
-2. En cada teléfono adicional: **Unirme con una invitación** y escanear el
-   código de **Hogar → Invitar dispositivo** de un teléfono que ya esté en el
-   hogar. Abrir el enlace `camnode://join?...` desde otra app también funciona.
-3. En los teléfonos cámara: pestaña **Transmitir** → **Iniciar transmisión**.
-   Sigue transmitiendo con la pantalla apagada o mientras usas otras apps.
-   Revisa la tarjeta **Funcionamiento continuo** para que el sistema no la cierre.
-4. En los teléfonos visores: pestaña **Cámaras**. Toca una cámara para verla en
-   pantalla completa, cambiar de lente o activar el sonido.
+1. Abre CamNode en el primer teléfono y selecciona **Crear mi hogar**.
+2. En otro teléfono, selecciona **Unirme con una invitación**. Escanea el código de **Hogar → Invitar dispositivo** o abre el enlace de invitación compartido.
+3. En el teléfono que usarás como cámara, abre **Transmitir** y pulsa **Iniciar transmisión**. Revisa **Funcionamiento continuo** para evitar que el sistema cierre la transmisión.
+4. En el teléfono visor, abre **Cámaras** y toca una cámara para verla a pantalla completa.
+5. Para recibir avisos de movimiento de la cámara, abre **Alertas** en el teléfono que llevas contigo y activa **Este es un teléfono maestro**.
 
-5. En el teléfono que llevas contigo: pestaña **Alertas** → **Este es un
-   teléfono maestro**. Recibirás una notificación si alguien mueve una cámara.
-6. En **Hogar** ves la batería de cada dispositivo, con los que hay que cargar
-   arriba.
+La transmisión continúa con la pantalla apagada o mientras usas otras aplicaciones. También puedes copiar el enlace de la tarjeta **Conexión** para ver la cámara en VLC.
 
-7. **Hogar → Bloqueo con PIN**: pide un PIN de 4 dígitos para abrir la app y,
-   si quieres, la disfraza de calculadora, reloj, calendario o notas, con tres
-   íconos a elegir para cada uno. La
-   notificación de la cámara sigue mostrando "CamNode".
+## Opciones del hogar
 
-8. **Hogar → Idioma**: español, inglés, portugués, francés, alemán, hindi,
-   indonesio, árabe, chino o ruso; por defecto, el del teléfono.
+En **Hogar** puedes consultar la batería de los dispositivos, cambiar el idioma y activar el bloqueo de la app con un PIN de cuatro dígitos. El disfraz de la app ofrece tres iconos para cada apariencia. La notificación de la cámara sigue mostrando el nombre CamNode.
 
-Cada cámara también se puede ver en VLC con el botón de copiar enlace de la
-tarjeta **Conexión**.
+La app está disponible en español, inglés, portugués, francés, alemán, hindi, indonesio, árabe, chino y ruso. Por defecto usa el idioma del teléfono.
 
-## Grabar en una PC
+## Grabación en una PC
+
+El grabador necesita Java 17 o superior y `ffmpeg`. Obtén el enlace desde **Hogar → Invitar dispositivo → Compartir** y ejecuta:
 
 ```sh
 ./gradlew :recorder:installDist
-recorder/build/install/camnode-recorder/bin/camnode-recorder join "<enlace de Hogar → Invitar → Compartir>" --dir ~/CamNode
+recorder/build/install/camnode-recorder/bin/camnode-recorder join "<enlace de invitación>" --dir ~/CamNode
 recorder/build/install/camnode-recorder/bin/camnode-recorder run
 ```
 
-Necesita Java 17+ y `ffmpeg`. Graba todas las cámaras en segmentos de 5 minutos,
-borra lo que tenga más de 7 días y recibe las alertas de movimiento.
+El grabador guarda todas las cámaras en segmentos de cinco minutos, elimina las grabaciones de más de siete días y recibe las alertas de movimiento. Consulta la [arquitectura](docs/arquitectura.md) para conocer más opciones y límites.
 
 ## Desarrollo
 
+El proyecto usa Kotlin, Jetpack Compose, CameraX y Gradle. Para ejecutar las comprobaciones y generar el APK de depuración:
+
 ```sh
-./gradlew test            # Pruebas unitarias de todos los módulos
-./gradlew lint            # Lint de Android
-./gradlew assembleDebug   # APK en app/build/outputs/apk/debug/
+./gradlew test lint assembleDebug :recorder:installDist
 ```
 
-La arquitectura, los contratos entre teléfonos y las decisiones de seguridad
-están en [`docs/arquitectura.md`](docs/arquitectura.md).
+El APK se genera en `app/build/outputs/apk/debug/`. La [documentación de arquitectura](docs/arquitectura.md) describe los módulos, el contrato entre dispositivos y las decisiones de seguridad.
