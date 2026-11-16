@@ -12,6 +12,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontVariation
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -48,21 +51,46 @@ private val CamNodeColorScheme = darkColorScheme(
     inverseOnSurface = Palette.Ink,
 )
 
+/**
+ * Inter, bundled (res/font, OFL license in assets/licenses): works offline, without Google
+ * Play Services, and looks the same on every phone. One variable file serves every weight.
+ * Scripts it lacks (Arabic, Devanagari, Chinese) fall back to the system font.
+ */
+private fun inter(weight: FontWeight) = Font(
+    R.font.inter,
+    weight = weight,
+    variationSettings = FontVariation.Settings(FontVariation.weight(weight.weight)),
+)
+
+private val Inter = FontFamily(
+    inter(FontWeight.Normal),
+    inter(FontWeight.Medium),
+    inter(FontWeight.SemiBold),
+    inter(FontWeight.Bold),
+)
+
+/** Labels carry battery, data rate, zoom and times: equal-width digits keep them from jittering. */
+private const val TABULAR_FIGURES = "tnum"
+
 private val base = Typography()
 
+private fun TextStyle.inter(weight: FontWeight = FontWeight.Normal, tracking: Float = 0f) =
+    copy(fontFamily = Inter, fontWeight = weight, letterSpacing = tracking.sp)
+
 private val CamNodeTypography = Typography(
-    displaySmall = base.displaySmall.copy(fontWeight = FontWeight.SemiBold, letterSpacing = (-0.5).sp),
-    headlineMedium = base.headlineMedium.copy(fontWeight = FontWeight.SemiBold, letterSpacing = (-0.25).sp),
-    headlineSmall = base.headlineSmall.copy(fontWeight = FontWeight.SemiBold),
-    titleLarge = base.titleLarge.copy(fontWeight = FontWeight.SemiBold),
-    titleMedium = base.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-    titleSmall = base.titleSmall.copy(fontWeight = FontWeight.SemiBold),
-    bodyLarge = base.bodyLarge,
-    bodyMedium = base.bodyMedium,
-    bodySmall = base.bodySmall,
-    labelLarge = base.labelLarge.copy(fontWeight = FontWeight.SemiBold),
-    labelMedium = base.labelMedium.copy(fontWeight = FontWeight.SemiBold, letterSpacing = 0.4.sp),
-    labelSmall = TextStyle(fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp),
+    displaySmall = base.displaySmall.inter(FontWeight.SemiBold, tracking = -0.75f),
+    headlineMedium = base.headlineMedium.inter(FontWeight.SemiBold, tracking = -0.5f),
+    headlineSmall = base.headlineSmall.inter(FontWeight.SemiBold, tracking = -0.25f),
+    titleLarge = base.titleLarge.inter(FontWeight.SemiBold, tracking = -0.2f),
+    titleMedium = base.titleMedium.inter(FontWeight.SemiBold),
+    titleSmall = base.titleSmall.inter(FontWeight.SemiBold),
+    bodyLarge = base.bodyLarge.inter(),
+    bodyMedium = base.bodyMedium.inter(),
+    bodySmall = base.bodySmall.inter(tracking = 0.1f),
+    labelLarge = base.labelLarge.inter(FontWeight.SemiBold).copy(fontFeatureSettings = TABULAR_FIGURES),
+    labelMedium = base.labelMedium.inter(FontWeight.SemiBold, tracking = 0.2f).copy(fontFeatureSettings = TABULAR_FIGURES),
+    // Section headers are uppercase; open tracking keeps them readable at 11 sp.
+    labelSmall = TextStyle(fontSize = 11.sp, lineHeight = 14.sp).inter(FontWeight.Bold, tracking = 0.8f).copy(fontFeatureSettings = TABULAR_FIGURES),
 )
 
 private val CamNodeShapes = Shapes(
