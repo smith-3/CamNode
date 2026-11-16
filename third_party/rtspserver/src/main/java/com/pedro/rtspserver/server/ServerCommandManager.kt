@@ -117,18 +117,29 @@ class ServerCommandManager: CommandsManager() {
 
   private val base64Line = Regex("[A-Za-z0-9+/=]+")
 
+  /**
+   * CamNode: decided from the Transport header only. Upstream searched the whole request for
+   * "UDP", including the URL and the base64 credentials, so a ticket that happened to spell
+   * it turned a TCP SETUP into UDP and the server answered 500 to that viewer for 12 hours.
+   * RTP/AVP without "/TCP" is UDP, as RFC 2326 defines it.
+   */
   private fun getProtocol(request: String, track: Int): Protocol {
-    return if (request.contains("UDP", true) || loadPorts(request, track)) {
-      Protocol.UDP
-    } else {
+    val transport = transportOf(request)
+    return if (transport.contains("/TCP", true) && !transport.contains("client_port", true)) {
       Protocol.TCP
+    } else {
+      loadPorts(request, track)
+      Protocol.UDP
     }
   }
+
+  private fun transportOf(request: String): String =
+    request.split(Regex("\r?\n")).firstOrNull { it.startsWith("Transport:", ignoreCase = true) }.orEmpty()
 
   private fun loadPorts(request: String, track: Int): Boolean {
     val ports = ArrayList<Int>()
     val portsMatcher =
-        Pattern.compile("client_port=(\\d+)(?:-(\\d+))?", Pattern.CASE_INSENSITIVE).matcher(request)
+        Pattern.compile("client_port=(\\d+)(?:-(\\d+))?", Pattern.CASE_INSENSITIVE).matcher(transportOf(request))
     if (portsMatcher.find()) {
       portsMatcher.group(1)?.toIntOrNull()?.let { ports.add(it) }
       portsMatcher.group(2)?.toIntOrNull()?.let { ports.add(it) }

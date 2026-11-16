@@ -51,6 +51,28 @@ class ServerCommandManagerAuthTest {
         assertTrue(longManager.mayStream)
     }
 
+    /**
+     * The transport used to be guessed from the whole request, so credentials whose base64
+     * happened to contain "udp" turned a TCP SETUP into UDP and the server answered 500.
+     */
+    @Test
+    fun setupOverTcpStaysTcpWhateverTheCredentialsSpell() {
+        val manager = ServerCommandManager().apply {
+            authenticator = { _, _ -> true }
+            videoDisabled = true
+            audioDisabled = true
+        }
+        // "QXVkUDpz..." spells "UDp" in the header text itself, as a real ticket can.
+        val credentials = "Authorization: Basic QXVkUDpzZWNyZXQ=\r\n"
+        manager.createResponse(Method.DESCRIBE, request("DESCRIBE", credentials), 1, "1.2.3.4")
+
+        val setup = request("SETUP", credentials + "Transport: RTP/AVP/TCP;unicast;interleaved=0-1\r\n")
+        val response = manager.createResponse(Method.SETUP, setup, 2, "1.2.3.4")
+
+        assertTrue(response, response.startsWith("RTSP/1.0 200"))
+        assertTrue(response, response.contains("RTP/AVP/TCP;unicast;interleaved=0-1"))
+    }
+
     @Test
     fun describeWithWrongOrMissingCredentialsIsRefused() {
         assertTrue(manager.createResponse(Method.DESCRIBE, request("DESCRIBE"), 2, "1.2.3.4").startsWith("RTSP/1.0 401"))
