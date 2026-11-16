@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="tailscale_connected">%1$s · Включите «Постоянную VPN», чтобы связь сохранялась после перезагрузки</string>
+    <string name="tailscale_disconnected">Отключено. %1$s</string>
+    <string name="tailscale_not_installed">Не установлено. %1$s</string>
+    <string name="tailscale_open">Открыть Tailscale</string>
+    <string name="tailscale_install">Установить Tailscale</string>
+    <string name="tailscale_always_on">Постоянная VPN</string>
+</resources>

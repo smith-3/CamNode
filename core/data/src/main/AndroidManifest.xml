@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ContinuousOperation asks for the battery exemption and opens each brand's app-launch manager. -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <queries>
+        <package android:name="com.tailscale.ipn" />
+        <intent>
+            <action android:name="hihonor.intent.action.HSM_STARTUPAPP_MANAGER" />
+        </intent>
+        <intent>
+            <action android:name="huawei.intent.action.HSM_STARTUPAPP_MANAGER" />
+        </intent>
+    </queries>
+</manifest>

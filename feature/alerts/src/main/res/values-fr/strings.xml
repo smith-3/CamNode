@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="alerts_title">Alertes</string>
+    <string name="alerts_clear">Effacer</string>
+    <string name="alerts_master_title">C’est un téléphone maître</string>
+    <string name="alerts_master_on">Vous serez averti si quelqu’un déplace une caméra</string>
+    <string name="alerts_master_off">Activez-le sur le téléphone que vous gardez sur vous pour recevoir les alertes</string>
+    <string name="alerts_tailscale_hint">Activez-le pour recevoir les alertes hors de chez vous.</string>
+    <string name="alerts_battery_title">Autorisez CamNode à fonctionner en arrière-plan</string>
+    <string name="alerts_battery_body">Avec l’économiseur de batterie, Android peut retarder ou perdre des alertes pendant la veille.</string>
+    <string name="alerts_allow">Autoriser</string>
+    <string name="alerts_recent">Récentes</string>
+    <string name="alerts_empty_title">Tout est calme</string>
+    <string name="alerts_empty_body">Vous verrez ici quand quelqu’un déplace une de vos caméras.</string>
+    <string name="alerts_channel_master">Téléphone maître</string>
+    <string name="alerts_receiving">Réception des alertes de vos caméras</string>
+    <string name="alerts_channel_alerts">Alertes de sécurité</string>
+    <string name="alerts_channel_alerts_description">Avis lorsqu’une de vos caméras est déplacée</string>
+    <string name="alerts_check_camera">Vérifiez la caméra dans CamNode</string>
+    <string name="alerts_camera_moved">La caméra %1$s a été déplacée</string>
+</resources>

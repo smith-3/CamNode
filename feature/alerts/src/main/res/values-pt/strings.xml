@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="alerts_title">Alertas</string>
+    <string name="alerts_clear">Limpar</string>
+    <string name="alerts_master_title">Este é um telefone principal</string>
+    <string name="alerts_master_on">Você receberá uma notificação se alguém mexer em uma câmera</string>
+    <string name="alerts_master_off">Ative no telefone que você leva com você para receber alertas</string>
+    <string name="alerts_tailscale_hint">Ative para receber alertas fora de casa.</string>
+    <string name="alerts_battery_title">Permita que o CamNode funcione em segundo plano</string>
+    <string name="alerts_battery_body">Com a economia de bateria ativa, o Android pode atrasar ou perder alertas enquanto o telefone dorme.</string>
+    <string name="alerts_allow">Permitir</string>
+    <string name="alerts_recent">Recentes</string>
+    <string name="alerts_empty_title">Tudo tranquilo</string>
+    <string name="alerts_empty_body">Aqui você verá quando alguém mexer em uma das suas câmeras.</string>
+    <string name="alerts_channel_master">Telefone principal</string>
+    <string name="alerts_receiving">Recebendo alertas das suas câmeras</string>
+    <string name="alerts_channel_alerts">Alertas de segurança</string>
+    <string name="alerts_channel_alerts_description">Avisos quando alguém mexe em uma das suas câmeras</string>
+    <string name="alerts_check_camera">Confira a câmera no CamNode</string>
+    <string name="alerts_camera_moved">A câmera %1$s foi movida</string>
+</resources>

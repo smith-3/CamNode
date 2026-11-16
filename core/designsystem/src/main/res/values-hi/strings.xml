@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="tailscale_connected">%1$s · रीस्टार्ट के बाद भी जुड़े रहने के लिए \"हमेशा चालू VPN\" चालू करें</string>
+    <string name="tailscale_disconnected">कनेक्ट नहीं है। %1$s</string>
+    <string name="tailscale_not_installed">इंस्टॉल नहीं है। %1$s</string>
+    <string name="tailscale_open">Tailscale खोलें</string>
+    <string name="tailscale_install">Tailscale इंस्टॉल करें</string>
+    <string name="tailscale_always_on">हमेशा चालू VPN</string>
+</resources>

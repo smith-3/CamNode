@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="tab_cameras">摄像头</string>
+    <string name="tab_alerts">提醒</string>
+    <string name="tab_broadcast">推流</string>
+    <string name="tab_household">家</string>
+</resources>

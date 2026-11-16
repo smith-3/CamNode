@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="disguise_calculator">कैलकुलेटर</string>
+    <string name="disguise_clock">घड़ी</string>
+    <string name="disguise_calendar">कैलेंडर</string>
+    <string name="disguise_notes">नोट्स</string>
+    <string name="applock_disguise_none">CamNode</string>
+    <string name="applock_back">वापस</string>
+    <string name="applock_save">सहेजें</string>
+    <string name="applock_cancel">रद्द करें</string>
+    <string name="applock_delete">मिटाएँ</string>
+    <string name="applock_lock_title">अपना PIN डालें</string>
+    <string name="applock_lock_info">CamNode 4 अंकों के PIN से सुरक्षित है।</string>
+    <plurals name="applock_wrong_pin">
+        <item quantity="one">गलत PIN। इंतज़ार से पहले %1$d कोशिश बाकी है।</item>
+        <item quantity="other">गलत PIN। इंतज़ार से पहले %1$d कोशिशें बाकी हैं।</item>
+    </plurals>
+    <string name="applock_locked_out">बहुत ज़्यादा कोशिशें। %1$s के बाद फिर कोशिश करें।</string>
+    <string name="applock_pin_progress">%2$d में से %1$d अंक</string>
+    <string name="applock_settings_title">PIN लॉक</string>
+    <string name="applock_on">लॉक चालू है</string>
+    <string name="applock_off">लॉक बंद है</string>
+    <string name="applock_on_detail">CamNode खोलने पर और ऐप से 15 सेकंड बाहर रहने के बाद PIN मांगा जाता है।</string>
+    <string name="applock_off_detail">CamNode खोलने के लिए 4 अंकों का PIN मांगें।</string>
+    <string name="applock_look_header">ऐप कैसा दिखे</string>
+    <string name="applock_icon_header">आइकन</string>
+    <string name="applock_icon_style">आइकन %1$d</string>
+    <string name="applock_camera_visible_title">कैमरा दिखता रहता है</string>
+    <string name="applock_camera_visible_body">नया आइकन ऐप से बाहर जाने पर दिखता है। जब यह फ़ोन स्ट्रीम कर रहा होता है, Android कैमरा संकेतक और CamNode की सूचना असली नाम के साथ दिखाता है।</string>
+    <string name="applock_enable">PIN चुनें और चालू करें</string>
+    <string name="applock_apply">रूप लागू करें</string>
+    <string name="applock_disable">लॉक बंद करें</string>
+    <string name="applock_pin_choose">PIN चुनें</string>
+    <string name="applock_pin_repeat">PIN दोबारा डालें</string>
+    <string name="applock_pin_repeat_hint">पुष्टि के लिए फिर से लिखें।</string>
+    <string name="applock_pin_disable_hint">CamNode को उसका असली नाम और आइकन वापस मिल जाएगा।</string>
+    <string name="applock_error_not_enterable">यह PIN %1$s में नहीं डाला जा सकता। %2$s</string>
+    <string name="applock_error_mismatch">PIN मेल नहीं खाते। फिर से कोशिश करें।</string>
+    <string name="applock_error_unusable">यह PIN %1$s के साथ काम नहीं करता।</string>
+    <string name="applock_error_current_pin">आपका PIN %1$s में नहीं डाला जा सकता। %2$s लॉक बंद करें और दूसरा PIN चुनें।</string>
+    <string name="applock_howto_none">असली नाम और आइकन; PIN पैड से खुलता है।</string>
+    <string name="applock_howto_calculator">चलने वाला कैलकुलेटर। PIN लिखें और = दबाएँ।</string>
+    <string name="applock_howto_clock">एक घड़ी। PIN वाले समय का अलार्म बनाएँ (1830 = 18:30)।</string>
+    <string name="applock_howto_calendar">एक कैलेंडर। PIN वाली तारीख पर इवेंट जोड़ें (2512 = 25 दिसंबर)।</string>
+    <string name="applock_howto_notes">नोट्स। ऐसा नोट सहेजें जिसमें सिर्फ़ PIN हो।</string>
+    <string name="applock_rule_clock">घड़ी के साथ PIN एक समय HHMM होता है: 0000 से 2359।</string>
+    <string name="applock_rule_calendar">कैलेंडर के साथ PIN एक तारीख DDMM होता है: 0101 से 3112।</string>
+    <string name="applock_rule_any">चार अंक।</string>
+    <string name="applock_clock_new_alarm">नया अलार्म</string>
+    <string name="applock_clock_use_dial">डायल का इस्तेमाल करें</string>
+    <string name="applock_clock_type_time">समय लिखें</string>
+    <string name="applock_clock_no_app">अलार्म सहेजने के लिए कोई घड़ी ऐप नहीं है</string>
+    <string name="applock_calendar_new_event">नया इवेंट</string>
+    <string name="applock_calendar_previous">पिछला महीना</string>
+    <string name="applock_calendar_next">अगला महीना</string>
+    <string name="applock_calendar_no_events">%1$s · कोई इवेंट नहीं</string>
+    <string name="applock_calendar_no_app">इवेंट सहेजने के लिए कोई कैलेंडर ऐप नहीं है</string>
+    <string name="applock_notes_new">नया नोट</string>
+    <string name="applock_notes_empty">कोई नोट नहीं</string>
+    <string name="applock_notes_save_back">सहेजें और वापस जाएँ</string>
+    <string name="applock_notes_delete">नोट हटाएँ</string>
+    <string name="applock_notes_hint">नोट लिखें</string>
+</resources>

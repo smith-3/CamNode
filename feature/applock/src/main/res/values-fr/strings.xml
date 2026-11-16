@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="disguise_calculator">Calculatrice</string>
+    <string name="disguise_clock">Horloge</string>
+    <string name="disguise_calendar">Calendrier</string>
+    <string name="disguise_notes">Notes</string>
+    <string name="applock_disguise_none">CamNode</string>
+    <string name="applock_back">Retour</string>
+    <string name="applock_save">Enregistrer</string>
+    <string name="applock_cancel">Annuler</string>
+    <string name="applock_delete">Effacer</string>
+    <string name="applock_lock_title">Saisissez votre code</string>
+    <string name="applock_lock_info">CamNode est protégé par un code à 4 chiffres.</string>
+    <plurals name="applock_wrong_pin">
+        <item quantity="one">Code incorrect. Encore %1$d essai avant d’attendre.</item>
+        <item quantity="many">Code incorrect. Encore %1$d essais avant d’attendre.</item>
+        <item quantity="other">Code incorrect. Encore %1$d essais avant d’attendre.</item>
+    </plurals>
+    <string name="applock_locked_out">Trop d’essais. Réessayez après %1$s.</string>
+    <string name="applock_pin_progress">%1$d chiffres sur %2$d</string>
+    <string name="applock_settings_title">Verrouillage par code</string>
+    <string name="applock_on">Verrouillage activé</string>
+    <string name="applock_off">Verrouillage désactivé</string>
+    <string name="applock_on_detail">Le code est demandé à l’ouverture de CamNode et après 15 s hors de l’appli.</string>
+    <string name="applock_off_detail">Demandez un code à 4 chiffres pour ouvrir CamNode.</string>
+    <string name="applock_look_header">Apparence de l’appli</string>
+    <string name="applock_icon_header">Icône</string>
+    <string name="applock_icon_style">Icône %1$d</string>
+    <string name="applock_camera_visible_title">La caméra reste visible</string>
+    <string name="applock_camera_visible_body">La nouvelle icône apparaît quand vous quittez l’appli. Pendant que ce téléphone diffuse, Android affiche l’indicateur de caméra et la notification de CamNode sous son vrai nom.</string>
+    <string name="applock_enable">Choisir un code et activer</string>
+    <string name="applock_apply">Appliquer l’apparence</string>
+    <string name="applock_disable">Désactiver le verrouillage</string>
+    <string name="applock_pin_choose">Choisissez un code</string>
+    <string name="applock_pin_repeat">Répétez le code</string>
+    <string name="applock_pin_repeat_hint">Saisissez-le à nouveau pour confirmer.</string>
+    <string name="applock_pin_disable_hint">CamNode retrouvera son nom et son icône.</string>
+    <string name="applock_error_not_enterable">Ce code ne peut pas être saisi avec %1$s. %2$s</string>
+    <string name="applock_error_mismatch">Les codes ne correspondent pas. Réessayez.</string>
+    <string name="applock_error_unusable">Ce code ne convient pas pour %1$s.</string>
+    <string name="applock_error_current_pin">Votre code ne peut pas être saisi avec %1$s. %2$s Désactivez le verrouillage et choisissez un autre code.</string>
+    <string name="applock_howto_none">Vrai nom et vraie icône ; s’ouvre avec un pavé de code.</string>
+    <string name="applock_howto_calculator">Une vraie calculatrice. Tapez le code puis =.</string>
+    <string name="applock_howto_clock">Une horloge. Créez une alarme à l’heure du code (1830 = 18:30).</string>
+    <string name="applock_howto_calendar">Un calendrier. Ajoutez un événement à la date du code (2512 = 25 décembre).</string>
+    <string name="applock_howto_notes">Des notes. Enregistrez une note contenant uniquement le code.</string>
+    <string name="applock_rule_clock">Avec Horloge, le code est une heure HHMM : 0000 à 2359.</string>
+    <string name="applock_rule_calendar">Avec Calendrier, le code est une date JJMM : 0101 à 3112.</string>
+    <string name="applock_rule_any">Quatre chiffres.</string>
+    <string name="applock_clock_new_alarm">Nouvelle alarme</string>
+    <string name="applock_clock_use_dial">Utiliser le cadran</string>
+    <string name="applock_clock_type_time">Saisir l’heure</string>
+    <string name="applock_clock_no_app">Aucune appli d’horloge pour enregistrer l’alarme</string>
+    <string name="applock_calendar_new_event">Nouvel événement</string>
+    <string name="applock_calendar_previous">Mois précédent</string>
+    <string name="applock_calendar_next">Mois suivant</string>
+    <string name="applock_calendar_no_events">%1$s · Aucun événement</string>
+    <string name="applock_calendar_no_app">Aucune appli de calendrier pour enregistrer l’événement</string>
+    <string name="applock_notes_new">Nouvelle note</string>
+    <string name="applock_notes_empty">Aucune note</string>
+    <string name="applock_notes_save_back">Enregistrer et revenir</string>
+    <string name="applock_notes_delete">Supprimer la note</string>
+    <string name="applock_notes_hint">Écrivez une note</string>
+</resources>

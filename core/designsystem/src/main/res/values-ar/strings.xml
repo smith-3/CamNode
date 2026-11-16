@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="tailscale_connected">%1$s · فعّل \"VPN قيد التشغيل دائمًا\" ليبقى متصلًا بعد إعادة التشغيل</string>
+    <string name="tailscale_disconnected">غير متصل. %1$s</string>
+    <string name="tailscale_not_installed">غير مثبّت. %1$s</string>
+    <string name="tailscale_open">فتح Tailscale</string>
+    <string name="tailscale_install">تثبيت Tailscale</string>
+    <string name="tailscale_always_on">VPN قيد التشغيل دائمًا</string>
+</resources>

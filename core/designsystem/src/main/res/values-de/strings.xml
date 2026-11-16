@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="tailscale_connected">%1$s · Aktiviere „Durchgehend aktives VPN“, damit es nach einem Neustart verbunden bleibt</string>
+    <string name="tailscale_disconnected">Getrennt. %1$s</string>
+    <string name="tailscale_not_installed">Nicht installiert. %1$s</string>
+    <string name="tailscale_open">Tailscale öffnen</string>
+    <string name="tailscale_install">Tailscale installieren</string>
+    <string name="tailscale_always_on">Durchgehend aktives VPN</string>
+</resources>

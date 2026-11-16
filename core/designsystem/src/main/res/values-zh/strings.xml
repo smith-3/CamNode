@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="tailscale_connected">%1$s · 开启“始终开启的 VPN”，重启后也能保持连接</string>
+    <string name="tailscale_disconnected">未连接。%1$s</string>
+    <string name="tailscale_not_installed">未安装。%1$s</string>
+    <string name="tailscale_open">打开 Tailscale</string>
+    <string name="tailscale_install">安装 Tailscale</string>
+    <string name="tailscale_always_on">始终开启的 VPN</string>
+</resources>

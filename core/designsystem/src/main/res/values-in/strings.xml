@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="tailscale_connected">%1$s · Aktifkan \"VPN selalu aktif\" agar tetap terhubung setelah dimulai ulang</string>
+    <string name="tailscale_disconnected">Terputus. %1$s</string>
+    <string name="tailscale_not_installed">Belum terpasang. %1$s</string>
+    <string name="tailscale_open">Buka Tailscale</string>
+    <string name="tailscale_install">Pasang Tailscale</string>
+    <string name="tailscale_always_on">VPN selalu aktif</string>
+</resources>

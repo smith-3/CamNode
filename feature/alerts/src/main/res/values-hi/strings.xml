@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="alerts_title">चेतावनियाँ</string>
+    <string name="alerts_clear">साफ़ करें</string>
+    <string name="alerts_master_title">यह मास्टर फ़ोन है</string>
+    <string name="alerts_master_on">कोई कैमरा हिलाए तो आपको सूचना मिलेगी</string>
+    <string name="alerts_master_off">चेतावनियाँ पाने के लिए इसे उस फ़ोन पर चालू करें जो आपके पास रहता है</string>
+    <string name="alerts_tailscale_hint">घर से बाहर चेतावनियाँ पाने के लिए इसे चालू करें।</string>
+    <string name="alerts_battery_title">CamNode को बैकग्राउंड में चलने दें</string>
+    <string name="alerts_battery_body">बैटरी सेवर चालू होने पर फ़ोन के सोते समय Android चेतावनियों में देरी कर सकता है या उन्हें खो सकता है।</string>
+    <string name="alerts_allow">अनुमति दें</string>
+    <string name="alerts_recent">हाल की</string>
+    <string name="alerts_empty_title">सब शांत है</string>
+    <string name="alerts_empty_body">कोई आपका कैमरा हिलाए तो यहाँ दिखेगा।</string>
+    <string name="alerts_channel_master">मास्टर फ़ोन</string>
+    <string name="alerts_receiving">आपके कैमरों से चेतावनियाँ मिल रही हैं</string>
+    <string name="alerts_channel_alerts">सुरक्षा चेतावनियाँ</string>
+    <string name="alerts_channel_alerts_description">कोई आपका कैमरा हिलाए तो सूचना</string>
+    <string name="alerts_check_camera">CamNode में कैमरा देखें</string>
+    <string name="alerts_camera_moved">कैमरा %1$s हिलाया गया</string>
+</resources>

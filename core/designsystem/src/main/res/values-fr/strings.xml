@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="tailscale_connected">%1$s · Activez « VPN permanent » pour rester connecté après un redémarrage</string>
+    <string name="tailscale_disconnected">Déconnecté. %1$s</string>
+    <string name="tailscale_not_installed">Non installé. %1$s</string>
+    <string name="tailscale_open">Ouvrir Tailscale</string>
+    <string name="tailscale_install">Installer Tailscale</string>
+    <string name="tailscale_always_on">VPN permanent</string>
+</resources>

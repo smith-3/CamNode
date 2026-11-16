@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="alerts_title">提醒</string>
+    <string name="alerts_clear">清除</string>
+    <string name="alerts_master_title">这是主控手机</string>
+    <string name="alerts_master_on">有人移动摄像头时你会收到通知</string>
+    <string name="alerts_master_off">在你随身携带的手机上开启以接收提醒</string>
+    <string name="alerts_tailscale_hint">开启后在外也能收到提醒。</string>
+    <string name="alerts_battery_title">允许 CamNode 在后台运行</string>
+    <string name="alerts_battery_body">开启省电模式时，Android 可能会在手机休眠时延迟或丢失提醒。</string>
+    <string name="alerts_allow">允许</string>
+    <string name="alerts_recent">最近</string>
+    <string name="alerts_empty_title">一切正常</string>
+    <string name="alerts_empty_body">有人移动你的摄像头时会显示在这里。</string>
+    <string name="alerts_channel_master">主控手机</string>
+    <string name="alerts_receiving">正在接收摄像头的提醒</string>
+    <string name="alerts_channel_alerts">安全提醒</string>
+    <string name="alerts_channel_alerts_description">有人移动你的摄像头时发出通知</string>
+    <string name="alerts_check_camera">在 CamNode 中查看摄像头</string>
+    <string name="alerts_camera_moved">摄像头 %1$s 被移动了</string>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="alerts_title">Оповещения</string>
+    <string name="alerts_clear">Очистить</string>
+    <string name="alerts_master_title">Это главный телефон</string>
+    <string name="alerts_master_on">Вы получите уведомление, если кто-то сдвинет камеру</string>
+    <string name="alerts_master_off">Включите на телефоне, который всегда с вами, чтобы получать оповещения</string>
+    <string name="alerts_tailscale_hint">Включите, чтобы получать оповещения вне дома.</string>
+    <string name="alerts_battery_title">Разрешите CamNode работать в фоне</string>
+    <string name="alerts_battery_body">При включённой экономии заряда Android может задерживать или терять оповещения, пока телефон спит.</string>
+    <string name="alerts_allow">Разрешить</string>
+    <string name="alerts_recent">Недавние</string>
+    <string name="alerts_empty_title">Всё спокойно</string>
+    <string name="alerts_empty_body">Здесь появится, если кто-то сдвинет одну из ваших камер.</string>
+    <string name="alerts_channel_master">Главный телефон</string>
+    <string name="alerts_receiving">Получение оповещений от ваших камер</string>
+    <string name="alerts_channel_alerts">Оповещения безопасности</string>
+    <string name="alerts_channel_alerts_description">Уведомления, когда кто-то сдвигает вашу камеру</string>
+    <string name="alerts_check_camera">Проверьте камеру в CamNode</string>
+    <string name="alerts_camera_moved">Камеру %1$s сдвинули</string>
+</resources>

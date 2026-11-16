@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="disguise_calculator">الآلة الحاسبة</string>
+    <string name="disguise_clock">الساعة</string>
+    <string name="disguise_calendar">التقويم</string>
+    <string name="disguise_notes">الملاحظات</string>
+    <string name="applock_disguise_none">CamNode</string>
+    <string name="applock_back">رجوع</string>
+    <string name="applock_save">حفظ</string>
+    <string name="applock_cancel">إلغاء</string>
+    <string name="applock_delete">حذف</string>
+    <string name="applock_lock_title">أدخل رمز PIN</string>
+    <string name="applock_lock_info">CamNode محمي برمز PIN من 4 أرقام.</string>
+    <plurals name="applock_wrong_pin">
+        <item quantity="zero">رمز PIN خاطئ. بقيت %1$d محاولات قبل الانتظار.</item>
+        <item quantity="one">رمز PIN خاطئ. بقيت محاولة واحدة قبل الانتظار.</item>
+        <item quantity="two">رمز PIN خاطئ. بقيت %1$d محاولات قبل الانتظار.</item>
+        <item quantity="few">رمز PIN خاطئ. بقيت %1$d محاولات قبل الانتظار.</item>
+        <item quantity="many">رمز PIN خاطئ. بقيت %1$d محاولات قبل الانتظار.</item>
+        <item quantity="other">رمز PIN خاطئ. بقيت %1$d محاولات قبل الانتظار.</item>
+    </plurals>
+    <string name="applock_locked_out">محاولات كثيرة جدًا. حاول مرة أخرى بعد %1$s.</string>
+    <string name="applock_pin_progress">%1$d من %2$d أرقام</string>
+    <string name="applock_settings_title">القفل برمز PIN</string>
+    <string name="applock_on">القفل مفعّل</string>
+    <string name="applock_off">القفل غير مفعّل</string>
+    <string name="applock_on_detail">يُطلب رمز PIN عند فتح CamNode وبعد 15 ثانية خارج التطبيق.</string>
+    <string name="applock_off_detail">اطلب رمز PIN من 4 أرقام لفتح CamNode.</string>
+    <string name="applock_look_header">مظهر التطبيق</string>
+    <string name="applock_icon_header">الأيقونة</string>
+    <string name="applock_icon_style">الأيقونة %1$d</string>
+    <string name="applock_camera_visible_title">تظل الكاميرا ظاهرة</string>
+    <string name="applock_camera_visible_body">تظهر الأيقونة الجديدة عند الخروج من التطبيق. أثناء بث هذا الهاتف، يعرض Android مؤشر الكاميرا وإشعار CamNode باسمه الحقيقي.</string>
+    <string name="applock_enable">اختر رمز PIN وفعّل القفل</string>
+    <string name="applock_apply">تطبيق المظهر</string>
+    <string name="applock_disable">إيقاف القفل</string>
+    <string name="applock_pin_choose">اختر رمز PIN</string>
+    <string name="applock_pin_repeat">أعد إدخال رمز PIN</string>
+    <string name="applock_pin_repeat_hint">اكتبه مرة أخرى للتأكيد.</string>
+    <string name="applock_pin_disable_hint">سيستعيد CamNode اسمه وأيقونته.</string>
+    <string name="applock_error_not_enterable">لا يمكن إدخال هذا الرمز في %1$s. %2$s</string>
+    <string name="applock_error_mismatch">رمزا PIN غير متطابقين. حاول مرة أخرى.</string>
+    <string name="applock_error_unusable">هذا الرمز لا يصلح مع %1$s.</string>
+    <string name="applock_error_current_pin">لا يمكن إدخال رمزك في %1$s. %2$s أوقف القفل واختر رمزًا آخر.</string>
+    <string name="applock_howto_none">الاسم والأيقونة الحقيقيان؛ يُفتح بلوحة رمز PIN.</string>
+    <string name="applock_howto_calculator">آلة حاسبة تعمل فعلًا. اكتب رمز PIN ثم اضغط =.</string>
+    <string name="applock_howto_clock">ساعة. أنشئ منبهًا في وقت رمز PIN (1830 = 18:30).</string>
+    <string name="applock_howto_calendar">تقويم. أضف حدثًا في تاريخ رمز PIN (2512 = 25 ديسمبر).</string>
+    <string name="applock_howto_notes">ملاحظات. احفظ ملاحظة تحتوي على رمز PIN فقط.</string>
+    <string name="applock_rule_clock">مع الساعة يكون رمز PIN وقتًا HHMM: من 0000 إلى 2359.</string>
+    <string name="applock_rule_calendar">مع التقويم يكون رمز PIN تاريخًا DDMM: من 0101 إلى 3112.</string>
+    <string name="applock_rule_any">أربعة أرقام.</string>
+    <string name="applock_clock_new_alarm">منبه جديد</string>
+    <string name="applock_clock_use_dial">استخدام القرص</string>
+    <string name="applock_clock_type_time">اكتب الوقت</string>
+    <string name="applock_clock_no_app">لا يوجد تطبيق ساعة لحفظ المنبه</string>
+    <string name="applock_calendar_new_event">حدث جديد</string>
+    <string name="applock_calendar_previous">الشهر السابق</string>
+    <string name="applock_calendar_next">الشهر التالي</string>
+    <string name="applock_calendar_no_events">%1$s · لا أحداث</string>
+    <string name="applock_calendar_no_app">لا يوجد تطبيق تقويم لحفظ الحدث</string>
+    <string name="applock_notes_new">ملاحظة جديدة</string>
+    <string name="applock_notes_empty">لا توجد ملاحظات</string>
+    <string name="applock_notes_save_back">حفظ والرجوع</string>
+    <string name="applock_notes_delete">حذف الملاحظة</string>
+    <string name="applock_notes_hint">اكتب ملاحظة</string>
+</resources>

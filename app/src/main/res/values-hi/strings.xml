@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="tab_cameras">कैमरे</string>
+    <string name="tab_alerts">चेतावनियाँ</string>
+    <string name="tab_broadcast">स्ट्रीम</string>
+    <string name="tab_household">घर</string>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="tab_cameras">الكاميرات</string>
+    <string name="tab_alerts">التنبيهات</string>
+    <string name="tab_broadcast">البث</string>
+    <string name="tab_household">المنزل</string>
+</resources>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="disguise_calculator">计算器</string>
+    <string name="disguise_clock">时钟</string>
+    <string name="disguise_calendar">日历</string>
+    <string name="disguise_notes">笔记</string>
+    <string name="applock_disguise_none">CamNode</string>
+    <string name="applock_back">返回</string>
+    <string name="applock_save">保存</string>
+    <string name="applock_cancel">取消</string>
+    <string name="applock_delete">删除</string>
+    <string name="applock_lock_title">输入 PIN 码</string>
+    <string name="applock_lock_info">CamNode 受 4 位 PIN 码保护。</string>
+    <plurals name="applock_wrong_pin">
+        <item quantity="other">PIN 码错误。还可尝试 %1$d 次，之后需要等待。</item>
+    </plurals>
+    <string name="applock_locked_out">尝试次数过多。请在 %1$s 之后重试。</string>
+    <string name="applock_pin_progress">已输入 %1$d/%2$d 位</string>
+    <string name="applock_settings_title">PIN 码锁</string>
+    <string name="applock_on">锁定已开启</string>
+    <string name="applock_off">锁定已关闭</string>
+    <string name="applock_on_detail">打开 CamNode 时以及离开应用 15 秒后需要输入 PIN 码。</string>
+    <string name="applock_off_detail">打开 CamNode 时要求输入 4 位 PIN 码。</string>
+    <string name="applock_look_header">应用外观</string>
+    <string name="applock_icon_header">图标</string>
+    <string name="applock_icon_style">图标 %1$d</string>
+    <string name="applock_camera_visible_title">摄像头仍然可见</string>
+    <string name="applock_camera_visible_body">离开应用后会显示新图标。此手机推流时，Android 仍会显示摄像头指示标志和带有真实名称的 CamNode 通知。</string>
+    <string name="applock_enable">设置 PIN 码并开启</string>
+    <string name="applock_apply">应用外观</string>
+    <string name="applock_disable">关闭锁定</string>
+    <string name="applock_pin_choose">设置 PIN 码</string>
+    <string name="applock_pin_repeat">再次输入 PIN 码</string>
+    <string name="applock_pin_repeat_hint">再输入一次以确认。</string>
+    <string name="applock_pin_disable_hint">CamNode 将恢复原来的名称和图标。</string>
+    <string name="applock_error_not_enterable">无法在“%1$s”中输入该 PIN 码。%2$s</string>
+    <string name="applock_error_mismatch">两次输入的 PIN 码不一致，请重试。</string>
+    <string name="applock_error_unusable">该 PIN 码不适用于“%1$s”。</string>
+    <string name="applock_error_current_pin">无法在“%1$s”中输入你的 PIN 码。%2$s请关闭锁定并设置其他 PIN 码。</string>
+    <string name="applock_howto_none">真实名称和图标；通过 PIN 码键盘打开。</string>
+    <string name="applock_howto_calculator">可正常使用的计算器。输入 PIN 码后按 =。</string>
+    <string name="applock_howto_clock">时钟。按 PIN 码对应的时间新建闹钟（1830 = 18:30）。</string>
+    <string name="applock_howto_calendar">日历。在 PIN 码对应的日期添加活动（2512 = 12 月 25 日）。</string>
+    <string name="applock_howto_notes">笔记。保存一条只包含 PIN 码的笔记。</string>
+    <string name="applock_rule_clock">使用时钟时，PIN 码是时间 HHMM：0000 至 2359。</string>
+    <string name="applock_rule_calendar">使用日历时，PIN 码是日期 DDMM：0101 至 3112。</string>
+    <string name="applock_rule_any">四位数字。</string>
+    <string name="applock_clock_new_alarm">新建闹钟</string>
+    <string name="applock_clock_use_dial">使用表盘</string>
+    <string name="applock_clock_type_time">输入时间</string>
+    <string name="applock_clock_no_app">没有可保存闹钟的时钟应用</string>
+    <string name="applock_calendar_new_event">新建活动</string>
+    <string name="applock_calendar_previous">上个月</string>
+    <string name="applock_calendar_next">下个月</string>
+    <string name="applock_calendar_no_events">%1$s · 无活动</string>
+    <string name="applock_calendar_no_app">没有可保存活动的日历应用</string>
+    <string name="applock_notes_new">新建笔记</string>
+    <string name="applock_notes_empty">没有笔记</string>
+    <string name="applock_notes_save_back">保存并返回</string>
+    <string name="applock_notes_delete">删除笔记</string>
+    <string name="applock_notes_hint">写点什么</string>
+</resources>

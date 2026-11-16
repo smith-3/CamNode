@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="alerts_title">التنبيهات</string>
+    <string name="alerts_clear">مسح</string>
+    <string name="alerts_master_title">هذا هاتف رئيسي</string>
+    <string name="alerts_master_on">ستصلك إشعارات إذا حرّك أحدهم كاميرا</string>
+    <string name="alerts_master_off">فعّله على الهاتف الذي تحمله لتلقي التنبيهات</string>
+    <string name="alerts_tailscale_hint">فعّله لتلقي التنبيهات خارج المنزل.</string>
+    <string name="alerts_battery_title">اسمح لـ CamNode بالعمل في الخلفية</string>
+    <string name="alerts_battery_body">مع تفعيل توفير البطارية قد يؤخر Android التنبيهات أو يفقدها أثناء سكون الهاتف.</string>
+    <string name="alerts_allow">السماح</string>
+    <string name="alerts_recent">الأحدث</string>
+    <string name="alerts_empty_title">كل شيء هادئ</string>
+    <string name="alerts_empty_body">سترى هنا عندما يحرك أحدهم إحدى كاميراتك.</string>
+    <string name="alerts_channel_master">الهاتف الرئيسي</string>
+    <string name="alerts_receiving">يتلقى تنبيهات من كاميراتك</string>
+    <string name="alerts_channel_alerts">تنبيهات الأمان</string>
+    <string name="alerts_channel_alerts_description">إشعارات عندما يحرك أحدهم إحدى كاميراتك</string>
+    <string name="alerts_check_camera">تحقق من الكاميرا في CamNode</string>
+    <string name="alerts_camera_moved">تم تحريك الكاميرا %1$s</string>
+</resources>

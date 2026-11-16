@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="alerts_title">Peringatan</string>
+    <string name="alerts_clear">Hapus</string>
+    <string name="alerts_master_title">Ini ponsel utama</string>
+    <string name="alerts_master_on">Anda akan menerima notifikasi jika ada yang memindahkan kamera</string>
+    <string name="alerts_master_off">Aktifkan di ponsel yang Anda bawa untuk menerima peringatan</string>
+    <string name="alerts_tailscale_hint">Aktifkan untuk menerima peringatan di luar rumah.</string>
+    <string name="alerts_battery_title">Izinkan CamNode berjalan di latar belakang</string>
+    <string name="alerts_battery_body">Saat penghemat baterai aktif, Android bisa menunda atau melewatkan peringatan saat ponsel tidur.</string>
+    <string name="alerts_allow">Izinkan</string>
+    <string name="alerts_recent">Terbaru</string>
+    <string name="alerts_empty_title">Semua aman</string>
+    <string name="alerts_empty_body">Di sini Anda akan melihat saat ada yang memindahkan kamera Anda.</string>
+    <string name="alerts_channel_master">Ponsel utama</string>
+    <string name="alerts_receiving">Menerima peringatan dari kamera Anda</string>
+    <string name="alerts_channel_alerts">Peringatan keamanan</string>
+    <string name="alerts_channel_alerts_description">Pemberitahuan saat ada yang memindahkan kamera Anda</string>
+    <string name="alerts_check_camera">Periksa kamera di CamNode</string>
+    <string name="alerts_camera_moved">Kamera %1$s dipindahkan</string>
+</resources>

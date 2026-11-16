@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="disguise_calculator">Calculadora</string>
+    <string name="disguise_clock">Relógio</string>
+    <string name="disguise_calendar">Agenda</string>
+    <string name="disguise_notes">Notas</string>
+    <string name="applock_disguise_none">CamNode</string>
+    <string name="applock_back">Voltar</string>
+    <string name="applock_save">Salvar</string>
+    <string name="applock_cancel">Cancelar</string>
+    <string name="applock_delete">Apagar</string>
+    <string name="applock_lock_title">Digite seu PIN</string>
+    <string name="applock_lock_info">O CamNode está protegido com um PIN de 4 dígitos.</string>
+    <plurals name="applock_wrong_pin">
+        <item quantity="one">PIN incorreto. Resta %1$d tentativa antes de esperar.</item>
+        <item quantity="many">PIN incorreto. Restam %1$d tentativas antes de esperar.</item>
+        <item quantity="other">PIN incorreto. Restam %1$d tentativas antes de esperar.</item>
+    </plurals>
+    <string name="applock_locked_out">Muitas tentativas. Tente de novo depois das %1$s.</string>
+    <string name="applock_pin_progress">%1$d de %2$d dígitos</string>
+    <string name="applock_settings_title">Bloqueio com PIN</string>
+    <string name="applock_on">Bloqueio ativado</string>
+    <string name="applock_off">Bloqueio desativado</string>
+    <string name="applock_on_detail">O PIN é pedido ao abrir o CamNode e após 15 s fora do app.</string>
+    <string name="applock_off_detail">Peça um PIN de 4 dígitos para abrir o CamNode.</string>
+    <string name="applock_look_header">Aparência do app</string>
+    <string name="applock_icon_header">Ícone</string>
+    <string name="applock_icon_style">Ícone %1$d</string>
+    <string name="applock_camera_visible_title">A câmera continua visível</string>
+    <string name="applock_camera_visible_body">O novo ícone aparece quando você sai do app. Enquanto este telefone transmite, o Android mostra o indicador de câmera e a notificação do CamNode com o nome real.</string>
+    <string name="applock_enable">Escolher PIN e ativar</string>
+    <string name="applock_apply">Aplicar aparência</string>
+    <string name="applock_disable">Desativar bloqueio</string>
+    <string name="applock_pin_choose">Escolha um PIN</string>
+    <string name="applock_pin_repeat">Repita o PIN</string>
+    <string name="applock_pin_repeat_hint">Digite de novo para confirmar.</string>
+    <string name="applock_pin_disable_hint">O CamNode voltará ao nome e ícone originais.</string>
+    <string name="applock_error_not_enterable">Esse PIN não pode ser digitado em %1$s. %2$s</string>
+    <string name="applock_error_mismatch">Os PINs não coincidem. Tente de novo.</string>
+    <string name="applock_error_unusable">Esse PIN não funciona com %1$s.</string>
+    <string name="applock_error_current_pin">Seu PIN não pode ser digitado em %1$s. %2$s Desative o bloqueio e escolha outro PIN.</string>
+    <string name="applock_howto_none">Nome e ícone reais; abre com um teclado de PIN.</string>
+    <string name="applock_howto_calculator">Uma calculadora que funciona. Digite o PIN e toque em =.</string>
+    <string name="applock_howto_clock">Um relógio. Crie um alarme no horário do PIN (1830 = 18:30).</string>
+    <string name="applock_howto_calendar">Uma agenda. Adicione um evento na data do PIN (2512 = 25 de dezembro).</string>
+    <string name="applock_howto_notes">Notas. Salve uma nota que contenha só o PIN.</string>
+    <string name="applock_rule_clock">Com Relógio o PIN é um horário HHMM: 0000 a 2359.</string>
+    <string name="applock_rule_calendar">Com Agenda o PIN é uma data DDMM: 0101 a 3112.</string>
+    <string name="applock_rule_any">Quatro dígitos.</string>
+    <string name="applock_clock_new_alarm">Novo alarme</string>
+    <string name="applock_clock_use_dial">Usar o mostrador</string>
+    <string name="applock_clock_type_time">Digitar o horário</string>
+    <string name="applock_clock_no_app">Nenhum app de relógio para salvar o alarme</string>
+    <string name="applock_calendar_new_event">Novo evento</string>
+    <string name="applock_calendar_previous">Mês anterior</string>
+    <string name="applock_calendar_next">Próximo mês</string>
+    <string name="applock_calendar_no_events">%1$s · Sem eventos</string>
+    <string name="applock_calendar_no_app">Nenhum app de agenda para salvar o evento</string>
+    <string name="applock_notes_new">Nova nota</string>
+    <string name="applock_notes_empty">Nenhuma nota</string>
+    <string name="applock_notes_save_back">Salvar e voltar</string>
+    <string name="applock_notes_delete">Excluir nota</string>
+    <string name="applock_notes_hint">Escreva uma nota</string>
+</resources>

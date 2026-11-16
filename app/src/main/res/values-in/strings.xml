@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="tab_cameras">Kamera</string>
+    <string name="tab_alerts">Peringatan</string>
+    <string name="tab_broadcast">Siarkan</string>
+    <string name="tab_household">Rumah</string>
+</resources>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Shield and camera from Material Symbols Rounded (Apache 2.0), centered in the 66dp safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="0.06"
+        android:scaleY="0.06"
+        android:translateX="25.2"
+        android:translateY="82.8">
+        <path
+            android:fillColor="#FF4C8DFF"
+            android:pathData="M480-84q-7 0-13-1t-12-3q-135-45-215-166.5T160-516v-189q0-25 14.5-45t37.5-29l240-90q14-5 28-5t28 5l240 90q23 9 37.5 29t14.5 45v189q0 140-80 261.5T505-88q-6 2-12 3t-13 1Z" />
+    </group>
+    <group
+        android:scaleX="0.026"
+        android:scaleY="0.026"
+        android:translateX="41.52"
+        android:translateY="67.5">
+        <path
+            android:fillColor="#FF0E131A"
+            android:pathData="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h480q33 0 56.5 23.5T720-720v180l126-126q10-10 22-5t12 19v344q0 14-12 19t-22-5L720-420v180q0 33-23.5 56.5T640-160H160Z" />
+    </group>
+</vector>

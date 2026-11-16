@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="disguise_calculator">Калькулятор</string>
+    <string name="disguise_clock">Часы</string>
+    <string name="disguise_calendar">Календарь</string>
+    <string name="disguise_notes">Заметки</string>
+    <string name="applock_disguise_none">CamNode</string>
+    <string name="applock_back">Назад</string>
+    <string name="applock_save">Сохранить</string>
+    <string name="applock_cancel">Отмена</string>
+    <string name="applock_delete">Стереть</string>
+    <string name="applock_lock_title">Введите PIN-код</string>
+    <string name="applock_lock_info">CamNode защищён 4-значным PIN-кодом.</string>
+    <plurals name="applock_wrong_pin">
+        <item quantity="one">Неверный PIN-код. Осталась %1$d попытка до ожидания.</item>
+        <item quantity="few">Неверный PIN-код. Осталось %1$d попытки до ожидания.</item>
+        <item quantity="many">Неверный PIN-код. Осталось %1$d попыток до ожидания.</item>
+        <item quantity="other">Неверный PIN-код. Осталось %1$d попытки до ожидания.</item>
+    </plurals>
+    <string name="applock_locked_out">Слишком много попыток. Повторите после %1$s.</string>
+    <string name="applock_pin_progress">%1$d из %2$d цифр</string>
+    <string name="applock_settings_title">Блокировка PIN-кодом</string>
+    <string name="applock_on">Блокировка включена</string>
+    <string name="applock_off">Блокировка выключена</string>
+    <string name="applock_on_detail">PIN-код запрашивается при открытии CamNode и после 15 с вне приложения.</string>
+    <string name="applock_off_detail">Запрашивать 4-значный PIN-код при открытии CamNode.</string>
+    <string name="applock_look_header">Как выглядит приложение</string>
+    <string name="applock_icon_header">Значок</string>
+    <string name="applock_icon_style">Значок %1$d</string>
+    <string name="applock_camera_visible_title">Камера остаётся заметной</string>
+    <string name="applock_camera_visible_body">Новый значок появится, когда вы выйдете из приложения. Пока телефон ведёт трансляцию, Android показывает индикатор камеры и уведомление CamNode с настоящим названием.</string>
+    <string name="applock_enable">Выбрать PIN-код и включить</string>
+    <string name="applock_apply">Применить вид</string>
+    <string name="applock_disable">Отключить блокировку</string>
+    <string name="applock_pin_choose">Придумайте PIN-код</string>
+    <string name="applock_pin_repeat">Повторите PIN-код</string>
+    <string name="applock_pin_repeat_hint">Введите ещё раз для подтверждения.</string>
+    <string name="applock_pin_disable_hint">CamNode вернёт своё название и значок.</string>
+    <string name="applock_error_not_enterable">Этот PIN-код нельзя ввести в «%1$s». %2$s</string>
+    <string name="applock_error_mismatch">PIN-коды не совпадают. Попробуйте ещё раз.</string>
+    <string name="applock_error_unusable">Этот PIN-код не подходит для «%1$s».</string>
+    <string name="applock_error_current_pin">Ваш PIN-код нельзя ввести в «%1$s». %2$s Отключите блокировку и выберите другой PIN-код.</string>
+    <string name="applock_howto_none">Настоящие название и значок; открывается через ввод PIN-кода.</string>
+    <string name="applock_howto_calculator">Работающий калькулятор. Введите PIN-код и нажмите =.</string>
+    <string name="applock_howto_clock">Часы. Создайте будильник на время PIN-кода (1830 = 18:30).</string>
+    <string name="applock_howto_calendar">Календарь. Добавьте событие на дату PIN-кода (2512 = 25 декабря).</string>
+    <string name="applock_howto_notes">Заметки. Сохраните заметку, в которой только PIN-код.</string>
+    <string name="applock_rule_clock">Для «Часов» PIN-код — это время ЧЧММ: от 0000 до 2359.</string>
+    <string name="applock_rule_calendar">Для «Календаря» PIN-код — это дата ДДММ: от 0101 до 3112.</string>
+    <string name="applock_rule_any">Четыре цифры.</string>
+    <string name="applock_clock_new_alarm">Новый будильник</string>
+    <string name="applock_clock_use_dial">Использовать циферблат</string>
+    <string name="applock_clock_type_time">Ввести время</string>
+    <string name="applock_clock_no_app">Нет приложения часов для сохранения будильника</string>
+    <string name="applock_calendar_new_event">Новое событие</string>
+    <string name="applock_calendar_previous">Предыдущий месяц</string>
+    <string name="applock_calendar_next">Следующий месяц</string>
+    <string name="applock_calendar_no_events">%1$s · Нет событий</string>
+    <string name="applock_calendar_no_app">Нет приложения календаря для сохранения события</string>
+    <string name="applock_notes_new">Новая заметка</string>
+    <string name="applock_notes_empty">Нет заметок</string>
+    <string name="applock_notes_save_back">Сохранить и вернуться</string>
+    <string name="applock_notes_delete">Удалить заметку</string>
+    <string name="applock_notes_hint">Напишите заметку</string>
+</resources>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="disguise_calculator">Kalkulator</string>
+    <string name="disguise_clock">Jam</string>
+    <string name="disguise_calendar">Kalender</string>
+    <string name="disguise_notes">Catatan</string>
+    <string name="applock_disguise_none">CamNode</string>
+    <string name="applock_back">Kembali</string>
+    <string name="applock_save">Simpan</string>
+    <string name="applock_cancel">Batal</string>
+    <string name="applock_delete">Hapus</string>
+    <string name="applock_lock_title">Masukkan PIN Anda</string>
+    <string name="applock_lock_info">CamNode dilindungi PIN 4 digit.</string>
+    <plurals name="applock_wrong_pin">
+        <item quantity="other">PIN salah. Tersisa %1$d percobaan sebelum harus menunggu.</item>
+    </plurals>
+    <string name="applock_locked_out">Terlalu banyak percobaan. Coba lagi setelah %1$s.</string>
+    <string name="applock_pin_progress">%1$d dari %2$d digit</string>
+    <string name="applock_settings_title">Kunci PIN</string>
+    <string name="applock_on">Kunci aktif</string>
+    <string name="applock_off">Kunci nonaktif</string>
+    <string name="applock_on_detail">PIN diminta saat CamNode dibuka dan setelah 15 detik di luar aplikasi.</string>
+    <string name="applock_off_detail">Minta PIN 4 digit untuk membuka CamNode.</string>
+    <string name="applock_look_header">Tampilan aplikasi</string>
+    <string name="applock_icon_header">Ikon</string>
+    <string name="applock_icon_style">Ikon %1$d</string>
+    <string name="applock_camera_visible_title">Kamera tetap terlihat</string>
+    <string name="applock_camera_visible_body">Ikon baru muncul saat Anda keluar dari aplikasi. Selama ponsel ini menyiarkan, Android menampilkan indikator kamera dan notifikasi CamNode dengan nama aslinya.</string>
+    <string name="applock_enable">Pilih PIN dan aktifkan</string>
+    <string name="applock_apply">Terapkan tampilan</string>
+    <string name="applock_disable">Matikan kunci</string>
+    <string name="applock_pin_choose">Pilih PIN</string>
+    <string name="applock_pin_repeat">Ulangi PIN</string>
+    <string name="applock_pin_repeat_hint">Ketik lagi untuk konfirmasi.</string>
+    <string name="applock_pin_disable_hint">CamNode akan kembali ke nama dan ikon aslinya.</string>
+    <string name="applock_error_not_enterable">PIN itu tidak bisa dimasukkan lewat %1$s. %2$s</string>
+    <string name="applock_error_mismatch">PIN tidak cocok. Coba lagi.</string>
+    <string name="applock_error_unusable">PIN itu tidak bisa dipakai untuk %1$s.</string>
+    <string name="applock_error_current_pin">PIN Anda tidak bisa dimasukkan lewat %1$s. %2$s Matikan kunci dan pilih PIN lain.</string>
+    <string name="applock_howto_none">Nama dan ikon asli; dibuka dengan papan PIN.</string>
+    <string name="applock_howto_calculator">Kalkulator yang berfungsi. Ketik PIN lalu tekan =.</string>
+    <string name="applock_howto_clock">Jam. Buat alarm pada jam PIN (1830 = 18:30).</string>
+    <string name="applock_howto_calendar">Kalender. Tambahkan acara pada tanggal PIN (2512 = 25 Desember).</string>
+    <string name="applock_howto_notes">Catatan. Simpan catatan yang hanya berisi PIN.</string>
+    <string name="applock_rule_clock">Dengan Jam, PIN berupa waktu HHMM: 0000 sampai 2359.</string>
+    <string name="applock_rule_calendar">Dengan Kalender, PIN berupa tanggal DDMM: 0101 sampai 3112.</string>
+    <string name="applock_rule_any">Empat digit.</string>
+    <string name="applock_clock_new_alarm">Alarm baru</string>
+    <string name="applock_clock_use_dial">Gunakan dial</string>
+    <string name="applock_clock_type_time">Ketik waktu</string>
+    <string name="applock_clock_no_app">Tidak ada aplikasi jam untuk menyimpan alarm</string>
+    <string name="applock_calendar_new_event">Acara baru</string>
+    <string name="applock_calendar_previous">Bulan sebelumnya</string>
+    <string name="applock_calendar_next">Bulan berikutnya</string>
+    <string name="applock_calendar_no_events">%1$s · Tidak ada acara</string>
+    <string name="applock_calendar_no_app">Tidak ada aplikasi kalender untuk menyimpan acara</string>
+    <string name="applock_notes_new">Catatan baru</string>
+    <string name="applock_notes_empty">Tidak ada catatan</string>
+    <string name="applock_notes_save_back">Simpan dan kembali</string>
+    <string name="applock_notes_delete">Hapus catatan</string>
+    <string name="applock_notes_hint">Tulis catatan</string>
+</resources>

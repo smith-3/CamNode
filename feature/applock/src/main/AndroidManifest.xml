@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- The clock disguise hands real alarms to the system clock app. -->
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+</manifest>

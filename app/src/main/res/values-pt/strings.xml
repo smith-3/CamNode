@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="tab_cameras">Câmeras</string>
+    <string name="tab_alerts">Alertas</string>
+    <string name="tab_broadcast">Transmitir</string>
+    <string name="tab_household">Casa</string>
+</resources>

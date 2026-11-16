@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the CamNode string table. -->
+<resources>
+    <string name="disguise_calculator">Rechner</string>
+    <string name="disguise_clock">Uhr</string>
+    <string name="disguise_calendar">Kalender</string>
+    <string name="disguise_notes">Notizen</string>
+    <string name="applock_disguise_none">CamNode</string>
+    <string name="applock_back">Zurück</string>
+    <string name="applock_save">Speichern</string>
+    <string name="applock_cancel">Abbrechen</string>
+    <string name="applock_delete">Löschen</string>
+    <string name="applock_lock_title">PIN eingeben</string>
+    <string name="applock_lock_info">CamNode ist mit einer 4-stelligen PIN geschützt.</string>
+    <plurals name="applock_wrong_pin">
+        <item quantity="one">Falsche PIN. Noch 1 Versuch, dann heißt es warten.</item>
+        <item quantity="other">Falsche PIN. Noch %1$d Versuche, dann heißt es warten.</item>
+    </plurals>
+    <string name="applock_locked_out">Zu viele Versuche. Versuche es nach %1$s erneut.</string>
+    <string name="applock_pin_progress">%1$d von %2$d Ziffern</string>
+    <string name="applock_settings_title">PIN-Sperre</string>
+    <string name="applock_on">Sperre aktiv</string>
+    <string name="applock_off">Sperre aus</string>
+    <string name="applock_on_detail">Die PIN wird beim Öffnen von CamNode und nach 15 s außerhalb der App abgefragt.</string>
+    <string name="applock_off_detail">Zum Öffnen von CamNode eine 4-stellige PIN verlangen.</string>
+    <string name="applock_look_header">Aussehen der App</string>
+    <string name="applock_icon_header">Symbol</string>
+    <string name="applock_icon_style">Symbol %1$d</string>
+    <string name="applock_camera_visible_title">Die Kamera bleibt sichtbar</string>
+    <string name="applock_camera_visible_body">Das neue Symbol erscheint, wenn du die App verlässt. Solange dieses Telefon überträgt, zeigt Android die Kameraanzeige und die CamNode-Benachrichtigung mit dem echten Namen.</string>
+    <string name="applock_enable">PIN wählen und aktivieren</string>
+    <string name="applock_apply">Aussehen übernehmen</string>
+    <string name="applock_disable">Sperre ausschalten</string>
+    <string name="applock_pin_choose">PIN wählen</string>
+    <string name="applock_pin_repeat">PIN wiederholen</string>
+    <string name="applock_pin_repeat_hint">Zur Bestätigung erneut eingeben.</string>
+    <string name="applock_pin_disable_hint">CamNode erhält seinen Namen und sein Symbol zurück.</string>
+    <string name="applock_error_not_enterable">Diese PIN lässt sich mit %1$s nicht eingeben. %2$s</string>
+    <string name="applock_error_mismatch">Die PINs stimmen nicht überein. Versuche es erneut.</string>
+    <string name="applock_error_unusable">Diese PIN passt nicht zu %1$s.</string>
+    <string name="applock_error_current_pin">Deine PIN lässt sich mit %1$s nicht eingeben. %2$s Schalte die Sperre aus und wähle eine andere PIN.</string>
+    <string name="applock_howto_none">Echter Name und echtes Symbol; öffnet sich mit einem PIN-Feld.</string>
+    <string name="applock_howto_calculator">Ein funktionierender Rechner. PIN eingeben und = drücken.</string>
+    <string name="applock_howto_clock">Eine Uhr. Stelle einen Wecker zur Uhrzeit der PIN (1830 = 18:30).</string>
+    <string name="applock_howto_calendar">Ein Kalender. Füge am Datum der PIN einen Termin hinzu (2512 = 25. Dezember).</string>
+    <string name="applock_howto_notes">Notizen. Speichere eine Notiz, die nur die PIN enthält.</string>
+    <string name="applock_rule_clock">Bei Uhr ist die PIN eine Uhrzeit HHMM: 0000 bis 2359.</string>
+    <string name="applock_rule_calendar">Bei Kalender ist die PIN ein Datum TTMM: 0101 bis 3112.</string>
+    <string name="applock_rule_any">Vier Ziffern.</string>
+    <string name="applock_clock_new_alarm">Neuer Wecker</string>
+    <string name="applock_clock_use_dial">Zifferblatt verwenden</string>
+    <string name="applock_clock_type_time">Uhrzeit eintippen</string>
+    <string name="applock_clock_no_app">Keine Uhr-App zum Speichern des Weckers</string>
+    <string name="applock_calendar_new_event">Neuer Termin</string>
+    <string name="applock_calendar_previous">Vorheriger Monat</string>
+    <string name="applock_calendar_next">Nächster Monat</string>
+    <string name="applock_calendar_no_events">%1$s · Keine Termine</string>
+    <string name="applock_calendar_no_app">Keine Kalender-App zum Speichern des Termins</string>
+    <string name="applock_notes_new">Neue Notiz</string>
+    <string name="applock_notes_empty">Keine Notizen</string>
+    <string name="applock_notes_save_back">Speichern und zurück</string>
+    <string name="applock_notes_delete">Notiz löschen</string>
+    <string name="applock_notes_hint">Notiz schreiben</string>
+</resources>
