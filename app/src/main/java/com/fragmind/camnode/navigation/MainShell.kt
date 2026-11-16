@@ -126,5 +126,5 @@ private val MainTab.icon: ImageVector
         MainTab.Cameras -> CamNodeIcons.Grid
         MainTab.Alerts -> CamNodeIcons.Notifications
         MainTab.Broadcast -> CamNodeIcons.Videocam
-        MainTab.Household -> CamNodeIcons.Home
+        MainTab.Household -> CamNodeIcons.Group
     }

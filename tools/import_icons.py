@@ -10,7 +10,7 @@ import urllib.request
 from pathlib import Path
 
 ICONS = [
-    "videocam", "videocam:fill", "videocam_off", "grid_view", "smartphone", "home", "qr_code_2",
+    "videocam", "videocam:fill", "videocam_off", "grid_view", "smartphone", "qr_code_2",
     "qr_code_scanner", "share", "battery_full", "battery_charging_full", "battery_alert", "wifi",
     "vpn_lock", "cameraswitch", "volume_up", "volume_off", "group", "delete", "logout", "shield:fill",
     "bolt", "chevron_right", "check_circle:fill", "error:fill", "cloud_off", "content_copy", "mic",

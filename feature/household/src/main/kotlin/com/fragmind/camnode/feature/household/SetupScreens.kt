@@ -44,7 +44,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -69,11 +68,10 @@ private val defaultDeviceName: String
 
 @Composable
 fun WelcomeScreen(onCreate: () -> Unit, onJoin: () -> Unit) {
-    val glow = MaterialTheme.colorScheme.primary.copy(alpha = 0.22f)
     Column(
         Modifier
             .fillMaxSize()
-            .background(Brush.radialGradient(listOf(glow, MaterialTheme.colorScheme.background), radius = 1400f))
+            .background(MaterialTheme.colorScheme.background)
             .statusBarsPadding()
             .navigationBarsPadding()
             .verticalScroll(rememberScrollState())
@@ -81,7 +79,7 @@ fun WelcomeScreen(onCreate: () -> Unit, onJoin: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         Spacer(Modifier.height(32.dp))
-        IconTile(CamNodeIcons.Shield, size = 72)
+        IconTile(CamNodeIcons.Logo, size = 72)
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text("CamNode", style = MaterialTheme.typography.displaySmall)
             Text(
@@ -130,7 +128,7 @@ fun CreateHouseholdRoute(onBack: () -> Unit, onDone: () -> Unit, viewModel: Hous
             OutlinedTextField(deviceName, { deviceName = it }, label = { Text(stringResource(R.string.household_device_name_label)) }, singleLine = true, modifier = Modifier.fillMaxWidth())
         }
         SetupFeedback(state)
-        CamNodeButton(stringResource(R.string.household_create), { viewModel.create(householdName, deviceName) }, enabled = state != SetupState.Working, icon = CamNodeIcons.Shield)
+        CamNodeButton(stringResource(R.string.household_create), { viewModel.create(householdName, deviceName) }, enabled = state != SetupState.Working, icon = CamNodeIcons.Logo)
     }
 }
 
@@ -163,7 +161,7 @@ fun JoinHouseholdRoute(
         if (invite != null && !scanning) {
             CamNodeCard {
                 SettingRow(
-                    icon = CamNodeIcons.Shield,
+                    icon = CamNodeIcons.Logo,
                     title = stringResource(R.string.household_join_invite_to, invite.household.name),
                     subtitle = if (invite.seeds.isEmpty()) stringResource(R.string.household_join_no_seeds) else pluralStringResource(R.plurals.household_join_seeds, invite.seeds.size, invite.seeds.size),
                     trailing = { TextButton(onClick = { link = "" }) { Text(stringResource(R.string.household_join_change)) } },

@@ -1,5 +1,6 @@
 package com.fragmind.camnode.core.designsystem
 
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
@@ -15,25 +16,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 private val CamNodeColorScheme = darkColorScheme(
-    primary = Palette.Signal,
-    onPrimary = Color.White,
-    primaryContainer = Palette.SignalDeep,
-    onPrimaryContainer = Palette.TextPrimary,
-    secondary = Palette.Mint,
+    primary = Palette.Paper,
+    onPrimary = Palette.Charcoal,
+    primaryContainer = Palette.PanelHighest,
+    onPrimaryContainer = Palette.Paper,
+    secondary = Palette.TextSecondary,
     onSecondary = Palette.Ink,
-    secondaryContainer = Palette.SignalDeep,
-    onSecondaryContainer = Palette.TextPrimary,
+    secondaryContainer = Palette.PanelHighest,
+    onSecondaryContainer = Palette.Paper,
     tertiary = Palette.Amber,
     tertiaryContainer = Color(0xFF3D2C0E),
-    onTertiaryContainer = Palette.TextPrimary,
+    onTertiaryContainer = Palette.Paper,
     error = Palette.Siren,
     onError = Color.White,
     errorContainer = Color(0xFF3A1416),
     onErrorContainer = Color(0xFFFFDAD6),
     background = Palette.Night,
-    onBackground = Palette.TextPrimary,
+    onBackground = Palette.Paper,
     surface = Palette.Night,
-    onSurface = Palette.TextPrimary,
+    onSurface = Palette.Paper,
     surfaceVariant = Palette.PanelHigh,
     onSurfaceVariant = Palette.TextSecondary,
     surfaceContainerLowest = Palette.Ink,
@@ -43,7 +44,7 @@ private val CamNodeColorScheme = darkColorScheme(
     surfaceContainerHighest = Palette.PanelHighest,
     outline = Palette.Line,
     outlineVariant = Palette.Line,
-    inverseSurface = Palette.TextPrimary,
+    inverseSurface = Palette.Paper,
     inverseOnSurface = Palette.Ink,
 )
 
@@ -83,8 +84,10 @@ fun CamNodeTheme(content: @Composable () -> Unit) {
             colorScheme = CamNodeColorScheme,
             typography = CamNodeTypography,
             shapes = CamNodeShapes,
-            content = content,
-        )
+        ) {
+            // Screens drawn straight on the window (no Surface or Scaffold) would otherwise get black text.
+            CompositionLocalProvider(LocalContentColor provides CamNodeColorScheme.onBackground, content = content)
+        }
     }
 }
 

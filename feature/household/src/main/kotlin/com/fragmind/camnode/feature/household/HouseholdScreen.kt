@@ -212,7 +212,7 @@ fun HouseholdRoute(onInvite: () -> Unit, onAppLock: () -> Unit, onLeft: () -> Un
         ) {
             CamNodeCard {
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                    IconTile(CamNodeIcons.Shield, size = 56)
+                    IconTile(CamNodeIcons.Logo, size = 56)
                     Column(Modifier.weight(1f)) {
                         Text(household.householdName, style = MaterialTheme.typography.titleLarge)
                         Text(

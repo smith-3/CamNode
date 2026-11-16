@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Window background shown before Compose draws. Mirrors Palette.Night (Color.kt);
+    BrandColorsTest keeps both in sync.
+-->
+<resources>
+    <color name="camnode_night">#FF161614</color>
+</resources>

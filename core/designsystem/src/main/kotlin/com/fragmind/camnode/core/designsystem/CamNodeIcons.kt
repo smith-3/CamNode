@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 
-/** Material Symbols Rounded, imported by tools/import_icons.py. */
+/** Material Symbols Rounded, imported by tools/import_icons.py, plus the CamNode brand [Logo]. */
 object CamNodeIcons {
+    /** The logo's node mark, for brand moments (welcome, household). Hand-made, not from Material Symbols. */
+    val Logo: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_brand_mark)
     val Add: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_add)
     val AlarmAdd: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_alarm_add)
     val Backspace: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_backspace)
@@ -47,7 +49,6 @@ object CamNodeIcons {
     val Monitor: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_view_quilt)
     val Group: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_group)
     val Hd: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_hd)
-    val Home: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_home)
     val Link: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_link)
     val Lock: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_lock)
     val Logout: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_logout)
