@@ -17,6 +17,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -68,6 +69,7 @@ import com.fragmind.camnode.core.designsystem.CamNodeButton
 import com.fragmind.camnode.core.designsystem.CamNodeCard
 import com.fragmind.camnode.core.designsystem.CamNodeIcons
 import com.fragmind.camnode.core.designsystem.CamNodeTheme
+import com.fragmind.camnode.core.designsystem.JoinPendingNotice
 import com.fragmind.camnode.core.designsystem.MetricChip
 import com.fragmind.camnode.core.designsystem.NoticeCard
 import com.fragmind.camnode.core.designsystem.SectionHeader
@@ -194,6 +196,7 @@ fun NodeScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+            state.pendingHousehold?.let { JoinPendingNotice(it) }
             CameraHero(live, showPreview, onTogglePreview = { showPreview = !showPreview }, preview)
             (state.stream as? StreamState.Failed)?.let {
                 NoticeCard(CamNodeIcons.Error, stringResource(R.string.node_start_failed), it.describe(), StatusTone.Live)
@@ -278,7 +281,13 @@ private fun CameraHero(live: StreamState.Live?, showPreview: Boolean, onTogglePr
                     MetricChip(CamNodeIcons.Upload, rate, onVideo = true, modifier = Modifier.clearAndSetSemantics { contentDescription = description })
                 }
             }
-            Row(Modifier.align(Alignment.BottomStart).padding(12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            // Wraps instead of squeezing: four chips don't fit one line on a narrow phone, and the
+            // last one ended up broken into a letter per line.
+            FlowRow(
+                Modifier.align(Alignment.BottomStart).padding(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
                 MetricChip(CamNodeIcons.Hd, live.settings.profile.shortLabel, onVideo = true)
                 if (live.settings.imageMode != ImageMode.COLOR) {
                     MetricChip(if (live.settings.imageMode == ImageMode.NIGHT) CamNodeIcons.Night else CamNodeIcons.BlackAndWhite, live.settings.imageMode.label, onVideo = true)

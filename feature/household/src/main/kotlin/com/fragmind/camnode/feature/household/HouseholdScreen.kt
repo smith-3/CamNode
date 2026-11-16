@@ -74,6 +74,7 @@ import com.fragmind.camnode.core.designsystem.CamNodeCard
 import com.fragmind.camnode.core.designsystem.CamNodeIcons
 import com.fragmind.camnode.core.designsystem.CamNodeTheme
 import com.fragmind.camnode.core.designsystem.IconTile
+import com.fragmind.camnode.core.designsystem.JoinPendingNotice
 import com.fragmind.camnode.core.designsystem.MetricChip
 import com.fragmind.camnode.core.designsystem.SectionHeader
 import com.fragmind.camnode.core.designsystem.SettingRow
@@ -104,6 +105,8 @@ data class HouseholdUiState(
     val roles: Map<NodeId, AccessRole> = emptyMap(),
     val alertsMuted: Boolean = false,
     val tailnetAddress: String? = null,
+    /** Joined but no exchange with the household yet: only this phone is listed. */
+    val joinPending: Boolean = false,
 ) {
     val canManage: Boolean get() = myRole.can(Permission.MANAGE_HOUSEHOLD)
     /** Viewing includes alerts, so only those roles get the mute switch. */
@@ -129,6 +132,8 @@ class HouseholdViewModel @Inject constructor(
     val uiState: StateFlow<HouseholdUiState?> = channelFlow {
         launch {
             while (true) {
+                // Also how a phone that just joined reaches the household from this screen.
+                directorySync.sync()
                 households.currentSession()?.let { batteries.value = readBatteries(it) }
                 delay(BATTERY_REFRESH_MILLIS)
             }
@@ -148,6 +153,7 @@ class HouseholdViewModel @Inject constructor(
                     roles = sorted.associate { member -> member.id to it.roleOf(member) },
                     alertsMuted = muted,
                     tailnetAddress = tailnetAddress,
+                    joinPending = it.bootstrapSeeds.isNotEmpty(),
                 )
             }
         }.collect(::send)
@@ -242,6 +248,7 @@ fun HouseholdRoute(onInvite: () -> Unit, onAppLock: () -> Unit, onLeft: () -> Un
             Modifier.padding(padding).fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+            if (household.joinPending) JoinPendingNotice(household.householdName)
             CamNodeCard {
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
                     IconTile(CamNodeIcons.Logo, size = 56)

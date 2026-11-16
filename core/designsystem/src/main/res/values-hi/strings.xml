@@ -8,4 +8,6 @@
     <string name="tailscale_install">Tailscale इंस्टॉल करें</string>
     <string name="tailscale_always_on">हमेशा चालू VPN</string>
     <string name="camera_zoom_step">ज़ूम %1$s</string>
+    <string name="join_pending_title">अभी %1$s से नहीं जुड़ा</string>
+    <string name="join_pending_body">यह फ़ोन घर के दूसरे फ़ोन नहीं ढूँढ पा रहा। इसे उसी Wi-Fi से जोड़ें या दोनों पर Tailscale चालू करें। मिलते ही यह अपने आप जुड़ जाएगा।</string>
 </resources>

@@ -8,4 +8,6 @@
     <string name="tailscale_install">Tailscale installieren</string>
     <string name="tailscale_always_on">Durchgehend aktives VPN</string>
     <string name="camera_zoom_step">Zoom %1$s</string>
+    <string name="join_pending_title">Noch nicht mit %1$s verbunden</string>
+    <string name="join_pending_body">Dieses Telefon findet die anderen Telefone des Zuhauses nicht. Verbinde es mit demselben WLAN oder aktiviere Tailscale auf beiden. Es verbindet sich von selbst, sobald es sie findet.</string>
 </resources>

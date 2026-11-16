@@ -8,4 +8,6 @@
     <string name="tailscale_install">Pasang Tailscale</string>
     <string name="tailscale_always_on">VPN selalu aktif</string>
     <string name="camera_zoom_step">Zoom %1$s</string>
+    <string name="join_pending_title">Belum terhubung ke %1$s</string>
+    <string name="join_pending_body">Ponsel ini tidak menemukan ponsel lain di rumah. Hubungkan ke Wi-Fi yang sama atau aktifkan Tailscale di keduanya. Ponsel akan terhubung sendiri begitu menemukannya.</string>
 </resources>

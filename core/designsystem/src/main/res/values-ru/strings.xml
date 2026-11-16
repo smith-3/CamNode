@@ -8,4 +8,6 @@
     <string name="tailscale_install">Установить Tailscale</string>
     <string name="tailscale_always_on">Постоянная VPN</string>
     <string name="camera_zoom_step">Зум %1$s</string>
+    <string name="join_pending_title">Ещё нет связи с %1$s</string>
+    <string name="join_pending_body">Этот телефон не находит другие телефоны дома. Подключите его к той же Wi-Fi или включите Tailscale на обоих. Он подключится сам, как только найдёт их.</string>
 </resources>

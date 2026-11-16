@@ -8,4 +8,6 @@
     <string name="tailscale_install">安装 Tailscale</string>
     <string name="tailscale_always_on">始终开启的 VPN</string>
     <string name="camera_zoom_step">变焦 %1$s</string>
+    <string name="join_pending_title">尚未连接到 %1$s</string>
+    <string name="join_pending_body">此手机找不到家中的其他手机。请连接到与它们相同的 Wi-Fi，或在两部手机上都开启 Tailscale。找到后会自动连接。</string>
 </resources>

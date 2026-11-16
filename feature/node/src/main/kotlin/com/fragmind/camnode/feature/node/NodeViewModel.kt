@@ -26,6 +26,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import com.fragmind.camnode.core.data.DirectorySync
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.channelFlow
 import javax.inject.Inject
 
 data class PlayerLink(val network: NetworkKind, val url: String)
@@ -40,6 +43,8 @@ data class NodeUiState(
     /** Credentialed URLs for VLC or any other RTSP player in the household. */
     val playerLinks: List<PlayerLink> = emptyList(),
     val continuous: ContinuousState = ContinuousState(),
+    /** Joined but no exchange with the household yet; null once connected. */
+    val pendingHousehold: String? = null,
 )
 
 @HiltViewModel
@@ -51,6 +56,7 @@ class NodeViewModel @Inject constructor(
     val tailscale: TailscaleSetup,
     deviceClass: DeviceClass,
     households: HouseholdRepository,
+    private val directorySync: DirectorySync,
 ) : ViewModel() {
     private val addresses = MutableStateFlow(localAddresses.current())
 
@@ -58,18 +64,32 @@ class NodeViewModel @Inject constructor(
     val previewByDefault: Boolean = !deviceClass.isLowEnd
     private val continuous = MutableStateFlow(readContinuous())
 
-    val uiState: StateFlow<NodeUiState> = combine(
-        controller.state, cameraSettings.settings, addresses, continuous, households.session,
-    ) { stream, settings, local, continuous, session ->
-        val links = session?.let { active ->
-            local.endpoints.map { endpoint ->
-                PlayerLink(
-                    endpoint.network,
-                    "rtsp://${RtspCredentials.USER}:${active.household.secret.value}@${endpoint.urlHost}:${endpoint.rtspPort}/",
-                )
+    /**
+     * A phone that just joined opens here, on Broadcast, as a camera; only the Cameras tab used
+     * to sync, so it never reached the household until it started streaming. While this screen
+     * is shown it syncs too, which also delivers the invite to the inviting phone.
+     */
+    val uiState: StateFlow<NodeUiState> = channelFlow {
+        launch {
+            while (true) {
+                directorySync.sync()
+                delay(SYNC_INTERVAL_MILLIS)
             }
-        }.orEmpty()
-        NodeUiState(session?.self?.name.orEmpty(), stream, settings, local, links, continuous)
+        }
+        combine(
+            controller.state, cameraSettings.settings, addresses, continuous, households.session,
+        ) { stream, settings, local, continuous, session ->
+            val links = session?.let { active ->
+                local.endpoints.map { endpoint ->
+                    PlayerLink(
+                        endpoint.network,
+                        "rtsp://${RtspCredentials.USER}:${active.household.secret.value}@${endpoint.urlHost}:${endpoint.rtspPort}/",
+                    )
+                }
+            }.orEmpty()
+            val pending = session?.takeIf { it.bootstrapSeeds.isNotEmpty() }?.household?.name
+            NodeUiState(session?.self?.name.orEmpty(), stream, settings, local, links, continuous, pending)
+        }.collect(::send)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), NodeUiState())
 
     /** Addresses and battery rules change outside the app, so they are re-read on every resume. */
@@ -119,3 +139,5 @@ class NodeViewModel @Inject constructor(
         vendor = continuousOperation.vendorStartupManager(),
     )
 }
+
+private const val SYNC_INTERVAL_MILLIS = 15_000L

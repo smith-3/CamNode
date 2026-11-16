@@ -8,4 +8,6 @@
     <string name="tailscale_install">تثبيت Tailscale</string>
     <string name="tailscale_always_on">VPN قيد التشغيل دائمًا</string>
     <string name="camera_zoom_step">تكبير %1$s</string>
+    <string name="join_pending_title">لم يتصل بـ %1$s بعد</string>
+    <string name="join_pending_body">لا يجد هذا الهاتف هواتف المنزل الأخرى. صِله بنفس شبكة Wi-Fi أو فعّل Tailscale على الهاتفين. سيتصل تلقائيًا عندما يجدها.</string>
 </resources>
