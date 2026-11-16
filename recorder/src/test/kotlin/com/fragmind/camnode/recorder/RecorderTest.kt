@@ -64,4 +64,12 @@ class RecorderTest {
         assertFalse(Files.exists(old))
         assertTrue(Files.exists(recent) && Files.exists(log))
     }
+
+    @Test
+    fun ffmpegErrorsNeverShowTheTicket() {
+        assertEquals(
+            "Error opening input file rtsp://<oculto>",
+            maskUrls("Error opening input file rtsp://611b:secretTicket@192.168.77.163:8554/"),
+        )
+    }
 }

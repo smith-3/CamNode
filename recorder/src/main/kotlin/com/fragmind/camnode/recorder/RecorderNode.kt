@@ -116,8 +116,13 @@ class RecorderNode(private val store: RecorderStore) {
                 recorder.stop()
             } else {
                 val wasRecording = recorder.recording
+                // A dead ffmpeg is restarted every cycle; say why instead of claiming to record.
+                val failure = recorder.failure
                 recorder.ensure(url)
-                if (!wasRecording) log("${camera.name}: grabando")
+                when {
+                    failure != null -> log("${camera.name}: la grabación falló ($failure); reintentando")
+                    !wasRecording -> log("${camera.name}: grabando")
+                }
             }
         }
         (recorders.keys - cameras.map(Member::id).toSet()).forEach { removed -> recorders.remove(removed)?.stop() }

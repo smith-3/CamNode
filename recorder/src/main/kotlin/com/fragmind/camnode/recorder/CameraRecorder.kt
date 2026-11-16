@@ -14,6 +14,17 @@ class CameraRecorder(private val cameraDir: Path, private val segmentSeconds: In
 
     val recording: Boolean get() = process?.isAlive == true
 
+    /**
+     * Why the last ffmpeg exited, from the end of its log, or null while it runs or before it
+     * started. URLs are masked: they carry this recorder's RTSP ticket.
+     */
+    val failure: String?
+        get() {
+            val exited = process?.takeIf { !it.isAlive } ?: return null
+            val last = runCatching { Files.readAllLines(cameraDir.resolve("ffmpeg.log")).lastOrNull { it.isNotBlank() } }.getOrNull()
+            return maskUrls(last ?: "ffmpeg salió con código ${exited.exitValue()}")
+        }
+
     /** Starts recording [rtspUrl], or restarts when the route changed or ffmpeg exited. */
     fun ensure(rtspUrl: String) {
         if (recording && url == rtspUrl) return
@@ -42,3 +53,6 @@ class CameraRecorder(private val cameraDir: Path, private val segmentSeconds: In
         url = null
     }
 }
+
+/** "rtsp://user:ticket@host/" becomes "rtsp://<oculto>", so logs never show credentials. */
+internal fun maskUrls(text: String): String = text.replace(Regex("rtsp://\\S+"), "rtsp://<oculto>")
