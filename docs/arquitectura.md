@@ -248,6 +248,10 @@ marcados en cada archivo:
   agregar la pista de audio), aunque `RTP-Info` siempre responde `rtptime=0`. El visor
   esperaba esas marcas: imagen congelada y sin sonido. Ahora el origen es el primer cuadro
   de video de cada `PLAY` y lo anterior se descarta (`ClientTimelineTest`).
+- **Transporte desde la cabecera `Transport`**: el original buscaba "UDP" en toda la
+  petición, incluidas la URL y las credenciales en base64. Un ticket que lo deletreaba
+  convertía un `SETUP` por TCP en UDP y el servidor respondía 500 a ese visor durante
+  12 horas (le pasó al grabador). `ServerCommandManagerAuthTest`.
 
 ## Pausa y navegación
 
@@ -386,6 +390,15 @@ marcados en cada archivo:
   exposición máxima y el rango de fps del sensor con piso más bajo sin superar los
   fps del stream. Se reaplica en cada `onCameraOpened` porque la petición de captura
   se reconstruye al reabrir la cámara. Linterna (`torch`) solo en lentes con flash.
+- **Blanco y negro para ahorrar datos**: es el modo por defecto de una cámara nueva y
+  codifica con el 60 % de la tasa del perfil (nocturno, 80 %: el realce de sombras
+  agrega ruido). Al cambiar de modo la tasa se ajusta en vivo (`setVideoBitrateOnFly`),
+  sin reiniciar el stream. Transmitir muestra lo que cada visor recibe (video más
+  audio, medido a la salida de los codificadores) mientras alguien mira. Medido con el
+  grabador en un HONOR LGN-LX3 (360p con audio, misma escena, 60 s): color 664 kbps,
+  blanco y negro 419 kbps, un 37 % menos; el indicador de la app marcó lo mismo.
+  Pendiente: en el HONOR ANY-LX3 se vieron ~2.5 Mbps con el perfil de 1.5 Mbps; ese
+  teléfono podría no respetar la tasa pedida.
   Medido en un Samsung A02: en blanco y negro la saturación media baja de 4.4 a 1.0;
   los filtros suman unos 5-12 puntos de CPU (no ahorran consumo en la cámara). En
   una habitación con poca luz el nocturno mostró la escena donde color era negro,
@@ -500,6 +513,10 @@ recorder/build/install/camnode-recorder/bin/camnode-recorder run
 
 ## Interfaz
 
+- Tipografía Inter, incluida en `core:designsystem` (`res/font/inter.ttf`, variable,
+  licencia OFL en `assets/licenses/inter-OFL.txt`): funciona sin internet ni Google Play
+  Services. Las etiquetas usan números de ancho fijo (`tnum`) para que batería, Mbps,
+  zoom y horas no cambien de ancho. Árabe, hindi y chino usan la fuente del sistema.
 - Tema oscuro fijo de consola de seguridad (`CamNodeTheme`), sin color dinámico,
   con colores de estado propios (`CamNodeTheme.status`: en vivo, en línea,
   advertencia).
