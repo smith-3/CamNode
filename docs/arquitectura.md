@@ -25,7 +25,8 @@ Una sola app. Cada teléfono elige su rol en cada momento: **cámara** o
 | Evento | `CameraEvent` | Alerta con id único (hoy `MOVED`); los receptores descartan duplicados |
 
 Roles: `CAMERA`, `VIEWER` y `RECORDER` (la PC). `Member.receivesAlerts` marca a los
-maestros: el teléfono que llevas y el grabador.
+receptores de alertas. Ya no se elige a mano: lo calcula cada teléfono a partir de su
+rol (ver [Alertas de movimiento](#alertas-de-movimiento)). El grabador lo anuncia siempre.
 
 ### Descubrimiento sin servidor
 
@@ -109,7 +110,7 @@ core/model/           JVM puro: tipos de dominio, Directory, InviteCodec, puerto
 core/control/         JVM puro: contrato entre nodos. ControlServer (Ktor CIO), ControlClient (OkHttp)
 core/network/         Android: direcciones Wi-Fi/Tailscale, mDNS (LanDiscovery), permiso de red local
 core/data/            DataStore tipado, repositorios, DirectorySync, PeerProbe, LocalNodeServer, EventDispatcher
-feature/alerts/       Pestaña Alertas: AlertReceiverService (maestro), BootReceiver, historial
+feature/alerts/       Pestaña Alertas: AlertReceiverService (receptor), BootReceiver, historial
 feature/applock/      Bloqueo con PIN y disfraz de la app: AppLockGate, disfraces, LauncherDisguiser, ajustes
 recorder/             App JVM de escritorio: graba las cámaras con ffmpeg y recibe alertas
 core/designsystem/    Tema y componentes compartidos
@@ -151,9 +152,25 @@ El cambio de lente no reinicia el stream. El cambio de orientación sí, durante
 unos 2 s, porque ancho y alto se intercambian; los visores reconectan solos y la
 cámara pide un cuadro clave cada vez que se conecta un espectador.
 
+Audio y reloj:
+
+- La cámara marca el audio por cantidad de muestras (`TimestampMode.BUFFER`) y el video
+  por reloj. Con reloj, un teléfono que entrega el micrófono a ráfagas (HONOR ANY-LX3:
+  ~12 cuadros AAC juntos cada ~400 ms) daba marcas casi iguales, y el visor, que avanza
+  el video según el reloj del audio, se congelaba tras el primer cuadro. Contando
+  muestras, el audio puede desfasarse unos segundos por día si el micrófono no va
+  exactamente a 32 kHz.
+- El visor pide audio y video desde el principio y silencia solo con el volumen. Media3
+  no sabe agregar una pista RTSP a mitad de sesión: al activar el sonido rehacía la
+  sesión con audio pero nunca entregaba sus muestras (un cuadro en 16 s). Si aun así el
+  video deja de avanzar ~4 s con audio activo, la conexión quita el audio y avisa
+  (`StallDetector`).
+- El servidor envía el audio también a un cliente que solo pidió el video, por un canal
+  que no negoció. Media3 lo ignora; queda como desvío conocido del protocolo.
+
 Un teléfono tiene un solo servidor de control (`LocalNodeServer`). La cámara y el
 receptor de alertas registran sus capacidades por separado y el servidor vive
-mientras haya alguna, así que un teléfono puede ser cámara y maestro a la vez.
+mientras haya alguna, así que un teléfono puede ser cámara y receptor de alertas a la vez.
 
 Autenticación:
 
@@ -178,6 +195,11 @@ controla. Las reglas viven en `core:model` (`AccessRole`, `RoleBook`) y son JVM 
 | Grabador (PC) | Sí | No | No |
 | Cámara | No | No | No |
 | Sin acceso (revocado) | No | No | No |
+
+- **Pestañas según el rol** (`MainTab.forRole`): quien puede ver tiene Cámaras,
+  Alertas, Transmitir y Hogar. Una cámara (o un dispositivo revocado) solo tiene
+  Transmitir y Hogar, y abre en Transmitir. La barra espera a conocer el rol para no
+  mostrar pestañas de más.
 
 - **Identidad**: cada dispositivo genera su par de llaves ECDSA P-256 (`NodeKeys`)
   y anuncia la pública en su registro del directorio. La privada nunca sale de él.
@@ -216,6 +238,16 @@ marcados en cada archivo:
   `PLAY`, incluso respondiendo `401`). Tras el arreglo el mismo ataque recibe 0 bytes.
   Prueba de regresión en `ServerCommandManagerAuthTest`.
 - `setAuthenticator`: verificador por usuario y contraseña, para los permisos por visor.
+- **Credenciales partidas**: Media3 codifica Basic auth con `Base64.DEFAULT`, que corta la
+  línea cada 76 caracteres; un id de visor más su ticket lo superan. `getAuth` une las
+  líneas de continuación (`ServerCommandManagerAuthTest`).
+- **Línea de tiempo por cliente** (`ClientTimeline`): el original tomaba el primer cuadro,
+  de audio o de video, como tiempo 0. El audio llega a ráfagas y atrasado, así que tras un
+  origen de video salían marcas negativas que en los 32 bits de RTP daban horas de más, y
+  además el origen no se reiniciaba en un segundo `PLAY` (Media3 lo envía con `Range` al
+  agregar la pista de audio), aunque `RTP-Info` siempre responde `rtptime=0`. El visor
+  esperaba esas marcas: imagen congelada y sin sonido. Ahora el origen es el primer cuadro
+  de video de cada `PLAY` y lo anterior se descarta (`ClientTimelineTest`).
 
 ## Pausa y navegación
 
@@ -349,7 +381,7 @@ marcados en cada archivo:
   (`VideoOrientation`) queda como ajuste de instalación para que las grabaciones
   salgan derechas.
 - **Modos de imagen** (`ImageMode`: color, blanco y negro, nocturno), elegidos desde
-  el maestro (`CameraCommand.imageMode`) o en la cámara. `ImagePlan` (puro, probado)
+  un visor con permiso de control (`CameraCommand.imageMode`) o en la cámara. `ImagePlan` (puro, probado)
   decide filtros GL (gris, gamma, contraste) y, en nocturno, compensación de
   exposición máxima y el rango de fps del sensor con piso más bajo sin superar los
   fps del stream. Se reaplica en cada `onCameraOpened` porque la petición de captura
@@ -383,18 +415,28 @@ en la cámara, así que todos los visores y grabaciones ven la imagen derecha.
 - `MovementAnalyzer` (lógica pura, probada) aprende la posición en reposo durante
   15 s y alerta si el teléfono se inclina más de 15° o recibe un tirón de más de
   2 m/s², como máximo una vez por minuto.
-- `EventDispatcher` entrega cada `CameraEvent` a todos los maestros, probando sus
-  direcciones (Wi-Fi primero) y reintentando cada 15 s durante 10 minutos.
+- **Quién recibe**: todo el que puede ver (administrador, visor y grabador). No hay
+  interruptor de "teléfono maestro". Cada teléfono anuncia `receivesAlerts` cuando su
+  rol puede ver y no las silenció en Hogar → Este teléfono (`StoredState.alertsMuted`).
+  Al fusionar el directorio se recalcula, así que un rol nuevo se anuncia en la
+  siguiente sincronización. Un teléfono quitado del hogar conserva su *tombstone*.
+- `EventDispatcher` entrega cada `CameraEvent` a los miembros con `receivesAlerts` cuyo
+  rol puede ver, probando sus direcciones (Wi-Fi primero) y reintentando cada 15 s
+  durante 10 minutos. El campo y la ruta `/v1/events` no cambian, así que cámaras de
+  versiones anteriores siguen entregando.
 - `AlertReceiverService` (servicio `specialUse`) mantiene el servidor para recibir
-  alertas, guarda las últimas 50 y muestra una notificación de prioridad alta.
-  Vuelve a iniciarse al reiniciar el teléfono (`BootReceiver`).
-- Un maestro con ahorro de batería activo puede recibir tarde en reposo profundo
-  (Doze); la pestaña Alertas pide la exención.
+  alertas, guarda las últimas 50 y muestra una notificación de prioridad alta. Lo
+  inicia `MainActivity` mientras está visible y el indicador está activo, y vuelve al
+  reiniciar el teléfono (`BootReceiver`). Se detiene solo cuando el indicador se apaga
+  (silenciado o rol sin permiso para ver). Android no deja iniciarlo desde segundo
+  plano: un rol recién concedido empieza a recibir al abrir la app o al reiniciar.
+- La pestaña Alertas solo lista avisos y señala lo que impediría recibirlos:
+  silenciadas, notificaciones desactivadas o ahorro de batería (Doze puede retrasarlas).
 
 ## Batería
 
 La pestaña Hogar consulta cada 30 s el `NodeStatus` de cada dispositivo con
-servidor activo (cámaras transmitiendo, maestros, grabador) y ordena de menor a
+servidor activo (cámaras transmitiendo, receptores de alertas, grabador) y ordena de menor a
 mayor batería, con aviso "Cargar pronto" a partir de 20 % sin cargar. Un visor
 sin servidor no expone su batería.
 
@@ -436,7 +478,7 @@ Alertas (`TailscaleSetup`).
 Android prohíbe iniciar un servicio de cámara al encender. CamNode recuerda si la
 cámara quedó encendida (`cameraShouldRun`, solo se borra al detenerla el usuario)
 y, tras un reinicio o una actualización, muestra "La cámara se detuvo · Toca para
-reanudar" (`CameraResumeReceiver`). El maestro de alertas sí vuelve solo.
+reanudar" (`CameraResumeReceiver`). El receptor de alertas sí vuelve solo.
 
 ## Grabador de escritorio
 
@@ -448,7 +490,7 @@ recorder/build/install/camnode-recorder/bin/camnode-recorder run
 
 - Requiere Java 17+ y `ffmpeg`. El enlace sale de Hogar → Invitar dispositivo →
   Compartir enlace. El estado vive en `~/.config/camnode-recorder/state.json`.
-- Se anuncia como `RECORDER` y maestro, sincroniza el directorio cada 30 s y
+- Se anuncia como `RECORDER` y receptor de alertas, sincroniza el directorio cada 30 s y
   mantiene un `ffmpeg -c copy` por cámara: segmentos MP4 fragmentados de 5 minutos
   en `<dir>/<cámara>_<id>/AAAA-MM-DD_HH-MM-SS.mp4`, reproducibles aunque se corte
   la luz. Borra MP4 con más días que `--days`.
@@ -502,7 +544,7 @@ versión adelante. Antes de actualizar dependencias, aplicar la política de
 
 - Validación con un segundo teléfono en la misma red: la cuadrícula y el detalle
   del visor reproduciendo una cámara remota, los botones de lente y rotación, y
-  la notificación en un teléfono maestro. Cada pieza se probó por separado desde
+  la notificación en un teléfono que recibe alertas. Cada pieza se probó por separado desde
   la PC (API, stream, rotación, grabador, alerta de movimiento hasta la PC).
 - Grabación solo de eventos o con detección de movimiento por imagen.
 - El bitrate real medido en el A02 (2.5-2.8 Mbps) supera el configurado para 720p
@@ -523,7 +565,7 @@ versión adelante. Antes de actualizar dependencias, aplicar la política de
 1. Dos teléfonos en la misma Wi-Fi. En A: crear hogar → Transmitir → Iniciar transmisión.
 2. En B: unirse escaneando el QR de A → pestaña Cámaras. A debe aparecer en vivo con chip "Wi-Fi" y batería.
 3. En B, abrir A y tocar el botón de cambiar lente. A debe pasar a la cámara frontal sin cortar el video.
-4. Activar Tailscale en ambos y apagar la Wi-Fi de B. El chip debe cambiar a "Tailscale".
+4. Activar Tailscale en ambos y apagar la Wi-Fi de B. El video debe seguir llegando por Tailscale (la ruta ya no se muestra en pantalla).
 5. Apagar la pantalla de A durante 10 minutos. B debe seguir viendo video.
 6. Copiar el enlace RTSP desde Transmitir y abrirlo en VLC desde una PC.
 7. Desde un tercer teléfono C unido con el QR de B: C debe ver A sin haber escaneado A.
