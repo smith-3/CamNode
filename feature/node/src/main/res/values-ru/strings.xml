@@ -65,4 +65,5 @@
     <string name="node_vendor_title">Запуск приложений %1$s</string>
     <string name="node_vendor_body">Отключите «Управлять автоматически» для CamNode и разрешите работу в фоне</string>
     <string name="node_keep_charging">Для непрерывного наблюдения держите телефон на зарядке.</string>
+    <string name="node_sending_per_viewer">Отправка %1$s каждому зрителю</string>
 </resources>

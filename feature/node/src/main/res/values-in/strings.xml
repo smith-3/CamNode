@@ -65,4 +65,5 @@
     <string name="node_vendor_title">Peluncuran aplikasi %1$s</string>
     <string name="node_vendor_body">Matikan \"Kelola otomatis\" untuk CamNode dan izinkan berjalan di latar belakang</string>
     <string name="node_keep_charging">Untuk pemantauan terus-menerus, biarkan ponsel terhubung ke pengisi daya.</string>
+    <string name="node_sending_per_viewer">Mengirim %1$s ke setiap penonton</string>
 </resources>

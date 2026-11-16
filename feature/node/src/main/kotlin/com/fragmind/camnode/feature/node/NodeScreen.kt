@@ -47,6 +47,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.annotation.StringRes
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.clip
@@ -268,6 +270,13 @@ private fun CameraHero(live: StreamState.Live?, showPreview: Boolean, onTogglePr
             Row(Modifier.align(Alignment.TopStart).padding(12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 StatusPill(stringResource(R.string.node_live), StatusTone.Live, onVideo = true)
                 MetricChip(CamNodeIcons.Visibility, "${live.viewers}", onVideo = true)
+                // Only while someone watches: idle, the camera encodes a couple of frames a second.
+                val sending = live.sendingBps
+                if (live.viewers > 0 && sending != null) {
+                    val rate = formatDataRate(sending)
+                    val description = stringResource(R.string.node_sending_per_viewer, rate)
+                    MetricChip(CamNodeIcons.Upload, rate, onVideo = true, modifier = Modifier.clearAndSetSemantics { contentDescription = description })
+                }
             }
             Row(Modifier.align(Alignment.BottomStart).padding(12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 MetricChip(CamNodeIcons.Hd, live.settings.profile.shortLabel, onVideo = true)

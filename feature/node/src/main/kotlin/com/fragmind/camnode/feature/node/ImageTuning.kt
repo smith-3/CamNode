@@ -20,15 +20,23 @@ internal data class ImagePlan(
     val contrast: Float = 1f,
     /** Maximum exposure compensation and the lowest frame-rate floor, so each frame gathers more light. */
     val lowLight: Boolean = false,
+    /**
+     * Share of the profile's bitrate to encode with. Without color the same detail needs fewer
+     * bits, which is what black and white is for: saving data. Night keeps more because
+     * brightened shadows are noisy and noise costs bits.
+     */
+    val bitrateFactor: Float = 1f,
 ) {
+    fun bitrateBps(profileBitrateBps: Int): Int = (profileBitrateBps * bitrateFactor).toInt()
+
     /** The part drawn by GL filters; the rest is sensor settings. */
     val glFilters: GlFilters get() = GlFilters(greyscale, gamma, contrast)
 
     companion object {
         fun forMode(mode: ImageMode): ImagePlan = when (mode) {
             ImageMode.COLOR -> ImagePlan(greyscale = false)
-            ImageMode.MONOCHROME -> ImagePlan(greyscale = true)
-            ImageMode.NIGHT -> ImagePlan(greyscale = true, gamma = 0.7f, contrast = 1.25f, lowLight = true)
+            ImageMode.MONOCHROME -> ImagePlan(greyscale = true, bitrateFactor = 0.6f)
+            ImageMode.NIGHT -> ImagePlan(greyscale = true, gamma = 0.7f, contrast = 1.25f, lowLight = true, bitrateFactor = 0.8f)
         }
     }
 }

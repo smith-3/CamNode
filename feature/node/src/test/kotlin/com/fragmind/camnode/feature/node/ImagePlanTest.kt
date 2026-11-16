@@ -1,6 +1,7 @@
 package com.fragmind.camnode.feature.node
 
 import com.fragmind.camnode.core.model.ImageMode
+import com.fragmind.camnode.core.model.StreamProfile
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertFalse
@@ -20,7 +21,7 @@ class ImagePlanTest {
 
     @Test
     fun monochromeOnlyDropsColor() {
-        assertEquals(ImagePlan(greyscale = true), ImagePlan.forMode(ImageMode.MONOCHROME))
+        assertEquals(ImagePlan(greyscale = true, bitrateFactor = 0.6f), ImagePlan.forMode(ImageMode.MONOCHROME))
     }
 
     @Test
@@ -51,5 +52,13 @@ class ImagePlanTest {
         assertEquals(night.glFilters, night.copy(lowLight = false).glFilters)
         assertEquals(GlFilters(greyscale = true, gamma = 1f, contrast = 1f), ImagePlan.forMode(ImageMode.MONOCHROME).glFilters)
         assertNotEquals(ImagePlan.forMode(ImageMode.MONOCHROME).glFilters, night.glFilters)
+    }
+
+    @Test
+    fun blackAndWhiteEncodesWithFewerBitsThanColor() {
+        val profile = StreamProfile.MEDIUM.bitrateBps
+        assertEquals(profile, ImagePlan.forMode(ImageMode.COLOR).bitrateBps(profile))
+        assertEquals(900_000, ImagePlan.forMode(ImageMode.MONOCHROME).bitrateBps(profile))
+        assertEquals(1_200_000, ImagePlan.forMode(ImageMode.NIGHT).bitrateBps(profile))
     }
 }

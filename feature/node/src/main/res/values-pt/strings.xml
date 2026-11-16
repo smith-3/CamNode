@@ -65,4 +65,5 @@
     <string name="node_vendor_title">Inicialização de apps da %1$s</string>
     <string name="node_vendor_body">Desative \"Gerenciar automaticamente\" no CamNode e permita a execução em segundo plano</string>
     <string name="node_keep_charging">Para vigilância contínua, deixe o telefone no carregador.</string>
+    <string name="node_sending_per_viewer">Enviando %1$s para cada espectador</string>
 </resources>

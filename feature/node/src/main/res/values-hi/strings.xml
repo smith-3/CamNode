@@ -65,4 +65,5 @@
     <string name="node_vendor_title">%1$s ऐप लॉन्च</string>
     <string name="node_vendor_body">CamNode के लिए \"अपने-आप प्रबंधित करें\" बंद करें और बैकग्राउंड में चलने दें</string>
     <string name="node_keep_charging">लगातार निगरानी के लिए फ़ोन को चार्जर पर लगा रहने दें।</string>
+    <string name="node_sending_per_viewer">हर दर्शक को %1$s भेजा जा रहा है</string>
 </resources>

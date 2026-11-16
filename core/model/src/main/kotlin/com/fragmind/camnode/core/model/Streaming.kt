@@ -48,7 +48,8 @@ data class CameraSettings(
     val orientation: VideoOrientation = VideoOrientation.AUTO,
     /** Alert the household when someone picks up or moves this camera. */
     val movementAlerts: Boolean = true,
-    val imageMode: ImageMode = ImageMode.COLOR,
+    /** Black and white by default: it encodes with fewer bits (the camera lowers its bitrate for it). */
+    val imageMode: ImageMode = ImageMode.MONOCHROME,
 )
 
 /** What a streaming camera reports. Absent from [NodeStatus] when the node is not streaming. */

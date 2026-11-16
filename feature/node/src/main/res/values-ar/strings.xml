@@ -65,4 +65,5 @@
     <string name="node_vendor_title">تشغيل تطبيقات %1$s</string>
     <string name="node_vendor_body">أوقف \"الإدارة التلقائية\" لـ CamNode واسمح بالتشغيل في الخلفية</string>
     <string name="node_keep_charging">للمراقبة المستمرة اترك الهاتف موصولًا بالشاحن.</string>
+    <string name="node_sending_per_viewer">يتم إرسال %1$s لكل مشاهد</string>
 </resources>

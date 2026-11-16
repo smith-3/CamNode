@@ -65,4 +65,5 @@
     <string name="node_vendor_title">App-Start von %1$s</string>
     <string name="node_vendor_body">Deaktiviere „Automatisch verwalten“ für CamNode und erlaube die Ausführung im Hintergrund</string>
     <string name="node_keep_charging">Für Daueraufsicht das Telefon am Ladegerät lassen.</string>
+    <string name="node_sending_per_viewer">Sendet %1$s an jeden Zuschauer</string>
 </resources>

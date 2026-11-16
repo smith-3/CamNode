@@ -67,6 +67,7 @@ object CamNodeIcons {
     val Visibility: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_visibility)
     val VisibilityOff: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_visibility_off)
     val ZoomIn: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_zoom_in)
+    val Upload: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_upload)
     val VolumeOff: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_volume_off)
     val VolumeUp: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_volume_up)
     val Wifi: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.cn_ic_wifi)

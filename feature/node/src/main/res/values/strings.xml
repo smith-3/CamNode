@@ -65,4 +65,5 @@
     <string name="node_vendor_title">%1$s app launch</string>
     <string name="node_vendor_body">Turn off \"Manage automatically\" for CamNode and allow it to run in the background</string>
     <string name="node_keep_charging">For continuous monitoring, keep the phone on the charger.</string>
+    <string name="node_sending_per_viewer">Sending %1$s to each viewer</string>
 </resources>

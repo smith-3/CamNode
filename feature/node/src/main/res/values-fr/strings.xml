@@ -65,4 +65,5 @@
     <string name="node_vendor_title">Lancement des applis %1$s</string>
     <string name="node_vendor_body">Désactivez « Gérer automatiquement » pour CamNode et autorisez l’exécution en arrière-plan</string>
     <string name="node_keep_charging">Pour une surveillance continue, laissez le téléphone en charge.</string>
+    <string name="node_sending_per_viewer">Envoi de %1$s à chaque spectateur</string>
 </resources>

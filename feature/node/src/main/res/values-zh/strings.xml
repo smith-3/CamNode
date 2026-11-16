@@ -65,4 +65,5 @@
     <string name="node_vendor_title">%1$s 应用启动管理</string>
     <string name="node_vendor_body">为 CamNode 关闭“自动管理”，并允许后台运行</string>
     <string name="node_keep_charging">如需持续监控，请让手机保持充电。</string>
+    <string name="node_sending_per_viewer">向每位观看者发送 %1$s</string>
 </resources>

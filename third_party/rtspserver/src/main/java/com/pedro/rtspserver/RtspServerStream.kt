@@ -47,6 +47,7 @@ class RtspServerStream(
   }
 
   override fun getAudioDataImp(audioBuffer: ByteBuffer, info: MediaCodec.BufferInfo) {
+    encodedBytes.addAndGet(info.size.toLong())
     rtspServer.sendAudio(audioBuffer, info)
   }
 
@@ -58,8 +59,15 @@ class RtspServerStream(
   }
 
   override fun getVideoDataImp(videoBuffer: ByteBuffer, info: MediaCodec.BufferInfo) {
+    encodedBytes.addAndGet(info.size.toLong())
     rtspServer.sendVideo(videoBuffer, info)
   }
+
+  // CamNode: bytes the encoders produced, i.e. what each viewer receives, whatever their number.
+  private val encodedBytes = java.util.concurrent.atomic.AtomicLong()
+
+  /** CamNode: encoded audio and video bytes since the last call. */
+  fun takeEncodedBytes(): Long = encodedBytes.getAndSet(0)
 
   override fun getStreamClient(): RtspServerStreamClient = RtspServerStreamClient(rtspServer)
 

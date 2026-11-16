@@ -6,6 +6,7 @@ import android.view.Display
 import android.view.Surface
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
+import android.os.SystemClock
 import android.util.Log
 import android.view.SurfaceView
 import androidx.annotation.MainThread
@@ -51,6 +52,8 @@ sealed interface StreamState {
         val torch: Boolean = false,
         /** Nobody is watching: few frames are captured and encoded until a viewer connects. */
         val idle: Boolean = true,
+        /** Measured data each viewer receives, video plus audio; null until the first reading. */
+        val sendingBps: Long? = null,
     ) : StreamState
     data class Failed(val problem: StreamProblem, val detail: String = "") : StreamState
     /** Camera, encoder and RTSP server are released; the service stays up so the node can resume remotely. */
@@ -158,7 +161,8 @@ class CameraStreamController @Inject constructor(@ApplicationContext private val
         val rotation = settings.orientation.rotationDegrees ?: autoRotation()
         val prepared = try {
             val profile = settings.profile
-            candidate.prepareVideo(profile.width, profile.height, profile.bitrateBps, profile.fps, KEYFRAME_INTERVAL_SECONDS, rotation) &&
+            val bitrate = ImagePlan.forMode(settings.imageMode).bitrateBps(profile.bitrateBps)
+            candidate.prepareVideo(profile.width, profile.height, bitrate, profile.fps, KEYFRAME_INTERVAL_SECONDS, rotation) &&
                 candidate.prepareAudio(AUDIO_SAMPLE_RATE, false, AUDIO_BITRATE)
         } catch (e: IllegalArgumentException) {
             candidate.release()
@@ -171,6 +175,7 @@ class CameraStreamController @Inject constructor(@ApplicationContext private val
         candidate.startStream()
         stream = candidate
         _state.value = StreamState.Live(settings, viewers = 0, rotationDegrees = rotation)
+        measureSending()
         previewView.get()?.let(::attachPreview)
         return true
     }
@@ -201,6 +206,7 @@ class CameraStreamController @Inject constructor(@ApplicationContext private val
             settings = settings.copy(imageMode = mode)
             _state.update { if (it is StreamState.Live) it.copy(settings = it.settings.copy(imageMode = mode)) else it }
             reapplyImage()
+            stream?.setVideoBitrateOnFly(ImagePlan.forMode(mode).bitrateBps(settings.profile.bitrateBps))
         }
         command.torch?.let(::setTorch)
         command.orientation?.takeIf { it != settings.orientation }?.let { orientation ->
@@ -322,6 +328,27 @@ class CameraStreamController @Inject constructor(@ApplicationContext private val
         return min..maxOf(min, max)
     }
 
+    /**
+     * Every few seconds, what the encoders produced, so the Broadcast tab can show the data each
+     * viewer costs. Stops on its own when the stream is released.
+     */
+    private fun measureSending() {
+        val measured = stream ?: return
+        measured.takeEncodedBytes()
+        var last = SystemClock.elapsedRealtime()
+        val tick = object : Runnable {
+            override fun run() {
+                if (stream !== measured) return
+                val now = SystemClock.elapsedRealtime()
+                val bps = measured.takeEncodedBytes() * 8 * 1000 / maxOf(1, now - last)
+                last = now
+                _state.update { if (it is StreamState.Live) it.copy(sendingBps = bps) else it }
+                mainHandler.postDelayed(this, SENDING_SAMPLE_MILLIS)
+            }
+        }
+        mainHandler.postDelayed(tick, SENDING_SAMPLE_MILLIS)
+    }
+
     private fun release() {
         val current = stream ?: return
         stream = null
@@ -359,6 +386,7 @@ class CameraStreamController @Inject constructor(@ApplicationContext private val
 
     private companion object {
         const val TAG = "CameraStream"
+        const val SENDING_SAMPLE_MILLIS = 3_000L
         const val KEYFRAME_INTERVAL_SECONDS = 2
         /** Enough to keep the pipeline warm and the first frame fast when someone connects. */
         const val IDLE_FPS = 2
