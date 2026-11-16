@@ -41,8 +41,9 @@
     <string name="viewer_back">Retour</string>
     <string name="viewer_resume_camera">Relancer la caméra</string>
     <string name="viewer_pause_camera">Mettre la caméra en pause</string>
-    <string name="viewer_zoom_in">Zoomer sur la caméra</string>
-    <string name="viewer_zoom_out">Dézoomer sur la caméra</string>
+    <string name="viewer_take_photo">Prendre une photo</string>
+    <string name="viewer_open_last_photo">Ouvrir la dernière photo</string>
+    <string name="viewer_photo_failed">Impossible d’enregistrer la photo</string>
     <string name="viewer_screen_zoom">Écran %1$.1fx · toucher deux fois pour réinitialiser</string>
     <string name="viewer_rotate">Pivoter la vue de 90°</string>
     <string name="viewer_torch_off">Éteindre la lampe</string>
@@ -56,4 +57,5 @@
     <string name="viewer_image_color">Couleur</string>
     <string name="viewer_image_monochrome">Noir et blanc</string>
     <string name="viewer_image_night">Nuit</string>
+    <string name="viewer_audio_unavailable">Le son de cette caméra n’arrive pas ; il a été coupé pour que la vidéo continue</string>
 </resources>

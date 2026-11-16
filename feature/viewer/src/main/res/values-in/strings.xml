@@ -41,8 +41,9 @@
     <string name="viewer_back">Kembali</string>
     <string name="viewer_resume_camera">Lanjutkan kamera</string>
     <string name="viewer_pause_camera">Jeda kamera</string>
-    <string name="viewer_zoom_in">Perbesar di kamera</string>
-    <string name="viewer_zoom_out">Perkecil di kamera</string>
+    <string name="viewer_take_photo">Ambil foto</string>
+    <string name="viewer_open_last_photo">Buka foto terakhir</string>
+    <string name="viewer_photo_failed">Foto tidak dapat disimpan</string>
     <string name="viewer_screen_zoom">Layar %1$.1fx · ketuk dua kali untuk mengatur ulang</string>
     <string name="viewer_rotate">Putar tampilan 90°</string>
     <string name="viewer_torch_off">Matikan senter</string>
@@ -56,4 +57,5 @@
     <string name="viewer_image_color">Warna</string>
     <string name="viewer_image_monochrome">Hitam putih</string>
     <string name="viewer_image_night">Malam</string>
+    <string name="viewer_audio_unavailable">Audio kamera ini tidak sampai; dimatikan agar video tetap berjalan</string>
 </resources>

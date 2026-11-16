@@ -41,8 +41,9 @@
     <string name="viewer_back">Zurück</string>
     <string name="viewer_resume_camera">Kamera fortsetzen</string>
     <string name="viewer_pause_camera">Kamera pausieren</string>
-    <string name="viewer_zoom_in">An der Kamera heranzoomen</string>
-    <string name="viewer_zoom_out">An der Kamera herauszoomen</string>
+    <string name="viewer_take_photo">Foto aufnehmen</string>
+    <string name="viewer_open_last_photo">Letztes Foto öffnen</string>
+    <string name="viewer_photo_failed">Foto konnte nicht gespeichert werden</string>
     <string name="viewer_screen_zoom">Bildschirm %1$.1fx · zum Zurücksetzen doppelt tippen</string>
     <string name="viewer_rotate">Ansicht um 90° drehen</string>
     <string name="viewer_torch_off">Taschenlampe aus</string>
@@ -56,4 +57,5 @@
     <string name="viewer_image_color">Farbe</string>
     <string name="viewer_image_monochrome">Schwarzweiß</string>
     <string name="viewer_image_night">Nacht</string>
+    <string name="viewer_audio_unavailable">Der Ton dieser Kamera kommt nicht an; er wurde ausgeschaltet, damit das Video weiterläuft</string>
 </resources>

@@ -7,4 +7,5 @@
     <string name="tailscale_open">Open Tailscale</string>
     <string name="tailscale_install">Install Tailscale</string>
     <string name="tailscale_always_on">Always-on VPN</string>
+    <string name="camera_zoom_step">Zoom %1$s</string>
 </resources>

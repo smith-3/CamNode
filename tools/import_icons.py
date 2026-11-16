@@ -16,7 +16,7 @@ ICONS = [
     "bolt", "chevron_right", "check_circle:fill", "error:fill", "cloud_off", "content_copy", "mic",
     "visibility", "devices", "add", "arrow_back", "lock", "settings", "hd", "fullscreen", "link",
     "screen_rotation", "notifications_active", "alarm:fill", "folder_open", "computer", "battery_2_bar",
-    "zoom_in", "zoom_out", "visibility_off",
+    "zoom_in", "visibility_off",
     "palette", "contrast", "bedtime", "flashlight_on", "flashlight_off",
     "calculate", "schedule", "calendar_month", "sticky_note_2", "backspace", "alarm_add", "chevron_left", "dialpad", "keyboard", "language", "edit", "view_agenda", "view_quilt",
 ]

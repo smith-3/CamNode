@@ -106,6 +106,10 @@ class ViewerViewModel @Inject constructor(
         }
     }
 
+    /** This phone's role without the discovery work [uiState] starts; null until the store loads. */
+    val access: StateFlow<AccessRole?> = households.session.map { it?.role }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
     fun setForeground(active: Boolean) = playback.setForeground(active)
 
     override fun onCleared() {
@@ -167,8 +171,8 @@ class ViewerViewModel @Inject constructor(
 
     fun toggleTorch(cameraId: NodeId) = command(cameraId) { camera -> CameraCommand(torch = !camera.torch) }
 
-    fun zoom(cameraId: NodeId, delta: Float) = command(cameraId) { camera ->
-        CameraCommand(zoom = (camera.zoom + delta).coerceIn(camera.zoomMin, camera.zoomMax))
+    fun setZoom(cameraId: NodeId, zoom: Float) = command(cameraId) { camera ->
+        CameraCommand(zoom = zoom.coerceIn(camera.zoomMin, camera.zoomMax))
     }
 
     fun setLiveGrid(enabled: Boolean) {

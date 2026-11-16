@@ -41,8 +41,9 @@
     <string name="viewer_back">返回</string>
     <string name="viewer_resume_camera">恢复摄像头</string>
     <string name="viewer_pause_camera">暂停摄像头</string>
-    <string name="viewer_zoom_in">摄像头放大</string>
-    <string name="viewer_zoom_out">摄像头缩小</string>
+    <string name="viewer_take_photo">拍照</string>
+    <string name="viewer_open_last_photo">打开最近的照片</string>
+    <string name="viewer_photo_failed">无法保存照片</string>
     <string name="viewer_screen_zoom">画面 %1$.1fx · 双击复原</string>
     <string name="viewer_rotate">画面旋转 90°</string>
     <string name="viewer_torch_off">关闭手电筒</string>
@@ -56,4 +57,5 @@
     <string name="viewer_image_color">彩色</string>
     <string name="viewer_image_monochrome">黑白</string>
     <string name="viewer_image_night">夜间</string>
+    <string name="viewer_audio_unavailable">此摄像头的音频未到达，已关闭音频以保持视频流畅</string>
 </resources>

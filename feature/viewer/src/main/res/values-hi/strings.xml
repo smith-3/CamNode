@@ -41,8 +41,9 @@
     <string name="viewer_back">वापस</string>
     <string name="viewer_resume_camera">कैमरा फिर शुरू करें</string>
     <string name="viewer_pause_camera">कैमरा रोकें</string>
-    <string name="viewer_zoom_in">कैमरे पर ज़ूम इन करें</string>
-    <string name="viewer_zoom_out">कैमरे पर ज़ूम आउट करें</string>
+    <string name="viewer_take_photo">फ़ोटो लें</string>
+    <string name="viewer_open_last_photo">आख़िरी फ़ोटो खोलें</string>
+    <string name="viewer_photo_failed">फ़ोटो सहेजी नहीं जा सकी</string>
     <string name="viewer_screen_zoom">स्क्रीन %1$.1fx · रीसेट के लिए दो बार टैप करें</string>
     <string name="viewer_rotate">व्यू 90° घुमाएँ</string>
     <string name="viewer_torch_off">टॉर्च बंद करें</string>
@@ -56,4 +57,5 @@
     <string name="viewer_image_color">रंगीन</string>
     <string name="viewer_image_monochrome">ब्लैक एंड व्हाइट</string>
     <string name="viewer_image_night">रात</string>
+    <string name="viewer_audio_unavailable">इस कैमरे की आवाज़ नहीं आ रही; वीडियो चलता रहे इसलिए उसे बंद कर दिया गया</string>
 </resources>

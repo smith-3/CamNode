@@ -41,8 +41,9 @@
     <string name="viewer_back">Back</string>
     <string name="viewer_resume_camera">Resume camera</string>
     <string name="viewer_pause_camera">Pause camera</string>
-    <string name="viewer_zoom_in">Zoom in on the camera</string>
-    <string name="viewer_zoom_out">Zoom out on the camera</string>
+    <string name="viewer_take_photo">Take photo</string>
+    <string name="viewer_open_last_photo">Open last photo</string>
+    <string name="viewer_photo_failed">Couldn\'t save the photo</string>
     <string name="viewer_screen_zoom">Screen %1$.1fx · double-tap to reset</string>
     <string name="viewer_rotate">Rotate view 90°</string>
     <string name="viewer_torch_off">Turn off flashlight</string>
@@ -56,4 +57,5 @@
     <string name="viewer_image_color">Color</string>
     <string name="viewer_image_monochrome">Black and white</string>
     <string name="viewer_image_night">Night</string>
+    <string name="viewer_audio_unavailable">This camera\'s audio isn\'t arriving, so it was turned off to keep the video moving</string>
 </resources>

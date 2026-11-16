@@ -20,7 +20,6 @@ import com.fragmind.camnode.core.designsystem.CamNodeTheme
 import com.fragmind.camnode.core.designsystem.MetricChip
 import com.fragmind.camnode.core.designsystem.StatusPill
 import com.fragmind.camnode.core.designsystem.StatusTone
-import com.fragmind.camnode.core.model.NetworkKind
 import com.fragmind.camnode.core.model.NodeStatus
 
 @Composable
@@ -35,15 +34,13 @@ internal fun HealthPill(health: CameraHealth, onVideo: Boolean = true, compact: 
     StatusPill(stringResource(label), tone, onVideo = onVideo, compact = compact)
 }
 
-/** Battery, viewers and network of a reachable camera. */
+/** Battery and, when others are watching too, the viewer count of a reachable camera. */
 @Composable
 internal fun HealthChips(health: CameraHealth, onVideo: Boolean) {
     val online = health as? CameraHealth.Online ?: return
     val status = online.status
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         BatteryChip(status, onVideo)
-        val wifi = online.route.network == NetworkKind.LAN
-        MetricChip(if (wifi) CamNodeIcons.Wifi else CamNodeIcons.Tailscale, if (wifi) "Wi-Fi" else "Tailscale", onVideo = onVideo)
         val viewers = online.camera?.viewers ?: 0
         if (viewers > 1) MetricChip(CamNodeIcons.Visibility, "$viewers", onVideo = onVideo)
     }

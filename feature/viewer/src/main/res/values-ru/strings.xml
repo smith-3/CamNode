@@ -41,8 +41,9 @@
     <string name="viewer_back">Назад</string>
     <string name="viewer_resume_camera">Возобновить камеру</string>
     <string name="viewer_pause_camera">Приостановить камеру</string>
-    <string name="viewer_zoom_in">Приблизить на камере</string>
-    <string name="viewer_zoom_out">Отдалить на камере</string>
+    <string name="viewer_take_photo">Сделать фото</string>
+    <string name="viewer_open_last_photo">Открыть последнее фото</string>
+    <string name="viewer_photo_failed">Не удалось сохранить фото</string>
     <string name="viewer_screen_zoom">Экран %1$.1fx · двойное касание для сброса</string>
     <string name="viewer_rotate">Повернуть изображение на 90°</string>
     <string name="viewer_torch_off">Выключить фонарик</string>
@@ -56,4 +57,5 @@
     <string name="viewer_image_color">Цвет</string>
     <string name="viewer_image_monochrome">Чёрно-белое</string>
     <string name="viewer_image_night">Ночь</string>
+    <string name="viewer_audio_unavailable">Звук с этой камеры не поступает; он отключён, чтобы видео не останавливалось</string>
 </resources>

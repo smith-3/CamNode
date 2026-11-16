@@ -7,4 +7,5 @@
     <string name="tailscale_open">打开 Tailscale</string>
     <string name="tailscale_install">安装 Tailscale</string>
     <string name="tailscale_always_on">始终开启的 VPN</string>
+    <string name="camera_zoom_step">变焦 %1$s</string>
 </resources>

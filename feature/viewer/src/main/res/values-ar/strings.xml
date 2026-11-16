@@ -41,8 +41,9 @@
     <string name="viewer_back">رجوع</string>
     <string name="viewer_resume_camera">استئناف الكاميرا</string>
     <string name="viewer_pause_camera">إيقاف الكاميرا مؤقتًا</string>
-    <string name="viewer_zoom_in">تكبير في الكاميرا</string>
-    <string name="viewer_zoom_out">تصغير في الكاميرا</string>
+    <string name="viewer_take_photo">التقاط صورة</string>
+    <string name="viewer_open_last_photo">فتح آخر صورة</string>
+    <string name="viewer_photo_failed">تعذّر حفظ الصورة</string>
     <string name="viewer_screen_zoom">الشاشة %1$.1fx · انقر مرتين لإعادة الضبط</string>
     <string name="viewer_rotate">تدوير العرض 90°</string>
     <string name="viewer_torch_off">إطفاء المصباح</string>
@@ -56,4 +57,5 @@
     <string name="viewer_image_color">ملوّن</string>
     <string name="viewer_image_monochrome">أبيض وأسود</string>
     <string name="viewer_image_night">ليلي</string>
+    <string name="viewer_audio_unavailable">صوت هذه الكاميرا لا يصل؛ تم إيقافه ليستمر الفيديو</string>
 </resources>

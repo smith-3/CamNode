@@ -41,8 +41,9 @@
     <string name="viewer_back">Voltar</string>
     <string name="viewer_resume_camera">Retomar câmera</string>
     <string name="viewer_pause_camera">Pausar câmera</string>
-    <string name="viewer_zoom_in">Aproximar na câmera</string>
-    <string name="viewer_zoom_out">Afastar na câmera</string>
+    <string name="viewer_take_photo">Tirar foto</string>
+    <string name="viewer_open_last_photo">Abrir a última foto</string>
+    <string name="viewer_photo_failed">Não foi possível salvar a foto</string>
     <string name="viewer_screen_zoom">Tela %1$.1fx · toque duas vezes para redefinir</string>
     <string name="viewer_rotate">Girar a visualização 90°</string>
     <string name="viewer_torch_off">Desligar lanterna</string>
@@ -56,4 +57,5 @@
     <string name="viewer_image_color">Cor</string>
     <string name="viewer_image_monochrome">Preto e branco</string>
     <string name="viewer_image_night">Noturno</string>
+    <string name="viewer_audio_unavailable">O áudio desta câmera não está chegando; foi desativado para o vídeo continuar</string>
 </resources>
