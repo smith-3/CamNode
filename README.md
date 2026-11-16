@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="app/src/main/res/drawable-nodpi/camnode_logo_neutral_medium.png" alt="Logo de CamNode" width="160">
+
 # CamNode
 
 **Tus teléfonos Android pueden cuidar de tu hogar.**
