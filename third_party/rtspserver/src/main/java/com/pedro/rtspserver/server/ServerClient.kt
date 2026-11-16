@@ -14,6 +14,7 @@ import com.pedro.common.socket.base.SocketType
 import com.pedro.common.socket.base.TcpStreamSocket
 import com.pedro.rtsp.rtsp.RtspSender
 import com.pedro.rtsp.rtsp.commands.Method
+import com.pedro.rtspserver.util.ClientTimeline
 import com.pedro.rtspserver.util.toMediaFrameInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -75,8 +76,8 @@ class ServerClient(
   private var job: Job? = null
   var canSend = false
     private set
-  //few players need start with timestamp 0 to work
-  private var startTs = 0L
+  // Players need the timeline to start at 0 and never go back; see ClientTimeline.
+  private val timeline = ClientTimeline(hasVideo = !commandManager.videoDisabled)
 
   val droppedAudioFrames: Long
     get() = rtspSender.getDroppedAudioFrames()
@@ -100,7 +101,7 @@ class ServerClient(
 
   fun startClient() {
     job = scope.launch {
-      startTs = 0L
+      timeline.reset()
       socket.connect()
       while (isActive) {
         try {
@@ -153,6 +154,10 @@ class ServerClient(
             rtspSender.setSocket(socket)
             rtspSender.start()
             listener.onClientConnected(this@ServerClient)
+            // Every PLAY answers rtptime=0 (Media3 sends a second one, with a Range, when it adds
+            // the audio track); without a new origin the frames kept their old times and the
+            // player waited that long for them.
+            timeline.reset()
             canSend = true
           } else if (request.method == Method.TEARDOWN) {
             Log.i(TAG, "Client disconnected")
@@ -172,7 +177,7 @@ class ServerClient(
   fun stopClient() {
     CoroutineScope(Dispatchers.IO).launch {
       canSend = false
-      startTs = 0L
+      timeline.reset()
       rtspSender.stop()
       job?.cancelAndJoin()
       job = null
@@ -222,17 +227,15 @@ class ServerClient(
   fun getItemsInCache(): Int = rtspSender.getItemsInCache()
 
   fun sendVideoFrame(videoBuffer: ByteBuffer, info: MediaCodec.BufferInfo) {
-    if (canSend) {
-      if (startTs == 0L) startTs = info.presentationTimeUs
-      rtspSender.sendMediaFrame(videoBuffer, info.toMediaFrameInfo(startTs), MediaFrame.Type.VIDEO)
-    }
+    if (!canSend) return
+    val offsetUs = timeline.offset(info.presentationTimeUs, isVideo = true) ?: return
+    rtspSender.sendMediaFrame(videoBuffer, info.toMediaFrameInfo(offsetUs), MediaFrame.Type.VIDEO)
   }
 
   fun sendAudioFrame(audioBuffer: ByteBuffer, info: MediaCodec.BufferInfo) {
-    if (canSend) {
-      if (startTs == 0L) startTs = info.presentationTimeUs
-      rtspSender.sendMediaFrame(audioBuffer, info.toMediaFrameInfo(startTs), MediaFrame.Type.AUDIO)
-    }
+    if (!canSend) return
+    val offsetUs = timeline.offset(info.presentationTimeUs, isVideo = false) ?: return
+    rtspSender.sendMediaFrame(audioBuffer, info.toMediaFrameInfo(offsetUs), MediaFrame.Type.AUDIO)
   }
 
   fun setBitrateExponentialFactor(factor: Float) {

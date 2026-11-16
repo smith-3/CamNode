@@ -8,4 +8,5 @@ import com.pedro.common.isKeyframe
  * Created by pedro on 28/10/24.
  */
 
-fun MediaCodec.BufferInfo.toMediaFrameInfo(startTs: Long) = MediaFrame.Info(offset, size, presentationTimeUs - startTs, isKeyframe())
+/** [timestampUs] is already on the client's timeline (see ClientTimeline). */
+fun MediaCodec.BufferInfo.toMediaFrameInfo(timestampUs: Long) = MediaFrame.Info(offset, size, timestampUs, isKeyframe())
