@@ -116,17 +116,100 @@ class LocalStateRepositoryTest {
     }
 
     @Test
-    fun becomingAMasterIsAnnouncedAndDuplicateAlertsAreDropped() = runTest {
+    fun alertsFollowTheRoleAndCanBeMutedOnThisPhone() = runTest {
         val repository = repository()
         val session = repository.create("Casa", "Samsung")
 
-        repository.setReceiverEnabled(true)
+        assertTrue("the owner can view, so it receives alerts", repository.receiverEnabled.first())
         assertTrue(repository.currentSession()!!.directory[session.self.id]!!.receivesAlerts)
+
+        repository.setAlertsMuted(true)
+        assertFalse(repository.receiverEnabled.first())
+        assertFalse(repository.currentSession()!!.directory[session.self.id]!!.receivesAlerts)
+
+        repository.setAlertsMuted(false)
+        assertTrue(repository.currentSession()!!.directory[session.self.id]!!.receivesAlerts)
+    }
+
+    @Test
+    fun aCameraGetsAlertsOnlyOnceAnAdministratorLetsItView() = runTest {
+        val owner = repository("owner.json")
+        val camera = repository("camera.json")
+        val joined = camera.join(owner.create("Casa", "HONOR").invite(), "A02")
+        assertFalse(camera.receiverEnabled.first())
+        assertFalse(camera.currentSession()!!.directory[joined.self.id]!!.receivesAlerts)
+
+        owner.mergeDirectory(camera.currentSession()!!.directory)
+        now += 1
+        assertTrue(owner.assignRole(joined.self.id, AccessRole.VIEWER))
+        camera.mergeDirectory(owner.currentSession()!!.directory)
+
+        assertTrue(camera.receiverEnabled.first())
+        assertTrue("cameras read this flag to find receivers", camera.currentSession()!!.directory[joined.self.id]!!.receivesAlerts)
+    }
+
+    @Test
+    fun aRemovedPhoneStaysRemovedWhenItMergesTheDirectory() = runTest {
+        val owner = repository("owner.json")
+        val camera = repository("camera.json")
+        val joined = camera.join(owner.create("Casa", "HONOR").invite(), "A02")
+        owner.mergeDirectory(camera.currentSession()!!.directory)
+        now += 1
+        owner.removeMember(joined.self.id)
+
+        camera.mergeDirectory(owner.currentSession()!!.directory)
+        owner.mergeDirectory(camera.currentSession()!!.directory)
+
+        assertTrue(owner.currentSession()!!.directory[joined.self.id]!!.removed)
+    }
+
+    @Test
+    fun duplicateAlertsAreDropped() = runTest {
+        val repository = repository()
+        repository.create("Casa", "Samsung")
 
         val event = CameraEvent.new(NodeId("cam"), "Cocina", CameraEventType.MOVED, atMillis = 1)
         assertTrue(repository.record(event))
         assertFalse(repository.record(event))
         assertEquals(listOf(event), repository.alerts.first())
+    }
+
+    @Test
+    fun dismissedAlertStaysDismissedOnRetryAndCanBeRestored() = runTest {
+        val repository = repository()
+        val first = CameraEvent.new(NodeId("cam"), "Entrada", CameraEventType.MOVED, atMillis = 1)
+        val second = CameraEvent.new(NodeId("cam"), "Patio", CameraEventType.MOVED, atMillis = 2)
+        repository.record(first)
+        repository.record(second)
+
+        repository.dismiss(first.id)
+        assertEquals(listOf(second), repository.alerts.first())
+        assertFalse(repository.record(first))
+        repository.restore(first)
+        assertEquals(listOf(second, first), repository.alerts.first())
+        assertFalse(repository.record(first))
+        repository.dismiss(first.id)
+        repository.restore(first)
+        assertEquals(listOf(second, first), repository.alerts.first())
+    }
+
+    @Test
+    fun dismissedAlertSurvivesRestartAndClearDoesNotReplayIt() = runTest {
+        val firstRun = CoroutineScope(coroutineContext + Job())
+        val repository = repository(scope = firstRun)
+        val event = CameraEvent.new(NodeId("cam"), "Entrada", CameraEventType.MOVED, atMillis = 1)
+        repository.record(event)
+        repository.dismiss(event.id)
+        firstRun.cancel()
+        advanceUntilIdle()
+        val reopened = repository()
+        assertFalse(reopened.record(event))
+        assertTrue(reopened.alerts.first().isEmpty())
+        val next = CameraEvent.new(NodeId("cam"), "Patio", CameraEventType.MOVED, atMillis = 2)
+        reopened.record(next)
+        reopened.clear()
+        assertFalse(reopened.record(next))
+        assertTrue(reopened.alerts.first().isEmpty())
     }
 
     @Test
@@ -148,7 +231,6 @@ class LocalStateRepositoryTest {
         val session = repository.create("Casa", "Samsung")
         val endpoint = NodeEndpoint("100.64.0.7")
         repository.announceSelf(listOf(endpoint), NodeRole.CAMERA)
-        repository.setReceiverEnabled(true)
 
         repository.renameMember(session.self.id, "  Entrada  ")
         repository.announceSelf(listOf(endpoint), NodeRole.CAMERA)

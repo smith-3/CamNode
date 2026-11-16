@@ -3,20 +3,31 @@
 <resources>
     <string name="alerts_title">Alerts</string>
     <string name="alerts_clear">Clear</string>
-    <string name="alerts_master_title">This is a master phone</string>
-    <string name="alerts_master_on">You\'ll get a notification if someone moves a camera</string>
-    <string name="alerts_master_off">Turn it on in the phone you carry to get alerts</string>
-    <string name="alerts_tailscale_hint">Turn it on to get alerts away from home.</string>
+    <string name="alerts_muted_title">Alerts are muted on this phone</string>
+    <string name="alerts_muted_body">Turn them back on in Home, under This phone.</string>
+    <string name="alerts_notifications_title">Notifications are off</string>
+    <string name="alerts_notifications_body">Without them you won\'t see when someone moves a camera.</string>
     <string name="alerts_battery_title">Let CamNode run in the background</string>
     <string name="alerts_battery_body">With battery saver on, Android may delay or drop alerts while the phone sleeps.</string>
     <string name="alerts_allow">Allow</string>
-    <string name="alerts_recent">Recent</string>
+    <string name="alerts_today">Today</string>
+    <string name="alerts_yesterday">Yesterday</string>
+    <string name="alert_moved_summary">The camera was moved</string>
+    <string name="alert_open">Open camera</string>
+    <string name="alert_swipe_dismiss">Dismiss</string>
+    <string name="alerts_clear_title">Delete all alerts?</string>
+    <string name="alerts_clear_body">This can\'t be undone.</string>
+    <string name="alerts_clear_confirm">Delete all</string>
+    <string name="alerts_cancel">Cancel</string>
     <string name="alerts_empty_title">All quiet</string>
     <string name="alerts_empty_body">You\'ll see here when someone moves one of your cameras.</string>
-    <string name="alerts_channel_master">Master phone</string>
+    <string name="alerts_channel_master">Alert reception</string>
     <string name="alerts_receiving">Receiving alerts from your cameras</string>
     <string name="alerts_channel_alerts">Security alerts</string>
     <string name="alerts_channel_alerts_description">Notices when someone moves one of your cameras</string>
     <string name="alerts_check_camera">Check the camera in CamNode</string>
     <string name="alerts_camera_moved">Camera %1$s was moved</string>
+    <string name="alert_dismissed">Alert dismissed</string>
+    <string name="alert_undo">Undo</string>
+    <string name="alert_dismiss">Dismiss alert</string>
 </resources>

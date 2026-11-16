@@ -34,6 +34,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -79,7 +80,8 @@ class AlertReceiverService : LifecycleService() {
 
     private suspend fun run() {
         val session = households.currentSession() ?: return stopSelf()
-        alerts.setReceiverEnabled(true)
+        // Muted here, or the role no longer allows viewing: stop serving alerts right away.
+        lifecycleScope.launch { alerts.receiverEnabled.first { enabled -> !enabled }; stopSelf() }
         nodeServer.attachAlertSink(sink)
         val discovered = MutableStateFlow<Map<NodeId, NodeEndpoint>>(emptyMap())
         lifecycleScope.launch { lanDiscovery.discover(session.household).collect { discovered.value = it } }

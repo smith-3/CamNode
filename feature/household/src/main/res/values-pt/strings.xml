@@ -18,10 +18,13 @@
     <string name="household_secure">Criar casa segura</string>
     <string name="household_charge_soon">Carregar em breve</string>
     <string name="household_devices_header">Dispositivos</string>
-    <string name="household_battery_note">A bateria aparece nas câmeras que transmitem e nos telefones principais.</string>
+    <string name="household_battery_note">A bateria aparece nas câmeras transmitindo e nos telefones que recebem alertas.</string>
     <string name="household_secured_note">Novos dispositivos entram como câmera; um administrador decide quem pode ver ou controlar. Remover um dispositivo revoga o acesso.</string>
     <string name="household_legacy_note">Remover um dispositivo o oculta da casa, mas não revoga o acesso.</string>
     <string name="household_this_phone">Este telefone</string>
+    <string name="household_alerts_here">Receber alertas neste telefone</string>
+    <string name="household_alerts_here_body">Chegam a todos que podem ver. Desative para silenciar só este telefone.</string>
+    <string name="household_tailscale_hint">Ative para ver as câmeras e receber alertas fora de casa.</string>
     <string name="household_app_lock">Bloqueio com PIN</string>
     <string name="household_app_lock_detail">Peça um PIN para abrir o app e escolha a aparência</string>
     <string name="household_language">Idioma</string>
@@ -45,7 +48,7 @@
     <string name="household_node_camera">Câmera</string>
     <string name="household_node_recorder">Gravador</string>
     <string name="household_node_viewer">Visualizador</string>
-    <string name="household_master">Principal</string>
+    <string name="household_master">Alertas</string>
     <string name="household_rename_device">Renomear %1$s</string>
     <string name="household_remove_device">Remover %1$s</string>
     <string name="household_your_role">Sua função nesta casa:</string>

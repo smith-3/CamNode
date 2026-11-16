@@ -14,10 +14,13 @@
     <string name="household_secure">创建安全家庭</string>
     <string name="household_charge_soon">请尽快充电</string>
     <string name="household_devices_header">设备</string>
-    <string name="household_battery_note">正在推流的摄像头和主控手机会显示电量。</string>
+    <string name="household_battery_note">正在推流的摄像头和接收提醒的手机会显示电量。</string>
     <string name="household_secured_note">新设备以摄像头身份加入；由管理员决定谁可以查看或控制。移除设备会撤销其访问权限。</string>
     <string name="household_legacy_note">移除设备只会将其从家庭中隐藏，不会撤销其访问权限。</string>
     <string name="household_this_phone">此手机</string>
+    <string name="household_alerts_here">在此手机上接收提醒</string>
+    <string name="household_alerts_here_body">所有可查看的人都会收到。关闭后仅此手机静音。</string>
+    <string name="household_tailscale_hint">开启后在外也能查看摄像头并接收提醒。</string>
     <string name="household_app_lock">PIN 码锁</string>
     <string name="household_app_lock_detail">打开应用时要求 PIN 码，并选择外观</string>
     <string name="household_language">语言</string>
@@ -41,7 +44,7 @@
     <string name="household_node_camera">摄像头</string>
     <string name="household_node_recorder">录像机</string>
     <string name="household_node_viewer">查看端</string>
-    <string name="household_master">主控</string>
+    <string name="household_master">提醒</string>
     <string name="household_rename_device">重命名 %1$s</string>
     <string name="household_remove_device">移除 %1$s</string>
     <string name="household_your_role">你在此家庭中的角色：</string>

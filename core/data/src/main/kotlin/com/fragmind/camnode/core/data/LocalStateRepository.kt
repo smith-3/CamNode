@@ -29,6 +29,7 @@ import com.fragmind.camnode.core.model.Member
 import com.fragmind.camnode.core.model.NodeEndpoint
 import com.fragmind.camnode.core.model.NodeId
 import com.fragmind.camnode.core.model.NodeRole
+import com.fragmind.camnode.core.model.Permission
 import com.fragmind.camnode.core.model.WallClock
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -114,7 +115,9 @@ internal class LocalStateRepository @Inject constructor(
         store.updateData { it.copy(cameraShouldRun = shouldRun) }
     }
 
-    override val receiverEnabled: Flow<Boolean> = store.data.map { it.receivesAlerts }.distinctUntilChanged()
+    override val receiverEnabled: Flow<Boolean> = store.data.map { it.wantsAlerts }.distinctUntilChanged()
+
+    override val alertsMuted: Flow<Boolean> = store.data.map { it.alertsMuted }.distinctUntilChanged()
 
     override val alerts: Flow<List<CameraEvent>> = store.data.map { it.alerts }.distinctUntilChanged()
 
@@ -134,21 +137,17 @@ internal class LocalStateRepository @Inject constructor(
             val self = LocalNode(state.self?.id ?: NodeId.random(), deviceName.trim(), state.nodeKeys?.publicKey)
             val directory = if (state.household?.id == household.id) state.directory else Directory()
             val previous = directory[self.id]
+            val joined = state.copy(self = self, household = household, directory = directory, bootstrapSeeds = invite.seeds)
             val me = Member(
                 id = self.id,
                 name = self.name,
                 role = previous?.role ?: NodeRole.VIEWER,
                 endpoints = previous?.endpoints.orEmpty(),
                 updatedAtMillis = nextTimestamp(previous),
-                receivesAlerts = state.receivesAlerts,
+                receivesAlerts = joined.wantsAlerts,
                 publicKey = self.publicKey,
             )
-            state.copy(
-                self = self,
-                household = household,
-                directory = directory.upsert(me),
-                bootstrapSeeds = invite.seeds,
-            )
+            joined.copy(directory = directory.upsert(me))
         }
         return checkNotNull(updated.toSession())
     }
@@ -163,7 +162,11 @@ internal class LocalStateRepository @Inject constructor(
             val self = state.self?.let { local ->
                 directory[local.id]?.takeUnless { it.removed }?.let { local.copy(name = it.name) } ?: local
             }
-            state.copy(self = self, directory = directory, bootstrapSeeds = emptyList())
+            val merged = state.copy(self = self, directory = directory, bootstrapSeeds = emptyList())
+            // A role granted or revoked by an administrator changes whether this phone takes alerts.
+            // A removed phone keeps its tombstone: rewriting the record would bring it back.
+            val active = self?.let { directory[it.id] }?.removed == false
+            if (active) merged.withSelf() else merged
         }.directory
 
     override suspend fun renameMember(id: NodeId, name: String) {
@@ -183,21 +186,46 @@ internal class LocalStateRepository @Inject constructor(
         store.updateData { state -> state.withSelf(endpoints = endpoints, role = role) }
     }
 
-    override suspend fun setReceiverEnabled(enabled: Boolean) {
-        store.updateData { state -> state.copy(receivesAlerts = enabled).withSelf() }
+    override suspend fun setAlertsMuted(muted: Boolean) {
+        store.updateData { state -> state.copy(alertsMuted = muted).withSelf() }
     }
 
     override suspend fun record(event: CameraEvent): Boolean {
         var isNew = false
         store.updateData { state ->
-            isNew = state.alerts.none { it.id == event.id }
+            isNew = event.id !in state.dismissedAlertIds && state.alerts.none { it.id == event.id }
             if (!isNew) state else state.copy(alerts = (listOf(event) + state.alerts).take(MAX_ALERTS))
         }
         return isNew
     }
 
+    override suspend fun dismiss(id: String) {
+        store.updateData { state ->
+            if (state.alerts.none { it.id == id }) state
+            else state.copy(
+                alerts = state.alerts.filterNot { it.id == id },
+                dismissedAlertIds = (listOf(id) + state.dismissedAlertIds).distinct().take(MAX_DISMISSED_ALERTS),
+            )
+        }
+    }
+
+    override suspend fun restore(event: CameraEvent) {
+        store.updateData { state ->
+            if (event.id !in state.dismissedAlertIds) state
+            else state.copy(
+                alerts = (state.alerts + event).sortedByDescending { it.atMillis }.take(MAX_ALERTS),
+                dismissedAlertIds = state.dismissedAlertIds.filterNot { it == event.id },
+            )
+        }
+    }
+
     override suspend fun clear() {
-        store.updateData { it.copy(alerts = emptyList()) }
+        store.updateData { state ->
+            state.copy(
+                alerts = emptyList(),
+                dismissedAlertIds = (state.alerts.map { it.id } + state.dismissedAlertIds).distinct().take(MAX_DISMISSED_ALERTS),
+            )
+        }
     }
 
     /** Rewrites this phone's directory record only when something peers care about changed. */
@@ -210,7 +238,7 @@ internal class LocalStateRepository @Inject constructor(
             role = role ?: previous?.role ?: NodeRole.VIEWER,
             endpoints = endpoints ?: previous?.endpoints.orEmpty(),
             updatedAtMillis = 0,
-            receivesAlerts = receivesAlerts,
+            receivesAlerts = wantsAlerts,
             publicKey = nodeKeys?.publicKey ?: previous?.publicKey,
         )
         if (previous != null && previous.copy(updatedAtMillis = 0) == next) return this
@@ -241,6 +269,14 @@ internal class LocalStateRepository @Inject constructor(
         return granted
     }
 
+    /** Viewing includes alerts: administrators, viewers and recorders get them unless muted here. */
+    private val StoredState.wantsAlerts: Boolean
+        get() {
+            val household = household ?: return false
+            val self = self ?: return false
+            return !alertsMuted && directory.roles.roleOf(self.id, nodeKeys?.publicKey, household.ownerKey).can(Permission.VIEW_STREAMS)
+        }
+
     private fun StoredState.withKeys(): StoredState = if (nodeKeys != null) this else copy(nodeKeys = NodeKeys.generate())
 
     override suspend fun update(transform: (CameraSettings) -> CameraSettings) {
@@ -257,6 +293,7 @@ internal class LocalStateRepository @Inject constructor(
 
     private companion object {
         const val MAX_ALERTS = 50
+        const val MAX_DISMISSED_ALERTS = 256
     }
 
     private fun StoredState.toSession(): HouseholdSession? {

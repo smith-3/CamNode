@@ -16,6 +16,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.mutableStateOf
 import com.fragmind.camnode.core.designsystem.CamNodeTheme
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.fragmind.camnode.core.data.AlertsRepository
 import com.fragmind.camnode.core.data.AppLockRepository
@@ -23,7 +25,6 @@ import com.fragmind.camnode.feature.applock.AppLockGate
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import com.fragmind.camnode.feature.alerts.AlertReceiverService
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.fragmind.camnode.core.model.InviteCodec
@@ -52,6 +53,7 @@ open class MainActivity : ComponentActivity() {
             resumeCameraIfAsked(intent)
         }
         hideFromRecentsWhileLocked()
+        keepAlertReceiverRunning()
         // Before Android 13 the chosen language comes from a wrapped context, which the window
         // does not use for its layout direction; Arabic needs right-to-left set explicitly.
         val direction = if (resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) LayoutDirection.Rtl else LayoutDirection.Ltr
@@ -70,6 +72,20 @@ open class MainActivity : ComponentActivity() {
     }
 
     /**
+     * Alerts follow the role, so the receiver starts whenever this phone may view and has not
+     * muted them: on opening the app, after an administrator grants a role, or after unmuting
+     * in Household. A visible activity may start it even if the system stopped it. The
+     * service stops itself when the flag turns off.
+     */
+    private fun keepAlertReceiverRunning() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                alerts.receiverEnabled.collect { enabled -> if (enabled) AlertReceiverService.start(this@MainActivity) }
+            }
+        }
+    }
+
+    /**
      * With the PIN lock on, the recents thumbnail must not show cameras. Android 13+ can
      * hide just the thumbnail; older versions need FLAG_SECURE, which also blocks screenshots.
      */
@@ -83,13 +99,6 @@ open class MainActivity : ComponentActivity() {
         }
     }
 
-    /** Safety net: a visible activity may (re)start the master service if the system stopped it. */
-    override fun onStart() {
-        super.onStart()
-        lifecycleScope.launch {
-            if (alerts.receiverEnabled.first()) AlertReceiverService.start(this@MainActivity)
-        }
-    }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)

@@ -28,13 +28,27 @@ import androidx.compose.ui.unit.dp
 import com.fragmind.camnode.R
 import com.fragmind.camnode.core.designsystem.CamNodeIcons
 import com.fragmind.camnode.core.model.NodeId
+import com.fragmind.camnode.core.model.Permission
+import com.fragmind.camnode.core.model.AccessRole
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fragmind.camnode.feature.alerts.AlertsRoute
 import com.fragmind.camnode.feature.household.HouseholdRoute
 import com.fragmind.camnode.feature.node.NodeRoute
 import com.fragmind.camnode.feature.viewer.ViewerRoute
 import com.fragmind.camnode.feature.viewer.ViewerViewModel
 
-enum class MainTab { Cameras, Alerts, Broadcast, Household }
+enum class MainTab {
+    Cameras, Alerts, Broadcast, Household;
+
+    companion object {
+        /**
+         * Watching and alerts need permission to view; everyone can stream and see the household.
+         * A camera-only phone opens straight on Broadcast.
+         */
+        fun forRole(role: AccessRole): List<MainTab> =
+            if (role.can(Permission.VIEW_STREAMS)) entries else listOf(Broadcast, Household)
+    }
+}
 
 /**
  * Top-level destinations of a phone that belongs to a household. A bottom bar in
@@ -48,11 +62,15 @@ fun MainShell(
     onLeft: () -> Unit,
     viewerViewModel: ViewerViewModel,
 ) {
-    var tab by rememberSaveable { mutableStateOf(MainTab.Cameras) }
+    // Wait for the role so a camera never flashes the viewer tabs.
+    val role = viewerViewModel.access.collectAsStateWithLifecycle().value ?: return
+    val tabs = MainTab.forRole(role)
+    var chosen by rememberSaveable { mutableStateOf(MainTab.Cameras) }
+    val tab = chosen.takeIf { it in tabs } ?: tabs.first()
     val content: @Composable () -> Unit = {
         when (tab) {
             MainTab.Cameras -> ViewerRoute(onOpenCamera = onOpenCamera, onInvite = onInvite, viewModel = viewerViewModel)
-            MainTab.Alerts -> AlertsRoute()
+            MainTab.Alerts -> AlertsRoute(onOpenCamera = onOpenCamera)
             MainTab.Broadcast -> NodeRoute()
             MainTab.Household -> HouseholdRoute(onInvite = onInvite, onAppLock = onAppLock, onLeft = onLeft)
         }
@@ -65,10 +83,10 @@ fun MainShell(
                     modifier = Modifier.fillMaxHeight(),
                 ) {
                     Box(Modifier.weight(1f))
-                    MainTab.entries.forEach { entry ->
+                    tabs.forEach { entry ->
                         NavigationRailItem(
                             selected = tab == entry,
-                            onClick = { tab = entry },
+                            onClick = { chosen = entry },
                             icon = { Icon(entry.icon, contentDescription = null) },
                             label = { Text(entry.label) },
                             colors = NavigationRailItemDefaults.colors(
@@ -87,10 +105,10 @@ fun MainShell(
             Scaffold(
                 bottomBar = {
                     NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainer) {
-                        MainTab.entries.forEach { entry ->
+                        tabs.forEach { entry ->
                             NavigationBarItem(
                                 selected = tab == entry,
-                                onClick = { tab = entry },
+                                onClick = { chosen = entry },
                                 icon = { Icon(entry.icon, contentDescription = null) },
                                 label = { Text(entry.label) },
                                 colors = NavigationBarItemDefaults.colors(

@@ -18,10 +18,13 @@
     <string name="household_secure">Créer une maison sécurisée</string>
     <string name="household_charge_soon">À recharger bientôt</string>
     <string name="household_devices_header">Appareils</string>
-    <string name="household_battery_note">La batterie s’affiche pour les caméras qui diffusent et les téléphones maîtres.</string>
+    <string name="household_battery_note">La batterie s’affiche sur les caméras qui diffusent et sur les téléphones qui reçoivent les alertes.</string>
     <string name="household_secured_note">Les nouveaux appareils rejoignent comme caméras ; un administrateur décide qui peut voir ou contrôler. Retirer un appareil révoque son accès.</string>
     <string name="household_legacy_note">Retirer un appareil le masque de la maison, sans révoquer son accès.</string>
     <string name="household_this_phone">Ce téléphone</string>
+    <string name="household_alerts_here">Recevoir les alertes sur ce téléphone</string>
+    <string name="household_alerts_here_body">Tous ceux qui peuvent regarder les reçoivent. Désactivez pour couper seulement ce téléphone.</string>
+    <string name="household_tailscale_hint">Activez-le pour voir les caméras et recevoir les alertes hors de chez vous.</string>
     <string name="household_app_lock">Verrouillage par code</string>
     <string name="household_app_lock_detail">Demandez un code pour ouvrir l’appli et choisissez son apparence</string>
     <string name="household_language">Langue</string>
@@ -45,7 +48,7 @@
     <string name="household_node_camera">Caméra</string>
     <string name="household_node_recorder">Enregistreur</string>
     <string name="household_node_viewer">Visionneuse</string>
-    <string name="household_master">Maître</string>
+    <string name="household_master">Alertes</string>
     <string name="household_rename_device">Renommer %1$s</string>
     <string name="household_remove_device">Retirer %1$s</string>
     <string name="household_your_role">Votre rôle dans cette maison :</string>

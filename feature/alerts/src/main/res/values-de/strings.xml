@@ -3,20 +3,31 @@
 <resources>
     <string name="alerts_title">Warnungen</string>
     <string name="alerts_clear">Löschen</string>
-    <string name="alerts_master_title">Dies ist ein Haupttelefon</string>
-    <string name="alerts_master_on">Du wirst benachrichtigt, wenn jemand eine Kamera bewegt</string>
-    <string name="alerts_master_off">Aktiviere es auf dem Telefon, das du dabei hast, um Warnungen zu erhalten</string>
-    <string name="alerts_tailscale_hint">Aktiviere es, um auch unterwegs Warnungen zu erhalten.</string>
+    <string name="alerts_muted_title">Warnungen sind auf diesem Telefon stummgeschaltet</string>
+    <string name="alerts_muted_body">Schalte sie unter Zuhause, Dieses Telefon, wieder ein.</string>
+    <string name="alerts_notifications_title">Benachrichtigungen sind aus</string>
+    <string name="alerts_notifications_body">Ohne sie siehst du nicht, wenn jemand eine Kamera bewegt.</string>
     <string name="alerts_battery_title">CamNode im Hintergrund laufen lassen</string>
     <string name="alerts_battery_body">Mit aktivem Energiesparen kann Android Warnungen im Ruhezustand verzögern oder verlieren.</string>
     <string name="alerts_allow">Erlauben</string>
-    <string name="alerts_recent">Neueste</string>
+    <string name="alerts_today">Heute</string>
+    <string name="alerts_yesterday">Gestern</string>
+    <string name="alert_moved_summary">Die Kamera wurde bewegt</string>
+    <string name="alert_open">Kamera öffnen</string>
+    <string name="alert_swipe_dismiss">Verwerfen</string>
+    <string name="alerts_clear_title">Alle Warnungen löschen?</string>
+    <string name="alerts_clear_body">Das lässt sich nicht rückgängig machen.</string>
+    <string name="alerts_clear_confirm">Alle löschen</string>
+    <string name="alerts_cancel">Abbrechen</string>
     <string name="alerts_empty_title">Alles ruhig</string>
     <string name="alerts_empty_body">Hier siehst du, wenn jemand eine deiner Kameras bewegt.</string>
-    <string name="alerts_channel_master">Haupttelefon</string>
+    <string name="alerts_channel_master">Warnungsempfang</string>
     <string name="alerts_receiving">Warnungen deiner Kameras werden empfangen</string>
     <string name="alerts_channel_alerts">Sicherheitswarnungen</string>
     <string name="alerts_channel_alerts_description">Hinweise, wenn jemand eine deiner Kameras bewegt</string>
     <string name="alerts_check_camera">Prüfe die Kamera in CamNode</string>
     <string name="alerts_camera_moved">Kamera %1$s wurde bewegt</string>
+    <string name="alert_dismissed">Warnung entfernt</string>
+    <string name="alert_undo">Rückgängig</string>
+    <string name="alert_dismiss">Warnung entfernen</string>
 </resources>

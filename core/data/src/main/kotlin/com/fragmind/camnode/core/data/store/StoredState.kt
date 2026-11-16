@@ -33,10 +33,14 @@ internal data class StoredState(
     val displayRotations: Map<String, Int> = emptyMap(),
     /** Invite seeds kept until the first successful directory exchange. */
     val bootstrapSeeds: List<NodeEndpoint> = emptyList(),
-    /** This phone is a "master" that receives camera alerts. */
-    val receivesAlerts: Boolean = false,
+    /**
+     * Alerts follow the role (whoever may view receives them); this only silences this phone.
+     * Replaces the old manual "master" switch, whose stored value is now ignored.
+     */
+    val alertsMuted: Boolean = false,
     /** Most recent alerts first, capped so the file stays small. */
     val alerts: List<CameraEvent> = emptyList(),
+    val dismissedAlertIds: List<String> = emptyList(),
     /** The user left the camera on; a reboot or update should offer to resume it. */
     val cameraShouldRun: Boolean = false,
     val appLock: AppLockState = AppLockState(),

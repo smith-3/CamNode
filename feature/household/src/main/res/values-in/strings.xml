@@ -14,10 +14,13 @@
     <string name="household_secure">Buat rumah aman</string>
     <string name="household_charge_soon">Segera isi daya</string>
     <string name="household_devices_header">Perangkat</string>
-    <string name="household_battery_note">Baterai terlihat di kamera yang menyiarkan dan di ponsel utama.</string>
+    <string name="household_battery_note">Baterai terlihat pada kamera yang menyiarkan dan ponsel yang menerima peringatan.</string>
     <string name="household_secured_note">Perangkat baru bergabung sebagai kamera; administrator menentukan siapa yang boleh melihat atau mengendalikan. Menghapus perangkat mencabut aksesnya.</string>
     <string name="household_legacy_note">Menghapus perangkat menyembunyikannya dari rumah, tetapi tidak mencabut aksesnya.</string>
     <string name="household_this_phone">Ponsel ini</string>
+    <string name="household_alerts_here">Terima peringatan di ponsel ini</string>
+    <string name="household_alerts_here_body">Semua yang bisa melihat menerimanya. Matikan untuk membisukan ponsel ini saja.</string>
+    <string name="household_tailscale_hint">Aktifkan untuk melihat kamera dan menerima peringatan di luar rumah.</string>
     <string name="household_app_lock">Kunci PIN</string>
     <string name="household_app_lock_detail">Minta PIN untuk membuka aplikasi dan pilih tampilannya</string>
     <string name="household_language">Bahasa</string>
@@ -41,7 +44,7 @@
     <string name="household_node_camera">Kamera</string>
     <string name="household_node_recorder">Perekam</string>
     <string name="household_node_viewer">Penampil</string>
-    <string name="household_master">Utama</string>
+    <string name="household_master">Peringatan</string>
     <string name="household_rename_device">Ganti nama %1$s</string>
     <string name="household_remove_device">Hapus %1$s</string>
     <string name="household_your_role">Peran Anda di rumah ini:</string>

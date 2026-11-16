@@ -3,20 +3,31 @@
 <resources>
     <string name="alerts_title">Alertas</string>
     <string name="alerts_clear">Borrar</string>
-    <string name="alerts_master_title">Este es un teléfono maestro</string>
-    <string name="alerts_master_on">Recibirás una notificación si alguien mueve una cámara</string>
-    <string name="alerts_master_off">Actívalo en el teléfono que llevas contigo para recibir alertas</string>
-    <string name="alerts_tailscale_hint">Actívalo para recibir alertas fuera de casa.</string>
+    <string name="alerts_muted_title">Las alertas están silenciadas en este teléfono</string>
+    <string name="alerts_muted_body">Vuelve a activarlas en Hogar, en Este teléfono.</string>
+    <string name="alerts_notifications_title">Las notificaciones están desactivadas</string>
+    <string name="alerts_notifications_body">Sin ellas no verás cuando alguien mueva una cámara.</string>
     <string name="alerts_battery_title">Permite que CamNode funcione en segundo plano</string>
     <string name="alerts_battery_body">Con el ahorro de batería activo, Android puede retrasar o perder alertas mientras el teléfono duerme.</string>
     <string name="alerts_allow">Permitir</string>
-    <string name="alerts_recent">Recientes</string>
+    <string name="alerts_today">Hoy</string>
+    <string name="alerts_yesterday">Ayer</string>
+    <string name="alert_moved_summary">Movieron la cámara</string>
+    <string name="alert_open">Abrir cámara</string>
+    <string name="alert_swipe_dismiss">Descartar</string>
+    <string name="alerts_clear_title">¿Borrar todas las alertas?</string>
+    <string name="alerts_clear_body">No se puede deshacer.</string>
+    <string name="alerts_clear_confirm">Borrar todo</string>
+    <string name="alerts_cancel">Cancelar</string>
     <string name="alerts_empty_title">Todo tranquilo</string>
     <string name="alerts_empty_body">Aquí verás cuando alguien mueva una de tus cámaras.</string>
-    <string name="alerts_channel_master">Teléfono maestro</string>
+    <string name="alerts_channel_master">Recepción de alertas</string>
     <string name="alerts_receiving">Recibiendo alertas de tus cámaras</string>
     <string name="alerts_channel_alerts">Alertas de seguridad</string>
     <string name="alerts_channel_alerts_description">Avisos cuando alguien mueve una de tus cámaras</string>
     <string name="alerts_check_camera">Revisa la cámara en CamNode</string>
     <string name="alerts_camera_moved">Movieron la cámara %1$s</string>
+    <string name="alert_dismissed">Alerta descartada</string>
+    <string name="alert_undo">Deshacer</string>
+    <string name="alert_dismiss">Descartar alerta</string>
 </resources>

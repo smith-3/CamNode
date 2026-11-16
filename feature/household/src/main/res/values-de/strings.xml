@@ -16,10 +16,13 @@
     <string name="household_secure">Sicheres Zuhause erstellen</string>
     <string name="household_charge_soon">Bald aufladen</string>
     <string name="household_devices_header">Geräte</string>
-    <string name="household_battery_note">Der Akku wird bei übertragenden Kameras und Haupttelefonen angezeigt.</string>
+    <string name="household_battery_note">Der Akku wird bei übertragenden Kameras und bei Telefonen angezeigt, die Warnungen erhalten.</string>
     <string name="household_secured_note">Neue Geräte treten als Kamera bei; ein Administrator entscheidet, wer sehen oder steuern darf. Wird ein Gerät entfernt, verliert es den Zugriff.</string>
     <string name="household_legacy_note">Ein entferntes Gerät wird ausgeblendet, behält aber seinen Zugriff.</string>
     <string name="household_this_phone">Dieses Telefon</string>
+    <string name="household_alerts_here">Warnungen auf diesem Telefon erhalten</string>
+    <string name="household_alerts_here_body">Alle, die zusehen dürfen, erhalten sie. Ausschalten, um nur dieses Telefon stummzuschalten.</string>
+    <string name="household_tailscale_hint">Aktiviere es, um unterwegs Kameras zu sehen und Warnungen zu erhalten.</string>
     <string name="household_app_lock">PIN-Sperre</string>
     <string name="household_app_lock_detail">PIN zum Öffnen verlangen und Aussehen wählen</string>
     <string name="household_language">Sprache</string>
@@ -43,7 +46,7 @@
     <string name="household_node_camera">Kamera</string>
     <string name="household_node_recorder">Rekorder</string>
     <string name="household_node_viewer">Betrachter</string>
-    <string name="household_master">Haupttelefon</string>
+    <string name="household_master">Warnungen</string>
     <string name="household_rename_device">%1$s umbenennen</string>
     <string name="household_remove_device">%1$s entfernen</string>
     <string name="household_your_role">Deine Rolle in diesem Zuhause:</string>

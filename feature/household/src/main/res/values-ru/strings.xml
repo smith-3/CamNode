@@ -20,10 +20,13 @@
     <string name="household_secure">Создать защищённый дом</string>
     <string name="household_charge_soon">Скоро зарядить</string>
     <string name="household_devices_header">Устройства</string>
-    <string name="household_battery_note">Заряд виден у транслирующих камер и у главных телефонов.</string>
+    <string name="household_battery_note">Заряд виден у транслирующих камер и у телефонов, получающих оповещения.</string>
     <string name="household_secured_note">Новые устройства присоединяются как камеры; администратор решает, кто может смотреть или управлять. Удаление устройства отзывает его доступ.</string>
     <string name="household_legacy_note">Удаление скрывает устройство из дома, но не отзывает его доступ.</string>
     <string name="household_this_phone">Этот телефон</string>
+    <string name="household_alerts_here">Получать оповещения на этом телефоне</string>
+    <string name="household_alerts_here_body">Их получают все, кто может смотреть. Выключите, чтобы заглушить только этот телефон.</string>
+    <string name="household_tailscale_hint">Включите, чтобы смотреть камеры и получать оповещения вне дома.</string>
     <string name="household_app_lock">Блокировка PIN-кодом</string>
     <string name="household_app_lock_detail">PIN-код для входа и выбор внешнего вида</string>
     <string name="household_language">Язык</string>
@@ -47,7 +50,7 @@
     <string name="household_node_camera">Камера</string>
     <string name="household_node_recorder">Рекордер</string>
     <string name="household_node_viewer">Просмотр</string>
-    <string name="household_master">Главный</string>
+    <string name="household_master">Оповещения</string>
     <string name="household_rename_device">Переименовать %1$s</string>
     <string name="household_remove_device">Удалить %1$s</string>
     <string name="household_your_role">Ваша роль в этом доме:</string>

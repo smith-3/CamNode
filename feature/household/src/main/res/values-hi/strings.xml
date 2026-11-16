@@ -16,10 +16,13 @@
     <string name="household_secure">सुरक्षित घर बनाएँ</string>
     <string name="household_charge_soon">जल्द चार्ज करें</string>
     <string name="household_devices_header">डिवाइस</string>
-    <string name="household_battery_note">बैटरी स्ट्रीम कर रहे कैमरों और मास्टर फ़ोन पर दिखती है।</string>
+    <string name="household_battery_note">बैटरी स्ट्रीम कर रहे कैमरों और चेतावनियाँ पाने वाले फ़ोनों पर दिखती है।</string>
     <string name="household_secured_note">नए डिवाइस कैमरे के रूप में जुड़ते हैं; एडमिन तय करता है कि कौन देख या नियंत्रित कर सकता है। डिवाइस हटाने पर उसकी पहुँच रद्द हो जाती है।</string>
     <string name="household_legacy_note">डिवाइस हटाने से वह घर से छिप जाता है, पर उसकी पहुँच रद्द नहीं होती।</string>
     <string name="household_this_phone">यह फ़ोन</string>
+    <string name="household_alerts_here">इस फ़ोन पर चेतावनियाँ पाएँ</string>
+    <string name="household_alerts_here_body">देख सकने वाले सभी को मिलती हैं। सिर्फ़ इस फ़ोन को शांत करने के लिए बंद करें।</string>
+    <string name="household_tailscale_hint">घर से बाहर कैमरे देखने और चेतावनियाँ पाने के लिए इसे चालू करें।</string>
     <string name="household_app_lock">PIN लॉक</string>
     <string name="household_app_lock_detail">ऐप खोलने के लिए PIN मांगें और उसका रूप चुनें</string>
     <string name="household_language">भाषा</string>
@@ -43,7 +46,7 @@
     <string name="household_node_camera">कैमरा</string>
     <string name="household_node_recorder">रिकॉर्डर</string>
     <string name="household_node_viewer">व्यूअर</string>
-    <string name="household_master">मास्टर</string>
+    <string name="household_master">चेतावनियाँ</string>
     <string name="household_rename_device">%1$s का नाम बदलें</string>
     <string name="household_remove_device">%1$s हटाएँ</string>
     <string name="household_your_role">इस घर में आपकी भूमिका:</string>

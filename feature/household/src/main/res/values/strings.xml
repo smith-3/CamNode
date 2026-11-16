@@ -16,10 +16,13 @@
     <string name="household_secure">Create secure home</string>
     <string name="household_charge_soon">Charge soon</string>
     <string name="household_devices_header">Devices</string>
-    <string name="household_battery_note">Battery shows on streaming cameras and on master phones.</string>
+    <string name="household_battery_note">Battery shows on streaming cameras and on phones that receive alerts.</string>
     <string name="household_secured_note">New devices join as cameras; an administrator decides who can view or control. Removing a device revokes its access.</string>
     <string name="household_legacy_note">Removing a device hides it from the home, but doesn\'t revoke its access.</string>
     <string name="household_this_phone">This phone</string>
+    <string name="household_alerts_here">Receive alerts on this phone</string>
+    <string name="household_alerts_here_body">Everyone who can view gets them. Turn off to silence only this phone.</string>
+    <string name="household_tailscale_hint">Turn it on to see cameras and get alerts away from home.</string>
     <string name="household_app_lock">PIN lock</string>
     <string name="household_app_lock_detail">Ask for a PIN to open the app and choose how it looks</string>
     <string name="household_language">Language</string>
@@ -43,7 +46,7 @@
     <string name="household_node_camera">Camera</string>
     <string name="household_node_recorder">Recorder</string>
     <string name="household_node_viewer">Viewer</string>
-    <string name="household_master">Master</string>
+    <string name="household_master">Alerts</string>
     <string name="household_rename_device">Rename %1$s</string>
     <string name="household_remove_device">Remove %1$s</string>
     <string name="household_your_role">Your role in this home:</string>

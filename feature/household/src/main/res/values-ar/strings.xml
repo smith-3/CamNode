@@ -24,10 +24,13 @@
     <string name="household_secure">إنشاء منزل آمن</string>
     <string name="household_charge_soon">اشحنه قريبًا</string>
     <string name="household_devices_header">الأجهزة</string>
-    <string name="household_battery_note">تظهر البطارية في الكاميرات التي تبث وفي الهواتف الرئيسية.</string>
+    <string name="household_battery_note">تظهر البطارية في الكاميرات التي تبث وفي الهواتف التي تستقبل التنبيهات.</string>
     <string name="household_secured_note">تنضم الأجهزة الجديدة ككاميرات؛ ويقرر المسؤول من يمكنه المشاهدة أو التحكم. إزالة جهاز تلغي وصوله.</string>
     <string name="household_legacy_note">إزالة جهاز تخفيه من المنزل لكنها لا تلغي وصوله.</string>
     <string name="household_this_phone">هذا الهاتف</string>
+    <string name="household_alerts_here">استقبال التنبيهات على هذا الهاتف</string>
+    <string name="household_alerts_here_body">تصل إلى كل من يمكنه المشاهدة. أوقفه لكتم هذا الهاتف فقط.</string>
+    <string name="household_tailscale_hint">فعّله لمشاهدة الكاميرات وتلقي التنبيهات خارج المنزل.</string>
     <string name="household_app_lock">القفل برمز PIN</string>
     <string name="household_app_lock_detail">اطلب رمز PIN لفتح التطبيق واختر مظهره</string>
     <string name="household_language">اللغة</string>
@@ -51,7 +54,7 @@
     <string name="household_node_camera">كاميرا</string>
     <string name="household_node_recorder">مسجّل</string>
     <string name="household_node_viewer">عارض</string>
-    <string name="household_master">رئيسي</string>
+    <string name="household_master">تنبيهات</string>
     <string name="household_rename_device">إعادة تسمية %1$s</string>
     <string name="household_remove_device">إزالة %1$s</string>
     <string name="household_your_role">دورك في هذا المنزل:</string>

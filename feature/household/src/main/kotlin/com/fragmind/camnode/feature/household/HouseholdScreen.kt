@@ -47,6 +47,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import com.fragmind.camnode.core.data.HouseholdRepository
+import com.fragmind.camnode.core.data.AlertsRepository
+import com.fragmind.camnode.core.data.device.TailscaleSetup
+import com.fragmind.camnode.core.network.LocalAddressProvider
+import com.fragmind.camnode.core.designsystem.TailscaleRow
+import androidx.compose.material3.Switch
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.fragmind.camnode.core.data.DirectorySync
 import com.fragmind.camnode.core.data.HouseholdSession
 import com.fragmind.camnode.core.data.PeerProbe
@@ -95,8 +102,12 @@ data class HouseholdUiState(
     val secured: Boolean = true,
     val myRole: AccessRole = AccessRole.CAMERA,
     val roles: Map<NodeId, AccessRole> = emptyMap(),
+    val alertsMuted: Boolean = false,
+    val tailnetAddress: String? = null,
 ) {
     val canManage: Boolean get() = myRole.can(Permission.MANAGE_HOUSEHOLD)
+    /** Viewing includes alerts, so only those roles get the mute switch. */
+    val canView: Boolean get() = myRole.can(Permission.VIEW_STREAMS)
     val cameras: Int get() = members.count { it.role == NodeRole.CAMERA }
     val needCharging: List<Member> get() = members.filter { batteries[it.id]?.low == true }
 }
@@ -107,8 +118,12 @@ class HouseholdViewModel @Inject constructor(
     private val probe: PeerProbe,
     private val battery: DeviceBattery,
     private val directorySync: DirectorySync,
+    private val alerts: AlertsRepository,
+    private val addresses: LocalAddressProvider,
+    val tailscale: TailscaleSetup,
 ) : ViewModel() {
     private val batteries = MutableStateFlow<Map<NodeId, BatteryReading>>(emptyMap())
+    private val tailnet = MutableStateFlow(addresses.current().tailnet)
 
     /** Battery polling runs only while the screen collects this state. */
     val uiState: StateFlow<HouseholdUiState?> = channelFlow {
@@ -118,7 +133,7 @@ class HouseholdViewModel @Inject constructor(
                 delay(BATTERY_REFRESH_MILLIS)
             }
         }
-        combine(households.session, batteries) { session, readings ->
+        combine(households.session, batteries, alerts.alertsMuted, tailnet) { session, readings, muted, tailnetAddress ->
             session?.let {
                 val sorted = it.directory.active.sortedWith(
                     compareBy<Member>({ m -> readings[m.id]?.percent ?: Int.MAX_VALUE }, { m -> m.name.lowercase() }),
@@ -131,6 +146,8 @@ class HouseholdViewModel @Inject constructor(
                     secured = it.household.secured,
                     myRole = it.role,
                     roles = sorted.associate { member -> member.id to it.roleOf(member) },
+                    alertsMuted = muted,
+                    tailnetAddress = tailnetAddress,
                 )
             }
         }.collect(::send)
@@ -149,6 +166,16 @@ class HouseholdViewModel @Inject constructor(
             }
             .awaitAll()
         (peers + self).filterNotNull().toMap()
+    }
+
+    /** The Tailscale connection changes outside the app, so it is re-read on resume. */
+    fun refresh() {
+        tailnet.value = addresses.current().tailnet
+    }
+
+    /** The alert service starts or stops itself from the resulting flag. */
+    fun setAlertsMuted(muted: Boolean) {
+        viewModelScope.launch { alerts.setAlertsMuted(muted) }
     }
 
     fun remove(id: NodeId) {
@@ -192,6 +219,11 @@ class HouseholdViewModel @Inject constructor(
 @Composable
 fun HouseholdRoute(onInvite: () -> Unit, onAppLock: () -> Unit, onLeft: () -> Unit, viewModel: HouseholdViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    LifecycleResumeEffect(Unit) {
+        viewModel.refresh()
+        onPauseOrDispose { }
+    }
     var confirmLeave by rememberSaveable { mutableStateOf(false) }
     var pendingRemoval by rememberSaveable { mutableStateOf<String?>(null) }
     var pendingRename by rememberSaveable { mutableStateOf<String?>(null) }
@@ -271,6 +303,23 @@ fun HouseholdRoute(onInvite: () -> Unit, onAppLock: () -> Unit, onLeft: () -> Un
             )
             SectionHeader(stringResource(R.string.household_this_phone))
             CamNodeCard(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)) {
+                if (household.canView) {
+                    SettingRow(
+                        CamNodeIcons.Notifications,
+                        stringResource(R.string.household_alerts_here),
+                        subtitle = stringResource(R.string.household_alerts_here_body),
+                        trailing = { Switch(checked = !household.alertsMuted, onCheckedChange = { on -> viewModel.setAlertsMuted(!on) }) },
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+                    TailscaleRow(
+                        tailnetAddress = household.tailnetAddress,
+                        installed = viewModel.tailscale.isInstalled(),
+                        onOpenTailscale = { context.startActivity(viewModel.tailscale.openAppIntent() ?: viewModel.tailscale.installIntent()) },
+                        onAlwaysOn = { context.startActivity(viewModel.tailscale.alwaysOnVpnIntent()) },
+                        disconnectedHint = stringResource(R.string.household_tailscale_hint),
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+                }
                 SettingRow(
                     CamNodeIcons.Lock,
                     stringResource(R.string.household_app_lock),
