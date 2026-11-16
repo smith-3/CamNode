@@ -1,6 +1,13 @@
 package com.fragmind.camnode.feature.node
 
 import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.provider.Settings
+import androidx.activity.compose.LocalActivity
+import androidx.compose.runtime.remember
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import android.content.Intent
 import android.os.Build
 import android.view.SurfaceView
@@ -80,12 +87,27 @@ fun NodeRoute(viewModel: NodeViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val clipboard = LocalClipboardManager.current
 
+    val activity = LocalActivity.current
+    var micGranted by remember { mutableStateOf(context.hasMicPermission()) }
     LifecycleResumeEffect(Unit) {
         viewModel.refresh()
+        micGranted = context.hasMicPermission()
         onPauseOrDispose { }
     }
     val permissions = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { granted ->
+        micGranted = context.hasMicPermission()
         if (granted[Manifest.permission.CAMERA] == true) CameraNodeService.start(context)
+    }
+    // Without a rationale both before and after a denial, Android never showed the dialog:
+    // the permission is blocked and only the app's settings page can grant it.
+    var micRationaleBefore by remember { mutableStateOf(false) }
+    val micPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        micGranted = granted
+        if (granted) {
+            viewModel.updateSettings { it.copy(audioEnabled = true) }
+        } else if (!micRationaleBefore && activity?.shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO) == false) {
+            context.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, "package:${context.packageName}".toUri()))
+        }
     }
 
     NodeScreen(
@@ -93,6 +115,11 @@ fun NodeRoute(viewModel: NodeViewModel = hiltViewModel()) {
         onStart = { permissions.launch(requiredPermissions(state.settings).toTypedArray()) },
         onStop = { CameraNodeService.stop(context) },
         onSettingsChange = viewModel::updateSettings,
+        micGranted = micGranted,
+        onRequestMic = {
+            micRationaleBefore = activity?.shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO) == true
+            micPermission.launch(Manifest.permission.RECORD_AUDIO)
+        },
         onSelectFacing = viewModel::selectFacing,
         onPause = viewModel::pause,
         onResume = viewModel::resume,
@@ -109,6 +136,9 @@ fun NodeRoute(viewModel: NodeViewModel = hiltViewModel()) {
     )
 }
 
+private fun Context.hasMicPermission(): Boolean =
+    ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+
 private fun requiredPermissions(settings: CameraSettings): List<String> = buildList {
     add(Manifest.permission.CAMERA)
     if (settings.audioEnabled) add(Manifest.permission.RECORD_AUDIO)
@@ -123,6 +153,8 @@ fun NodeScreen(
     onStart: () -> Unit,
     onStop: () -> Unit,
     onSettingsChange: ((CameraSettings) -> CameraSettings) -> Unit,
+    micGranted: Boolean,
+    onRequestMic: () -> Unit,
     onSelectFacing: (CameraFacing) -> Unit,
     onPause: () -> Unit,
     onResume: () -> Unit,
@@ -186,7 +218,7 @@ fun NodeScreen(
             ConnectionCard(state, live != null, onCopyLink, tailscaleInstalled, onOpenTailscale, onAlwaysOnVpn)
 
             SectionHeader(stringResource(R.string.node_video))
-            VideoCard(state.settings, live != null, onSettingsChange, onSelectFacing, onSelectImageMode, onSelectOrientation)
+            VideoCard(state.settings, live != null, micGranted, onRequestMic, onSettingsChange, onSelectFacing, onSelectImageMode, onSelectOrientation)
 
             SectionHeader(stringResource(R.string.node_security))
             SecurityCard(state.settings, live != null, onSettingsChange)
@@ -314,6 +346,8 @@ private fun CopyButton(onClick: () -> Unit) {
 private fun VideoCard(
     settings: CameraSettings,
     live: Boolean,
+    micGranted: Boolean,
+    onRequestMic: () -> Unit,
     onSettingsChange: ((CameraSettings) -> CameraSettings) -> Unit,
     onSelectFacing: (CameraFacing) -> Unit,
     onSelectImageMode: (ImageMode) -> Unit,
@@ -377,11 +411,20 @@ private fun VideoCard(
         SettingRow(
             icon = CamNodeIcons.Mic,
             title = stringResource(R.string.node_audio),
-            subtitle = stringResource(if (live) R.string.node_applies_on_restart else R.string.node_audio_body),
+            subtitle = stringResource(
+                when {
+                    settings.audioEnabled && !micGranted -> R.string.node_audio_no_permission
+                    live -> R.string.node_applies_on_restart
+                    else -> R.string.node_audio_body
+                },
+            ),
             trailing = {
+                // The service streams without sound when the permission is missing, so show that.
                 Switch(
-                    checked = settings.audioEnabled,
-                    onCheckedChange = { enabled -> onSettingsChange { it.copy(audioEnabled = enabled) } },
+                    checked = settings.audioEnabled && micGranted,
+                    onCheckedChange = { enabled ->
+                        if (enabled && !micGranted) onRequestMic() else onSettingsChange { it.copy(audioEnabled = enabled) }
+                    },
                 )
             },
         )

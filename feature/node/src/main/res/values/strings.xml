@@ -55,6 +55,7 @@
     <string name="node_upside_down_body">Rotates the image 180° if the phone is mounted upside down</string>
     <string name="node_applies_on_restart">The change applies when streaming restarts</string>
     <string name="node_audio_body">Streams the room\'s sound</string>
+    <string name="node_audio_no_permission">Microphone permission is missing. Turn it on to stream sound</string>
     <string name="node_motion_alert">Alert if the phone is moved</string>
     <string name="node_motion_alert_body">Tells the master phones if someone picks up or moves this camera</string>
     <string name="node_battery_saver">Battery saver</string>

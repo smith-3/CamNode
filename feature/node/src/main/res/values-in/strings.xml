@@ -55,6 +55,7 @@
     <string name="node_upside_down_body">Memutar gambar 180° jika ponsel dipasang terbalik</string>
     <string name="node_applies_on_restart">Perubahan berlaku saat siaran dimulai ulang</string>
     <string name="node_audio_body">Menyiarkan suara sekitar</string>
+    <string name="node_audio_no_permission">Izin mikrofon belum diberikan. Aktifkan untuk menyiarkan suara</string>
     <string name="node_motion_alert">Peringatan jika ponsel dipindahkan</string>
     <string name="node_motion_alert_body">Memberi tahu ponsel utama jika ada yang mengangkat atau memindahkan kamera ini</string>
     <string name="node_battery_saver">Penghemat baterai</string>

@@ -55,6 +55,7 @@
     <string name="node_upside_down_body">अगर फ़ोन उल्टा लगा है तो इमेज 180° घुमाता है</string>
     <string name="node_applies_on_restart">बदलाव स्ट्रीम फिर शुरू होने पर लागू होगा</string>
     <string name="node_audio_body">आसपास की आवाज़ स्ट्रीम करता है</string>
+    <string name="node_audio_no_permission">माइक्रोफ़ोन की अनुमति नहीं है। आवाज़ स्ट्रीम करने के लिए इसे चालू करें</string>
     <string name="node_motion_alert">फ़ोन हिलाए जाने पर चेतावनी</string>
     <string name="node_motion_alert_body">कोई यह कैमरा उठाए या हिलाए तो मास्टर फ़ोन को बताता है</string>
     <string name="node_battery_saver">बैटरी सेवर</string>

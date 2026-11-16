@@ -55,6 +55,7 @@
     <string name="node_upside_down_body">Поворачивает изображение на 180°, если телефон закреплён вверх ногами</string>
     <string name="node_applies_on_restart">Изменение вступит в силу после перезапуска трансляции</string>
     <string name="node_audio_body">Передаёт звук окружения</string>
+    <string name="node_audio_no_permission">Нет разрешения на микрофон. Включите его, чтобы передавать звук</string>
     <string name="node_motion_alert">Оповещать, если телефон сдвинут</string>
     <string name="node_motion_alert_body">Сообщает главным телефонам, если кто-то поднимет или сдвинет эту камеру</string>
     <string name="node_battery_saver">Экономия заряда</string>

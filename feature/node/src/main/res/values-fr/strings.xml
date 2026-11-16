@@ -55,6 +55,7 @@
     <string name="node_upside_down_body">Pivote l’image de 180° si le téléphone est monté à l’envers</string>
     <string name="node_applies_on_restart">Le changement s’applique au redémarrage de la diffusion</string>
     <string name="node_audio_body">Diffuse le son ambiant</string>
+    <string name="node_audio_no_permission">L’autorisation du micro manque. Activez-la pour diffuser le son</string>
     <string name="node_motion_alert">Alerte si le téléphone est déplacé</string>
     <string name="node_motion_alert_body">Prévient les téléphones maîtres si quelqu’un soulève ou déplace cette caméra</string>
     <string name="node_battery_saver">Économiseur de batterie</string>

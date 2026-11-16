@@ -55,6 +55,7 @@
     <string name="node_upside_down_body">手机倒装时将画面旋转 180°</string>
     <string name="node_applies_on_restart">更改将在重新开始推流后生效</string>
     <string name="node_audio_body">传输环境声音</string>
+    <string name="node_audio_no_permission">缺少麦克风权限。开启后才能传输声音</string>
     <string name="node_motion_alert">手机被移动时提醒</string>
     <string name="node_motion_alert_body">有人拿起或移动此摄像头时通知主控手机</string>
     <string name="node_battery_saver">省电</string>

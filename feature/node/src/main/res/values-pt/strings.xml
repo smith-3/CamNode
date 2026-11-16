@@ -55,6 +55,7 @@
     <string name="node_upside_down_body">Gira a imagem 180° se o telefone estiver montado de cabeça para baixo</string>
     <string name="node_applies_on_restart">A alteração vale ao reiniciar a transmissão</string>
     <string name="node_audio_body">Transmite o som do ambiente</string>
+    <string name="node_audio_no_permission">Falta a permissão do microfone. Ative-a para transmitir som</string>
     <string name="node_motion_alert">Alerta se moverem o telefone</string>
     <string name="node_motion_alert_body">Avisa os telefones principais se alguém pegar ou mexer nesta câmera</string>
     <string name="node_battery_saver">Economia de bateria</string>

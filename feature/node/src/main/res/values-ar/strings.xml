@@ -55,6 +55,7 @@
     <string name="node_upside_down_body">يدير الصورة 180° إذا كان الهاتف مثبتًا بالمقلوب</string>
     <string name="node_applies_on_restart">يُطبَّق التغيير عند إعادة تشغيل البث</string>
     <string name="node_audio_body">يبث صوت المكان</string>
+    <string name="node_audio_no_permission">إذن الميكروفون غير ممنوح. فعّله لبث الصوت</string>
     <string name="node_motion_alert">تنبيه عند تحريك الهاتف</string>
     <string name="node_motion_alert_body">ينبّه الهواتف الرئيسية إذا رفع أحدهم هذه الكاميرا أو حرّكها</string>
     <string name="node_battery_saver">توفير البطارية</string>

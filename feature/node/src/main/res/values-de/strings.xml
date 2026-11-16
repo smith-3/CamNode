@@ -55,6 +55,7 @@
     <string name="node_upside_down_body">Dreht das Bild um 180°, wenn das Telefon kopfüber montiert ist</string>
     <string name="node_applies_on_restart">Die Änderung gilt nach dem Neustart der Übertragung</string>
     <string name="node_audio_body">Überträgt den Umgebungston</string>
+    <string name="node_audio_no_permission">Die Mikrofonberechtigung fehlt. Aktiviere sie, um Ton zu übertragen</string>
     <string name="node_motion_alert">Warnen, wenn das Telefon bewegt wird</string>
     <string name="node_motion_alert_body">Benachrichtigt die Haupttelefone, wenn jemand diese Kamera hochhebt oder bewegt</string>
     <string name="node_battery_saver">Energiesparen</string>
