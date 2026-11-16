@@ -1,0 +1,15 @@
+<resources>
+    <style name="Theme.CamNode.Launch.Default" parent="Theme.CamNode" />
+    <style name="Theme.CamNode.Launch.Calculator" parent="Theme.CamNode" />
+    <style name="Theme.CamNode.Launch.Calculator2" parent="Theme.CamNode" />
+    <style name="Theme.CamNode.Launch.Calculator3" parent="Theme.CamNode" />
+    <style name="Theme.CamNode.Launch.Clock" parent="Theme.CamNode" />
+    <style name="Theme.CamNode.Launch.Clock2" parent="Theme.CamNode" />
+    <style name="Theme.CamNode.Launch.Clock3" parent="Theme.CamNode" />
+    <style name="Theme.CamNode.Launch.Calendar" parent="Theme.CamNode" />
+    <style name="Theme.CamNode.Launch.Calendar2" parent="Theme.CamNode" />
+    <style name="Theme.CamNode.Launch.Calendar3" parent="Theme.CamNode" />
+    <style name="Theme.CamNode.Launch.Notes" parent="Theme.CamNode" />
+    <style name="Theme.CamNode.Launch.Notes2" parent="Theme.CamNode" />
+    <style name="Theme.CamNode.Launch.Notes3" parent="Theme.CamNode" />
+</resources>

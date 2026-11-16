@@ -1,0 +1,41 @@
+<resources>
+    <style name="Theme.CamNode.Launch.Default" parent="Theme.CamNode">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_tile_default</item>
+    </style>
+    <style name="Theme.CamNode.Launch.Calculator" parent="Theme.CamNode">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_tile_calculator</item>
+    </style>
+    <style name="Theme.CamNode.Launch.Calculator2" parent="Theme.CamNode">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_tile_calculator2</item>
+    </style>
+    <style name="Theme.CamNode.Launch.Calculator3" parent="Theme.CamNode">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_tile_calculator3</item>
+    </style>
+    <style name="Theme.CamNode.Launch.Clock" parent="Theme.CamNode">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_tile_clock</item>
+    </style>
+    <style name="Theme.CamNode.Launch.Clock2" parent="Theme.CamNode">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_tile_clock2</item>
+    </style>
+    <style name="Theme.CamNode.Launch.Clock3" parent="Theme.CamNode">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_tile_clock3</item>
+    </style>
+    <style name="Theme.CamNode.Launch.Calendar" parent="Theme.CamNode">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_tile_calendar</item>
+    </style>
+    <style name="Theme.CamNode.Launch.Calendar2" parent="Theme.CamNode">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_tile_calendar2</item>
+    </style>
+    <style name="Theme.CamNode.Launch.Calendar3" parent="Theme.CamNode">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_tile_calendar3</item>
+    </style>
+    <style name="Theme.CamNode.Launch.Notes" parent="Theme.CamNode">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_tile_notes</item>
+    </style>
+    <style name="Theme.CamNode.Launch.Notes2" parent="Theme.CamNode">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_tile_notes2</item>
+    </style>
+    <style name="Theme.CamNode.Launch.Notes3" parent="Theme.CamNode">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_tile_notes3</item>
+    </style>
+</resources>

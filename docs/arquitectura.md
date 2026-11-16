@@ -209,7 +209,9 @@ marcados en cada archivo:
   se traduce con el resto.
   Al desactivar el alias que abrió la tarea, Android la cierra; por eso
   `LauncherDisguiser` aplica el cambio cuando la app pasa a segundo plano, y al arrancar
-  corrige el alias si quedó desalineado.
+  corrige el alias si quedó desalineado. Cada alias apunta a una actividad de entrada
+  que hereda `MainActivity` y define su propio tema de inicio. En Android 12 o superior
+  el tema muestra el icono correspondiente a la apariencia antes de abrir la app.
 - Recientes: en Android 13+ se usa `setRecentsScreenshotEnabled(false)`. En versiones
   anteriores se usa `FLAG_SECURE`, que también bloquea las capturas de pantalla mientras
   el bloqueo está activo.

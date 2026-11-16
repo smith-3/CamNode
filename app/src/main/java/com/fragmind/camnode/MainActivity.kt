@@ -33,7 +33,7 @@ import com.fragmind.camnode.navigation.CamNodeNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+open class MainActivity : ComponentActivity() {
     @Inject lateinit var alerts: AlertsRepository
     @Inject lateinit var appLock: AppLockRepository
 

@@ -34,6 +34,85 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".DefaultLauncherActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.CamNode.Launch.Default"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".CalculatorLauncherActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.CamNode.Launch.Calculator"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".Calculator2LauncherActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.CamNode.Launch.Calculator2"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".Calculator3LauncherActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.CamNode.Launch.Calculator3"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ClockLauncherActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.CamNode.Launch.Clock"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".Clock2LauncherActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.CamNode.Launch.Clock2"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".Clock3LauncherActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.CamNode.Launch.Clock3"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".CalendarLauncherActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.CamNode.Launch.Calendar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".Calendar2LauncherActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.CamNode.Launch.Calendar2"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".Calendar3LauncherActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.CamNode.Launch.Calendar3"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".NotesLauncherActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.CamNode.Launch.Notes"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".Notes2LauncherActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.CamNode.Launch.Notes2"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".Notes3LauncherActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.CamNode.Launch.Notes3"
+            android:windowSoftInputMode="adjustResize" />
+
         <!--
             Launcher entries: the app-lock disguise enables exactly one of these
             (feature/applock LauncherDisguiser). Names must not change: launchers pin them.
@@ -46,7 +125,7 @@
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity=".DefaultLauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -59,7 +138,7 @@
             android:icon="@mipmap/ic_launcher_calculator"
             android:label="@string/disguise_calculator"
             android:roundIcon="@mipmap/ic_launcher_calculator_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity=".CalculatorLauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -72,7 +151,7 @@
             android:icon="@mipmap/ic_launcher_calculator2"
             android:label="@string/disguise_calculator"
             android:roundIcon="@mipmap/ic_launcher_calculator2_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity=".Calculator2LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -85,7 +164,7 @@
             android:icon="@mipmap/ic_launcher_calculator3"
             android:label="@string/disguise_calculator"
             android:roundIcon="@mipmap/ic_launcher_calculator3_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity=".Calculator3LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -98,7 +177,7 @@
             android:icon="@mipmap/ic_launcher_clock"
             android:label="@string/disguise_clock"
             android:roundIcon="@mipmap/ic_launcher_clock_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity=".ClockLauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -111,7 +190,7 @@
             android:icon="@mipmap/ic_launcher_clock2"
             android:label="@string/disguise_clock"
             android:roundIcon="@mipmap/ic_launcher_clock2_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity=".Clock2LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -124,7 +203,7 @@
             android:icon="@mipmap/ic_launcher_clock3"
             android:label="@string/disguise_clock"
             android:roundIcon="@mipmap/ic_launcher_clock3_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity=".Clock3LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -137,7 +216,7 @@
             android:icon="@mipmap/ic_launcher_calendar"
             android:label="@string/disguise_calendar"
             android:roundIcon="@mipmap/ic_launcher_calendar_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity=".CalendarLauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -150,7 +229,7 @@
             android:icon="@mipmap/ic_launcher_calendar2"
             android:label="@string/disguise_calendar"
             android:roundIcon="@mipmap/ic_launcher_calendar2_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity=".Calendar2LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -163,7 +242,7 @@
             android:icon="@mipmap/ic_launcher_calendar3"
             android:label="@string/disguise_calendar"
             android:roundIcon="@mipmap/ic_launcher_calendar3_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity=".Calendar3LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -176,7 +255,7 @@
             android:icon="@mipmap/ic_launcher_notes"
             android:label="@string/disguise_notes"
             android:roundIcon="@mipmap/ic_launcher_notes_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity=".NotesLauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -189,7 +268,7 @@
             android:icon="@mipmap/ic_launcher_notes2"
             android:label="@string/disguise_notes"
             android:roundIcon="@mipmap/ic_launcher_notes2_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity=".Notes2LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -202,7 +281,7 @@
             android:icon="@mipmap/ic_launcher_notes3"
             android:label="@string/disguise_notes"
             android:roundIcon="@mipmap/ic_launcher_notes3_round"
-            android:targetActivity=".MainActivity">
+            android:targetActivity=".Notes3LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
