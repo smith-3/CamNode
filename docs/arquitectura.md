@@ -59,6 +59,48 @@ cualquier par de teléfonos puede sincronizarse en cualquier orden y converger.
 - Descubrir no autoriza nada: cada llamada sigue exigiendo la clave del hogar.
 - El reloj propio nunca retrocede para los registros propios.
 
+### Puente remoto (diseño, sin implementar)
+
+Objetivo: con un solo teléfono con Tailscale en la casa, un visor remoto ve todas
+las cámaras de esa Wi-Fi. Si una cámara tiene su propio Tailscale, se sigue usando
+la ruta directa.
+
+**Orden de rutas del visor**: Wi-Fi directa → Tailscale directo → puente. El puente
+es una ruta más en `byPreference`, no reemplaza a las otras.
+
+**Quién es puente**: cualquier nodo con servicio en segundo plano (cámara o
+grabador) que tenga a la vez dirección de Wi-Fi y de Tailscale. No se configura: si
+cumple las dos condiciones, ofrece puente. El grabador de la PC es buen candidato
+porque está siempre enchufado. Si hay varios puentes, el visor usa el primero que
+responda; así no hay un punto único de falla.
+
+**Cómo reenvía**: reenvío TCP puro, un par de puertos por cámara (control y RTSP),
+escuchando solo en la IP `100.x` del puente. Los bytes pasan sin tocarse, así que
+siguen valiendo de punta a punta las firmas de cada pedido (que nombran a la cámara
+como destinataria) y la contraseña RTSP por visor. El puente no necesita permisos
+para ver y no puede ver sin un ticket propio. Solo reenvía hacia direcciones de Wi-Fi
+de cámaras del directorio; nunca es un proxy abierto.
+
+No se usa una ruta HTTP tipo `/relay/<id>/...` porque cambiar la ruta invalida la firma
+del pedido.
+
+**Contrato**: campo nuevo y opcional en el registro del puente en el directorio,
+por ejemplo `bridge: { routes: [{ cameraId, controlPort, rtspPort }] }`. Los
+teléfonos viejos lo ignoran. Se republica cuando cambian las cámaras de la Wi-Fi o
+los puertos. Rige last-writer-wins igual que el resto del registro.
+
+**Costos**: el puente recibe y reenvía cada video (el doble de uso de Wi-Fi, más
+CPU y batería), así que debe estar enchufado. La subida de internet de la casa es el
+mismo límite con o sin puente. Ejemplo: 3 cámaras × 2.5 Mbps ≈ 7.5 Mbps.
+
+**Después**: si varios visores remotos miran la misma cámara, que el puente pida un
+solo video y lo reparta, para ahorrar subida.
+
+**Alternativa sin código**: Tailscale en Android puede publicar la red de casa como
+*subnet route*. Sirve para probar el caso de uso, pero exige aprobar la ruta en la
+consola de Tailscale, gasta mucha batería y choca si el visor remoto está en otra
+red con el mismo rango (por ejemplo `192.168.1.0/24`).
+
 ## Módulos
 
 ```text
