@@ -2,6 +2,7 @@ package com.fragmind.camnode.feature.node
 
 import com.fragmind.camnode.core.model.ImageMode
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -42,5 +43,13 @@ class ImagePlanTest {
         val sensor = listOf(15..15, 7..20, 20..20, 7..24, 24..24, 7..30, 30..30)
         assertEquals(15..15, idleFpsRange(sensor))
         assertNull(idleFpsRange(emptyList()))
+    }
+
+    @Test
+    fun theFilterPartIgnoresSensorSettings() {
+        val night = ImagePlan.forMode(ImageMode.NIGHT)
+        assertEquals(night.glFilters, night.copy(lowLight = false).glFilters)
+        assertEquals(GlFilters(greyscale = true, gamma = 1f, contrast = 1f), ImagePlan.forMode(ImageMode.MONOCHROME).glFilters)
+        assertNotEquals(ImagePlan.forMode(ImageMode.MONOCHROME).glFilters, night.glFilters)
     }
 }

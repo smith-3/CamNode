@@ -4,6 +4,9 @@ import android.content.Context
 import android.hardware.display.DisplayManager
 import android.view.Display
 import android.view.Surface
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraManager
+import android.util.Log
 import android.view.SurfaceView
 import androidx.annotation.MainThread
 import com.fragmind.camnode.core.model.CamNodePorts
@@ -16,6 +19,7 @@ import com.fragmind.camnode.core.model.StreamTicket
 import com.pedro.common.ConnectChecker
 import com.pedro.encoder.input.sources.audio.MicrophoneSource
 import com.pedro.encoder.input.sources.audio.NoAudioSource
+import com.pedro.encoder.TimestampMode
 import com.pedro.encoder.input.sources.video.Camera2Source
 import android.os.Handler
 import android.os.Looper
@@ -75,6 +79,7 @@ class CameraStreamController @Inject constructor(@ApplicationContext private val
     private val cameraCallbacks = object : CameraCallbacks {
         override fun onCameraOpened() {
             mainHandler.post {
+                syncFacingWithOpenedLens()
                 imageTuner.onCameraReopened()
                 reapplyImage()
             }
@@ -141,6 +146,10 @@ class CameraStreamController @Inject constructor(@ApplicationContext private val
         }
         val audio = if (settings.audioEnabled) MicrophoneSource() else NoAudioSource()
         val candidate = RtspServerStream(context, CamNodePorts.RTSP, connectChecker, video, audio)
+        // Audio stamped by sample count, not by read time: phones that hand over the microphone in
+        // bursts gave a dozen frames nearly the same timestamp, and viewers' video (paced by the
+        // audio clock) froze. Video keeps the clock, which matches when each frame was captured.
+        candidate.setTimestampMode(TimestampMode.CLOCK, TimestampMode.BUFFER)
         candidate.getStreamClient().apply {
             setAuthenticator { user, password -> access.accepts(tickets, user, password) }
             setOnlyVideo(!settings.audioEnabled)
@@ -271,6 +280,25 @@ class CameraStreamController @Inject constructor(@ApplicationContext private val
         _state.update { if (it is StreamState.Live) it.copy(torch = enabled) else it }
     }
 
+    /**
+     * The lens Android actually opened can differ from the one asked for (a phone once streamed
+     * from the back camera while the screen said front). The state follows the real lens, so the
+     * label and the viewer's lens switch act on what is streaming. The saved choice is untouched.
+     */
+    private fun syncFacingWithOpenedLens() {
+        val source = stream?.videoSource as? Camera2Source ?: return
+        val opened = runCatching {
+            context.getSystemService(CameraManager::class.java)
+                .getCameraCharacteristics(source.getCurrentCameraId())
+                .get(CameraCharacteristics.LENS_FACING)
+        }.getOrNull() ?: return
+        val facing = if (opened == CameraCharacteristics.LENS_FACING_FRONT) CameraFacing.FRONT else CameraFacing.BACK
+        val live = state.value as? StreamState.Live ?: return
+        if (live.settings.facing == facing) return
+        Log.w(TAG, "Asked for ${live.settings.facing} but camera ${source.getCurrentCameraId()} is $facing")
+        _state.update { if (it is StreamState.Live) it.copy(settings = it.settings.copy(facing = facing)) else it }
+    }
+
     /** Each lens reopens at 1x, so a lens switch resets the zoom. */
     private fun switchFacing(facing: CameraFacing) {
         val source = stream?.videoSource as? Camera2Source ?: return
@@ -330,6 +358,7 @@ class CameraStreamController @Inject constructor(@ApplicationContext private val
     }
 
     private companion object {
+        const val TAG = "CameraStream"
         const val KEYFRAME_INTERVAL_SECONDS = 2
         /** Enough to keep the pipeline warm and the first frame fast when someone connects. */
         const val IDLE_FPS = 2

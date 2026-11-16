@@ -21,6 +21,9 @@ internal data class ImagePlan(
     /** Maximum exposure compensation and the lowest frame-rate floor, so each frame gathers more light. */
     val lowLight: Boolean = false,
 ) {
+    /** The part drawn by GL filters; the rest is sensor settings. */
+    val glFilters: GlFilters get() = GlFilters(greyscale, gamma, contrast)
+
     companion object {
         fun forMode(mode: ImageMode): ImagePlan = when (mode) {
             ImageMode.COLOR -> ImagePlan(greyscale = false)
@@ -29,6 +32,8 @@ internal data class ImagePlan(
         }
     }
 }
+
+internal data class GlFilters(val greyscale: Boolean, val gamma: Float, val contrast: Float)
 
 /**
  * The sensor range whose floor is lowest without exceeding the stream's frame rate, so
@@ -51,16 +56,17 @@ internal fun idleFpsRange(available: List<IntRange>): IntRange? =
 internal class ImageTuner(private val context: Context) {
     private var defaultFpsRange: Range<Int>? = null
 
+    /** The filters set on [filteredGl]; a restarted stream brings a new GL pipeline without them. */
+    private var filteredGl: GlStreamInterface? = null
+    private var appliedFilters: GlFilters? = null
+
     /** Call when the camera reopened: the new capture builder has fresh defaults to restore later. */
     fun onCameraReopened() {
         defaultFpsRange = null
     }
 
     fun apply(source: Camera2Source, gl: GlStreamInterface, plan: ImagePlan, streamFps: Int, idle: Boolean) {
-        gl.clearFilters()
-        if (plan.greyscale) gl.addFilter(GreyScaleFilterRender())
-        if (plan.gamma != 1f) gl.addFilter(GammaFilterRender().apply { gamma = plan.gamma })
-        if (plan.contrast != 1f) gl.addFilter(ContrastFilterRender().apply { contrast = plan.contrast })
+        applyFilters(gl, plan.glFilters)
 
         val characteristics = characteristics(source)
         source.setCustomRequest { builder ->
@@ -76,6 +82,21 @@ internal class ImageTuner(private val context: Context) {
             val target = range?.let { Range(it.first, it.last) } ?: defaultFpsRange
             target?.let { builder.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, it) }
         }
+    }
+
+    /**
+     * GL applies a clear and each add on its own thread, so a few frames in between go out
+     * without filters: in black and white a viewer connecting flashed color on every screen.
+     * Leaving idle only changes the frame rate, so unchanged filters are left alone.
+     */
+    private fun applyFilters(gl: GlStreamInterface, filters: GlFilters) {
+        if (gl === filteredGl && filters == appliedFilters) return
+        gl.clearFilters()
+        if (filters.greyscale) gl.addFilter(GreyScaleFilterRender())
+        if (filters.gamma != 1f) gl.addFilter(GammaFilterRender().apply { gamma = filters.gamma })
+        if (filters.contrast != 1f) gl.addFilter(ContrastFilterRender().apply { contrast = filters.contrast })
+        filteredGl = gl
+        appliedFilters = filters
     }
 
     fun torchAvailable(source: Camera2Source): Boolean =
