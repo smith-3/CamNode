@@ -109,7 +109,7 @@ fun ZoomStops(zoom: Float, min: Float, max: Float, onSelect: (Float) -> Unit, mo
 }
 
 /**
- * The capture row: last photo on the left, shutter in the middle, lens switch on the right.
+ * The capture row: lens switch on the left, shutter in the middle, last photo on the right.
  * A missing action keeps its slot so the shutter stays centered.
  */
 @Composable
@@ -121,18 +121,7 @@ fun ShutterBar(
 ) {
     Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(SIDE_SLOT), contentAlignment = Alignment.Center) {
-            lastPhoto?.let { photo ->
-                Image(
-                    photo.thumbnail,
-                    contentDescription = photo.description,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(MaterialTheme.shapes.small)
-                        .border(1.5.dp, Color.White, MaterialTheme.shapes.small)
-                        .clickable(role = Role.Button, onClick = photo.onOpen),
-                )
-            }
+            switchLens?.let { ConsoleIconButton(CamNodeIcons.SwitchCamera, it.description, it.onClick, Modifier.size(52.dp)) }
         }
         Box(Modifier.size(SHUTTER), contentAlignment = Alignment.Center) {
             shutter?.let { action ->
@@ -150,7 +139,18 @@ fun ShutterBar(
             }
         }
         Box(Modifier.size(SIDE_SLOT), contentAlignment = Alignment.Center) {
-            switchLens?.let { ConsoleIconButton(CamNodeIcons.SwitchCamera, it.description, it.onClick, Modifier.size(52.dp)) }
+            lastPhoto?.let { photo ->
+                Image(
+                    photo.thumbnail,
+                    contentDescription = photo.description,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(MaterialTheme.shapes.small)
+                        .border(1.5.dp, Color.White, MaterialTheme.shapes.small)
+                        .clickable(role = Role.Button, onClick = photo.onOpen),
+                )
+            }
         }
     }
 }

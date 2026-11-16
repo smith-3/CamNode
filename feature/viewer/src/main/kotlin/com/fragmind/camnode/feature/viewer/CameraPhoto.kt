@@ -1,6 +1,9 @@
 package com.fragmind.camnode.feature.viewer
 
 import android.content.ContentValues
+import android.util.Size
+import android.graphics.BitmapFactory
+import android.content.ContentUris
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
@@ -72,12 +75,44 @@ internal object PhotoStore {
         }
     }
 
+    /**
+     * The newest photo this app saved, so the thumbnail survives leaving the screen or a
+     * restart. Only CamNode's own files are listed, which needs no storage permission.
+     */
+    suspend fun latest(context: Context): Uri? = withContext(Dispatchers.IO) {
+        val projection = arrayOf(MediaStore.Images.Media._ID)
+        // "_" is a LIKE wildcard and LIKE ignores case, so screenshots named camnode_*.png matched too.
+        val selection = "${MediaStore.Images.Media.DISPLAY_NAME} LIKE ? ESCAPE '\\' AND ${MediaStore.Images.Media.MIME_TYPE} = 'image/jpeg'"
+        // Not DATE_TAKEN: MediaStore replaces it with the photo's EXIF date, and frames copied from
+        // video have none, so it reads NULL and the order was arbitrary (the oldest photo showed).
+        val order = "${MediaStore.Images.Media.DATE_ADDED} DESC, ${MediaStore.Images.Media._ID} DESC"
+        runCatching {
+            context.contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, selection, arrayOf(PREFIX.replace("_", "\\_") + "%"), order)?.use { rows ->
+                if (rows.moveToFirst()) ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, rows.getLong(0)) else null
+            }
+        }.getOrNull()
+    }
+
+    /** A small copy for the thumbnail; null if the photo was deleted meanwhile. */
+    suspend fun thumbnail(context: Context, uri: Uri, size: Int): Bitmap? = withContext(Dispatchers.IO) {
+        runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                context.contentResolver.loadThumbnail(uri, Size(size, size), null)
+            } else {
+                context.contentResolver.openInputStream(uri)?.use { input ->
+                    BitmapFactory.decodeStream(input, null, BitmapFactory.Options().apply { inSampleSize = 8 })
+                }
+            }
+        }.getOrNull()
+    }
+
     /** "CamNode_Cocina_20261116_143205.jpg": sortable, and safe on any file system. */
     fun fileName(cameraName: String, atMillis: Long): String {
         val camera = cameraName.trim().replace(Regex("[^\\p{L}\\p{N}]+"), "_").trim('_').ifEmpty { "camara" }
         val stamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(Date(atMillis))
-        return "CamNode_${camera}_$stamp.jpg"
+        return "$PREFIX${camera}_$stamp.jpg"
     }
 
     private const val JPEG_QUALITY = 92
+    private const val PREFIX = "CamNode_"
 }

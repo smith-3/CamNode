@@ -81,6 +81,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fragmind.camnode.core.designsystem.CamNodeButton
 import com.fragmind.camnode.core.designsystem.CamNodeIcons
@@ -148,8 +149,20 @@ internal fun CameraDetailScreen(
     }
     val pagerState = rememberPagerState(initialPage = initialPage) { cameras.size }
     var muted by rememberSaveable { mutableStateOf(false) }
-    // Shared by every page: the thumbnail shows the last photo taken in this visit.
+    // Shared by every page: the newest CamNode photo in the gallery, re-read on resume so it
+    // survives leaving the screen and notices photos deleted from the gallery.
     var lastPhoto by remember { mutableStateOf<SavedPhoto?>(null) }
+    val context = LocalContext.current
+    var reloads by remember { mutableIntStateOf(0) }
+    LifecycleResumeEffect(Unit) {
+        reloads++
+        onPauseOrDispose { }
+    }
+    LaunchedEffect(reloads) {
+        val uri = PhotoStore.latest(context)
+        val thumbnail = uri?.let { PhotoStore.thumbnail(context, it, THUMBNAIL_WIDTH) }
+        lastPhoto = if (uri != null && thumbnail != null) SavedPhoto(uri, thumbnail.asImageBitmap()) else null
+    }
     var zoomedOnScreen by remember { mutableStateOf(false) }
     HorizontalPager(
         state = pagerState,
