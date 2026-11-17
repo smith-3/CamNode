@@ -1,6 +1,7 @@
 package com.fragmind.camnode.core.data
 
 import com.fragmind.camnode.core.model.CameraEvent
+import com.fragmind.camnode.core.model.NodeId
 import kotlinx.coroutines.flow.Flow
 
 interface AlertsRepository {
@@ -10,6 +11,13 @@ interface AlertsRepository {
     /** The user silenced alerts on this phone only. */
     val alertsMuted: Flow<Boolean>
     val alerts: Flow<List<CameraEvent>>
+
+    val cameraMutes: Flow<Map<NodeId, Long>>
+
+    suspend fun setCameraMuted(cameraId: NodeId, untilMillis: Long?)
+
+    /** Records and deduplicates every event, returning whether to notify at receipt time. */
+    suspend fun recordForNotification(event: CameraEvent): Boolean
 
     /** Also updates this phone's directory record so cameras know whether to send it alerts. */
     suspend fun setAlertsMuted(muted: Boolean)

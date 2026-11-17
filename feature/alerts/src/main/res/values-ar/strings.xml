@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generated from the CamNode string table. -->
 <resources>
+    <string name="alerts_settings_title">إعدادات التنبيهات</string>
+    <string name="alerts_back">رجوع</string>
+    <string name="alerts_settings_empty_title">لا توجد كاميرات بعد</string>
+    <string name="alerts_settings_empty_body">ستظهر كاميراتك هنا لاختيار إشعارات الحركة التي تريد تلقيها.</string>
     <string name="alerts_title">التنبيهات</string>
     <string name="alerts_clear">مسح</string>
     <string name="alerts_muted_title">التنبيهات مكتومة على هذا الهاتف</string>
@@ -30,4 +34,13 @@
     <string name="alert_dismissed">تم إخفاء التنبيه</string>
     <string name="alert_undo">تراجع</string>
     <string name="alert_dismiss">إخفاء التنبيه</string>
+    <string name="alerts_camera_preferences">الحركة حسب الكاميرا</string>
+    <string name="alerts_local_scope">يؤثر فقط على الإشعارات في هذا الهاتف. تبقى الأحداث في السجل.</string>
+    <string name="alerts_camera_enabled">إشعارات الحركة مفعلة</string>
+    <string name="alerts_camera_muted">مكتومة حتى تعيد تفعيلها</string>
+    <string name="alerts_camera_muted_until">مكتومة حتى %1$s</string>
+    <string name="alerts_configure">إعداد</string>
+    <string name="alerts_camera_receive">تلقي الإشعارات</string>
+    <string name="alerts_camera_mute_hour">كتم لمدة ساعة</string>
+    <string name="alerts_camera_mute_forever">كتم حتى إعادة التفعيل</string>
 </resources>

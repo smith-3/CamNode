@@ -21,10 +21,10 @@ import android.content.Intent
 import android.os.Build
 import android.text.format.DateUtils
 import androidx.compose.ui.res.stringResource
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,11 +32,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarDuration
@@ -44,7 +44,6 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -70,22 +69,25 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.fragmind.camnode.core.data.AlertsRepository
+import com.fragmind.camnode.core.data.HouseholdRepository
 import com.fragmind.camnode.core.data.device.ContinuousOperation
-import com.fragmind.camnode.core.designsystem.CamNodeCard
 import com.fragmind.camnode.core.designsystem.CamNodeIcons
 import com.fragmind.camnode.core.designsystem.CamNodeTheme
 import com.fragmind.camnode.core.designsystem.EmptyState
 import com.fragmind.camnode.core.designsystem.NoticeCard
 import com.fragmind.camnode.core.designsystem.SectionHeader
-import com.fragmind.camnode.core.designsystem.SettingRow
 import com.fragmind.camnode.core.designsystem.StatusTone
 import com.fragmind.camnode.core.model.CameraEvent
+import com.fragmind.camnode.core.model.Permission
+import com.fragmind.camnode.core.model.WallClock
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -101,6 +103,8 @@ class AlertsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: AlertsRepository,
     private val continuousOperation: ContinuousOperation,
+    private val households: HouseholdRepository,
+    private val clock: WallClock,
 ) : ViewModel() {
     private val batteryUnrestricted = MutableStateFlow(continuousOperation.isBatteryUnrestricted())
     private val notificationsAllowed = MutableStateFlow(notificationsEnabled())
@@ -108,6 +112,32 @@ class AlertsViewModel @Inject constructor(
     val uiState: StateFlow<AlertsUiState> =
         combine(repository.receiverEnabled, batteryUnrestricted, notificationsAllowed, repository.alerts, ::AlertsUiState)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AlertsUiState())
+
+    val cameraPreferences: StateFlow<List<CameraAlertPreference>> = combine(
+        households.session,
+        repository.cameraMutes,
+        flow {
+            while (true) {
+                emit(clock.nowMillis())
+                delay(1_000)
+            }
+        },
+    ) { session, mutes, now ->
+        session?.takeIf { it.can(Permission.VIEW_STREAMS) }?.directory?.cameras
+            .orEmpty()
+            .sortedBy { it.name.lowercase() }
+            .map { camera -> CameraAlertPreference(camera.id, camera.name, mutes[camera.id]?.takeIf { it > now }) }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
+    fun muteCamera(cameraId: NodeId, temporarily: Boolean) {
+        viewModelScope.launch {
+            repository.setCameraMuted(cameraId, if (temporarily) clock.nowMillis() + 3_600_000 else Long.MAX_VALUE)
+        }
+    }
+
+    fun unmuteCamera(cameraId: NodeId) {
+        viewModelScope.launch { repository.setCameraMuted(cameraId, null) }
+    }
 
     /** Battery and notification rules change outside the app, so they are re-read on resume. */
     fun refresh() {
@@ -132,14 +162,16 @@ class AlertsViewModel @Inject constructor(
 }
 
 /**
- * Who receives alerts comes from the role (whoever may view), so this screen only lists them
- * and points out what would keep them from arriving. Muting lives in Household.
+ * Lists alert history with a separate page for notification preferences on this phone.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlertsRoute(onOpenCamera: (NodeId) -> Unit, viewModel: AlertsViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    var settingsOpen by rememberSaveable { mutableStateOf(false) }
+    val historyScrollState = rememberScrollState()
+    BackHandler(enabled = settingsOpen) { settingsOpen = false }
     val snackbarHost = remember { SnackbarHostState() }
     val restoredVersions = remember { mutableStateMapOf<String, Int>() }
     val scope = rememberCoroutineScope()
@@ -170,57 +202,88 @@ fun AlertsRoute(onOpenCamera: (NodeId) -> Unit, viewModel: AlertsViewModel = hil
         snackbarHost = { SnackbarHost(snackbarHost) },
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.alerts_title), style = MaterialTheme.typography.headlineSmall) },
+                title = {
+                    Text(
+                        stringResource(if (settingsOpen) R.string.alerts_settings_title else R.string.alerts_title),
+                        style = MaterialTheme.typography.headlineSmall,
+                    )
+                },
+                navigationIcon = {
+                    if (settingsOpen) {
+                        IconButton(onClick = { settingsOpen = false }) {
+                            Icon(CamNodeIcons.Back, contentDescription = stringResource(R.string.alerts_back))
+                        }
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
-                actions = { if (state.alerts.isNotEmpty()) TextButton(onClick = { confirmClear = true }) { Text(stringResource(R.string.alerts_clear)) } },
+                actions = {
+                    if (!settingsOpen) {
+                        if (state.alerts.isNotEmpty()) {
+                            TextButton(onClick = { confirmClear = true }) { Text(stringResource(R.string.alerts_clear)) }
+                        }
+                        IconButton(onClick = { settingsOpen = true }) {
+                            Icon(CamNodeIcons.Settings, contentDescription = stringResource(R.string.alerts_settings_title))
+                        }
+                    }
+                },
             )
         },
     ) { padding ->
-        Column(
-            Modifier.padding(padding).fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            when {
-                !state.receiverEnabled -> NoticeCard(
-                    CamNodeIcons.Notifications,
-                    stringResource(R.string.alerts_muted_title),
-                    stringResource(R.string.alerts_muted_body),
-                    StatusTone.Neutral,
-                )
-                !state.notificationsAllowed -> NoticeCard(
-                    CamNodeIcons.Notifications,
-                    stringResource(R.string.alerts_notifications_title),
-                    stringResource(R.string.alerts_notifications_body),
-                    StatusTone.Warning,
-                    action = {
-                        TextButton(onClick = {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
-                            else context.startActivity(viewModel.notificationSettingsIntent())
-                        }) { Text(stringResource(R.string.alerts_allow)) }
-                    },
-                )
-                !state.batteryUnrestricted -> NoticeCard(
-                    CamNodeIcons.BatteryAlert,
-                    stringResource(R.string.alerts_battery_title),
-                    stringResource(R.string.alerts_battery_body),
-                    StatusTone.Warning,
-                    action = { TextButton(onClick = { context.startActivity(viewModel.batteryExemptionIntent()) }) { Text(stringResource(R.string.alerts_allow)) } },
-                )
-            }
+        if (settingsOpen) {
+            val cameraPreferences by viewModel.cameraPreferences.collectAsStateWithLifecycle()
+            AlertsSettingsScreen(
+                cameras = cameraPreferences,
+                onMute = viewModel::muteCamera,
+                onUnmute = viewModel::unmuteCamera,
+                modifier = Modifier.padding(padding),
+            )
+        } else {
+            Column(
+                Modifier.padding(padding).fillMaxSize().verticalScroll(historyScrollState).padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                when {
+                    !state.receiverEnabled -> NoticeCard(
+                        CamNodeIcons.Notifications,
+                        stringResource(R.string.alerts_muted_title),
+                        stringResource(R.string.alerts_muted_body),
+                        StatusTone.Neutral,
+                    )
+                    !state.notificationsAllowed -> NoticeCard(
+                        CamNodeIcons.Notifications,
+                        stringResource(R.string.alerts_notifications_title),
+                        stringResource(R.string.alerts_notifications_body),
+                        StatusTone.Warning,
+                        action = {
+                            TextButton(onClick = {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                else context.startActivity(viewModel.notificationSettingsIntent())
+                            }) { Text(stringResource(R.string.alerts_allow)) }
+                        },
+                    )
+                    !state.batteryUnrestricted -> NoticeCard(
+                        CamNodeIcons.BatteryAlert,
+                        stringResource(R.string.alerts_battery_title),
+                        stringResource(R.string.alerts_battery_body),
+                        StatusTone.Warning,
+                        action = { TextButton(onClick = { context.startActivity(viewModel.batteryExemptionIntent()) }) { Text(stringResource(R.string.alerts_allow)) } },
+                    )
+                }
 
-            if (state.alerts.isEmpty()) {
-                EmptyState(
-                    icon = CamNodeIcons.Shield,
-                    title = stringResource(R.string.alerts_empty_title),
-                    body = stringResource(R.string.alerts_empty_body),
-                )
-            } else {
-                groupByDay(state.alerts, System.currentTimeMillis(), ZoneId.systemDefault()).forEach { (day, events) ->
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        SectionHeader(day.label(context, events.first().atMillis))
-                        events.forEach { event ->
-                            key(event.id, restoredVersions[event.id] ?: 0) {
-                                AlertCard(event, onOpen = { onOpenCamera(event.cameraId) }, onDismiss = { dismiss(event) }, dismissLabel = dismissLabel)
+                if (state.alerts.isEmpty()) {
+                    EmptyState(
+                        icon = CamNodeIcons.Shield,
+                        title = stringResource(R.string.alerts_empty_title),
+                        body = stringResource(R.string.alerts_empty_body),
+                    )
+                } else {
+                    groupByDay(state.alerts, System.currentTimeMillis(), ZoneId.systemDefault()).forEach { (day, events) ->
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            SectionHeader(day.label(context, events.first().atMillis))
+                            events.forEach { event ->
+                                key(event.id, restoredVersions[event.id] ?: 0) {
+                                    AlertCard(event, onOpen = { onOpenCamera(event.cameraId) }, onDismiss = { dismiss(event) }, dismissLabel = dismissLabel)
+                                }
                             }
                         }
                     }

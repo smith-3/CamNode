@@ -38,6 +38,8 @@ internal data class StoredState(
      * Replaces the old manual "master" switch, whose stored value is now ignored.
      */
     val alertsMuted: Boolean = false,
+    /** Local notification mute expiry per camera; Long.MAX_VALUE means until restored. */
+    val cameraMutes: Map<String, Long> = emptyMap(),
     /** Most recent alerts first, capped so the file stays small. */
     val alerts: List<CameraEvent> = emptyList(),
     val dismissedAlertIds: List<String> = emptyList(),

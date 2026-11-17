@@ -28,8 +28,6 @@ import com.fragmind.camnode.core.network.LanDiscovery
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,6 +64,7 @@ data class CameraTile(
     val rtspUrl: String?,
     /** Screen rotation this viewer applies; the stream itself is untouched. */
     val displayRotation: Int = 0,
+    internal val commandState: CameraCommandState? = null,
 )
 
 data class ViewerUiState(
@@ -94,14 +93,20 @@ class ViewerViewModel @Inject constructor(
     private val cameraSettings: CameraSettingsRepository,
     private val lanDiscovery: LanDiscovery,
 ) : ViewModel() {
+    private val commands = CameraCommands(viewModelScope)
+    private var currentSession: HouseholdSession? = null
     private val health = MutableStateFlow<Map<NodeId, CameraHealth>>(emptyMap())
     internal val playback = PlaybackSessions(viewModelScope, { url -> RtspConnection(context, url, viewModelScope) })
 
     init {
         viewModelScope.launch {
-            households.session.map { it?.household }.distinctUntilChanged().collect {
-                health.value = emptyMap()
-                playback.clear()
+            households.session.collect { session ->
+                if (currentSession?.household != session?.household || currentSession?.self?.id != session?.self?.id || currentSession?.role != session?.role) {
+                    commands.clear()
+                    health.value = emptyMap()
+                    playback.clear()
+                }
+                currentSession = session
             }
         }
     }
@@ -113,6 +118,7 @@ class ViewerViewModel @Inject constructor(
     fun setForeground(active: Boolean) = playback.setForeground(active)
 
     override fun onCleared() {
+        commands.clear()
         playback.clear()
     }
 
@@ -131,21 +137,29 @@ class ViewerViewModel @Inject constructor(
             discovered.collectLatest { found ->
                 while (true) {
                     directorySync.sync(found.values)
-                    households.currentSession()?.let { session ->
-                        val checked = checkHealth(session, found)
-                        if (households.currentSession()?.household == session.household) health.value = checked
-                    }
                     delay(REFRESH_MILLIS)
                 }
             }
         }
+        launch {
+            households.session.map { it?.household }.distinctUntilChanged().collectLatest {
+                discovered.collectLatest { found ->
+                    while (true) {
+                        households.currentSession()?.let { checkHealth(it, found) }
+                        delay(REFRESH_MILLIS)
+                    }
+                }
+            }
+        }
         combine(
-            households.session, health, cameraSettings.liveGrid, cameraSettings.cameraLayout, cameraSettings.displayRotations,
-        ) { session, health, liveGrid, layout, rotations ->
+            combine(households.session, commands.states) { session, states -> session to states },
+            health, cameraSettings.liveGrid, cameraSettings.cameraLayout, cameraSettings.displayRotations,
+        ) { sessionAndCommands, health, liveGrid, layout, rotations ->
+            val (session, commandStates) = sessionAndCommands
             ViewerUiState(
                 loading = false,
                 householdName = session?.household?.name.orEmpty(),
-                cameras = session?.let { tiles(it, health) }.orEmpty().map { it.copy(displayRotation = rotations[it.id] ?: 0) },
+                cameras = session?.let { tiles(it, health) }.orEmpty().map { it.copy(displayRotation = rotations[it.id] ?: 0, commandState = commandStates[it.id]) },
                 liveGrid = liveGrid,
                 cameraLayout = layout,
                 access = session?.role ?: AccessRole.CAMERA,
@@ -183,17 +197,66 @@ class ViewerViewModel @Inject constructor(
         viewModelScope.launch { cameraSettings.setCameraLayout(layout) }
     }
 
-    private fun command(cameraId: NodeId, build: (CameraStatus) -> CameraCommand) {
-        val online = health.value[cameraId] as? CameraHealth.Online ?: return
-        val camera = online.camera ?: return
-        viewModelScope.launch {
-            val session = households.currentSession() ?: return@launch
-            val result = client.applyCameraCommand(online.route, session.auth, cameraId, build(camera))
-            if (result is ControlResult.Success) {
-                health.update { it + (cameraId to online.copy(status = result.value)) }
+    fun setMovementAlerts(cameraId: NodeId, enabled: Boolean, mutedUntilMillis: Long) = command(cameraId) {
+        CameraCommand(movementAlerts = enabled, movementAlertsMutedUntilMillis = mutedUntilMillis)
+    }
+
+    /** A timed-out mutation is never resent. Read the camera to reconcile its actual state. */
+    fun refreshCamera(cameraId: NodeId) {
+        val session = currentSession ?: return
+        val camera = remoteCameras(session).firstOrNull { it.id == cameraId } ?: return
+        val online = health.value[cameraId] as? CameraHealth.Online
+        var acknowledged = false
+        commands.start(cameraId, onTimeout = { if (acknowledged) CameraCommandState.RECONNECTING else CameraCommandState.UNCONFIRMED }) {
+            when (val reach = probe.probe(listOfNotNull(online?.route) + camera.endpoints, session.auth, cameraId)) {
+                is PeerReachability.Online -> {
+                    if (sameSession(session) && reach.status.nodeId == cameraId) {
+                        acknowledged = true
+                        updateConfirmedCamera(cameraId, session, CameraHealth.Online(reach.status, reach.route, online?.ticket))
+                    } else CameraCommandState.UNCONFIRMED
+                }
+                PeerReachability.Unauthorized -> CameraCommandState.DENIED
+                PeerReachability.Offline -> CameraCommandState.UNCONFIRMED
             }
         }
     }
+
+    private fun command(cameraId: NodeId, build: (CameraStatus) -> CameraCommand) {
+        val session = currentSession ?: return
+        if (!session.can(Permission.CONTROL_CAMERAS)) return
+        val online = health.value[cameraId] as? CameraHealth.Online ?: return
+        val camera = online.camera ?: return
+        var acknowledged = false
+        commands.start(cameraId, onTimeout = { if (acknowledged) CameraCommandState.RECONNECTING else CameraCommandState.UNCONFIRMED }) {
+            when (val result = client.applyCameraCommand(online.route, session.auth, cameraId, build(camera))) {
+                is ControlResult.Success -> {
+                    if (sameSession(session) && result.value.nodeId == cameraId) {
+                        acknowledged = true
+                        updateConfirmedCamera(cameraId, session, online.copy(status = result.value))
+                    } else CameraCommandState.UNCONFIRMED
+                }
+                ControlResult.Forbidden, ControlResult.Unauthorized -> CameraCommandState.DENIED
+                is ControlResult.Unreachable -> CameraCommandState.UNCONFIRMED
+            }
+        }
+    }
+
+    private suspend fun updateConfirmedCamera(
+        cameraId: NodeId,
+        session: HouseholdSession,
+        online: CameraHealth.Online,
+    ): CameraCommandState {
+        health.update { it + (cameraId to online) }
+        if (online.camera?.paused != false || !session.household.secured || online.ticket != null) return CameraCommandState.CONFIRMED
+        val ticket = (client.streamTicket(online.route, session.auth, cameraId) as? ControlResult.Success)?.value
+        if (!sameSession(session)) return CameraCommandState.UNCONFIRMED
+        if (ticket == null) return CameraCommandState.RECONNECTING
+        health.update { it + (cameraId to online.copy(ticket = ticket)) }
+        return CameraCommandState.CONFIRMED
+    }
+
+    private fun sameSession(session: HouseholdSession): Boolean =
+        currentSession?.household == session.household && currentSession?.self?.id == session.self.id && currentSession?.role == session.role
 
     private fun tiles(session: HouseholdSession, health: Map<NodeId, CameraHealth>): List<CameraTile> =
         remoteCameras(session).map { camera ->
@@ -208,19 +271,25 @@ class ViewerViewModel @Inject constructor(
             )
         }
 
-    private suspend fun checkHealth(session: HouseholdSession, discovered: Map<NodeId, NodeEndpoint>): Map<NodeId, CameraHealth> =
-        coroutineScope {
-            remoteCameras(session).map { camera ->
-                async {
-                    val candidates = listOfNotNull(discovered[camera.id]) + camera.endpoints
-                    camera.id to when (val reach = probe.probe(candidates, session.auth, camera.id)) {
-                        is PeerReachability.Online -> CameraHealth.Online(reach.status, reach.route, ticketFor(session, camera, reach))
-                        PeerReachability.Unauthorized -> CameraHealth.Unauthorized
-                        PeerReachability.Offline -> CameraHealth.Offline
+    private suspend fun checkHealth(session: HouseholdSession, discovered: Map<NodeId, NodeEndpoint>) = coroutineScope {
+        remoteCameras(session).forEach { camera ->
+            launch {
+                val revision = commands.revision(camera.id)
+                val candidates = listOfNotNull(discovered[camera.id]) + camera.endpoints
+                val checked = when (val reach = probe.probe(candidates, session.auth, camera.id)) {
+                    is PeerReachability.Online -> CameraHealth.Online(reach.status, reach.route, ticketFor(session, camera, reach))
+                    PeerReachability.Unauthorized -> CameraHealth.Unauthorized
+                    PeerReachability.Offline -> CameraHealth.Offline
+                }
+                if (sameSession(session) && commands.acceptsPoll(camera.id, revision)) {
+                    health.update { it + (camera.id to checked) }
+                    if (checked is CameraHealth.Online && (checked.camera?.paused == true || !session.household.secured || checked.ticket != null)) {
+                        commands.confirmReconnection(camera.id)
                     }
                 }
-            }.awaitAll().toMap()
+            }
         }
+    }
 
     /**
      * Asks the camera for this phone's RTSP ticket. The camera returns the same ticket while

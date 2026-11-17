@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generated from the CamNode string table. -->
 <resources>
+    <string name="alerts_settings_title">Настройки оповещений</string>
+    <string name="alerts_back">Назад</string>
+    <string name="alerts_settings_empty_title">Камер пока нет</string>
+    <string name="alerts_settings_empty_body">Здесь появятся ваши камеры, чтобы вы могли выбрать уведомления о движении.</string>
     <string name="alerts_title">Оповещения</string>
     <string name="alerts_clear">Очистить</string>
     <string name="alerts_muted_title">Оповещения на этом телефоне выключены</string>
@@ -30,4 +34,13 @@
     <string name="alert_dismissed">Оповещение удалено</string>
     <string name="alert_undo">Отменить</string>
     <string name="alert_dismiss">Удалить оповещение</string>
+    <string name="alerts_camera_preferences">Движение по камерам</string>
+    <string name="alerts_local_scope">Влияет только на уведомления на этом телефоне. События остаются в истории.</string>
+    <string name="alerts_camera_enabled">Уведомления о движении включены</string>
+    <string name="alerts_camera_muted">Отключены до повторного включения</string>
+    <string name="alerts_camera_muted_until">Отключены до %1$s</string>
+    <string name="alerts_configure">Настроить</string>
+    <string name="alerts_camera_receive">Получать уведомления</string>
+    <string name="alerts_camera_mute_hour">Отключить на 1 час</string>
+    <string name="alerts_camera_mute_forever">Отключить до включения вручную</string>
 </resources>

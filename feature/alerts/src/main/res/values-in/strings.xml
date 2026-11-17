@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generated from the CamNode string table. -->
 <resources>
+    <string name="alerts_settings_title">Pengaturan peringatan</string>
+    <string name="alerts_back">Kembali</string>
+    <string name="alerts_settings_empty_title">Belum ada kamera</string>
+    <string name="alerts_settings_empty_body">Kamera Anda akan muncul di sini untuk memilih notifikasi gerakan yang ingin diterima.</string>
     <string name="alerts_title">Peringatan</string>
     <string name="alerts_clear">Hapus</string>
     <string name="alerts_muted_title">Peringatan dibisukan di ponsel ini</string>
@@ -30,4 +34,13 @@
     <string name="alert_dismissed">Peringatan dihapus</string>
     <string name="alert_undo">Urungkan</string>
     <string name="alert_dismiss">Hapus peringatan</string>
+    <string name="alerts_camera_preferences">Gerakan per kamera</string>
+    <string name="alerts_local_scope">Hanya memengaruhi notifikasi di ponsel ini. Peristiwa tetap tersimpan di riwayat.</string>
+    <string name="alerts_camera_enabled">Notifikasi gerakan aktif</string>
+    <string name="alerts_camera_muted">Dibisukan sampai diaktifkan kembali</string>
+    <string name="alerts_camera_muted_until">Dibisukan sampai %1$s</string>
+    <string name="alerts_configure">Atur</string>
+    <string name="alerts_camera_receive">Terima notifikasi</string>
+    <string name="alerts_camera_mute_hour">Bisukan selama 1 jam</string>
+    <string name="alerts_camera_mute_forever">Bisukan sampai diaktifkan kembali</string>
 </resources>

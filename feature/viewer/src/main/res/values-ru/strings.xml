@@ -58,4 +58,20 @@
     <string name="viewer_image_monochrome">Чёрно-белое</string>
     <string name="viewer_image_night">Ночь</string>
     <string name="viewer_audio_unavailable">Звук с этой камеры не поступает; он отключён, чтобы видео не останавливалось</string>
+    <string name="viewer_command_pending">Ожидание камеры…</string>
+    <string name="viewer_command_confirmed">Состояние камеры подтверждено</string>
+    <string name="viewer_command_unconfirmed">Не удалось подтвердить изменение. Проверьте камеру перед повторной попыткой.</string>
+    <string name="viewer_command_denied">Камера отказала в доступе. Проверьте свои разрешения в доме.</string>
+    <string name="viewer_command_check">Проверить состояние</string>
+    <string name="viewer_movement_alerts">Оповещения о движении</string>
+    <string name="viewer_movement_all_receivers">Изменения затрагивают всех получателей оповещений этой камеры. Видео и запись остаются активными.</string>
+    <string name="viewer_movement_update_camera">Обновите CamNode на этой камере для управления оповещениями о движении.</string>
+    <string name="viewer_movement_disabled">Отключены до повторного включения</string>
+    <string name="viewer_movement_snoozed">Без звука до %1$s</string>
+    <string name="viewer_movement_enabled">Включены</string>
+    <string name="viewer_movement_enable">Включить оповещения</string>
+    <string name="viewer_movement_mute_hour">Отключить звук на 1 час</string>
+    <string name="viewer_movement_disable">Отключить до повторного включения</string>
+    <string name="viewer_close">Закрыть</string>
+    <string name="viewer_command_reconnecting">Изменение подтверждено. Видео ещё не подключилось.</string>
 </resources>

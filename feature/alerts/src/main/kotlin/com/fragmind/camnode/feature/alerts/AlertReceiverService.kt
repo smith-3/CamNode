@@ -59,7 +59,7 @@ class AlertReceiverService : LifecycleService() {
     private var runtime: Job? = null
 
     private val sink = AlertSink { event ->
-        if (alerts.record(event)) notifyAlert(event)
+        if (alerts.recordForNotification(event)) notifyAlert(event)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

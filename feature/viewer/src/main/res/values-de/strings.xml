@@ -58,4 +58,20 @@
     <string name="viewer_image_monochrome">Schwarzweiß</string>
     <string name="viewer_image_night">Nacht</string>
     <string name="viewer_audio_unavailable">Der Ton dieser Kamera kommt nicht an; er wurde ausgeschaltet, damit das Video weiterläuft</string>
+    <string name="viewer_command_pending">Warten auf die Kamera…</string>
+    <string name="viewer_command_confirmed">Kamerastatus bestätigt</string>
+    <string name="viewer_command_unconfirmed">Änderung konnte nicht bestätigt werden. Prüfe die Kamera, bevor du es erneut versuchst.</string>
+    <string name="viewer_command_denied">Die Kamera hat den Zugriff verweigert. Prüfe deine Berechtigungen im Zuhause.</string>
+    <string name="viewer_command_check">Status prüfen</string>
+    <string name="viewer_movement_alerts">Bewegungsalarme</string>
+    <string name="viewer_movement_all_receivers">Änderungen gelten für alle Empfänger dieser Kamera. Video und Aufnahme bleiben aktiv.</string>
+    <string name="viewer_movement_update_camera">Aktualisiere CamNode auf dieser Kamera, um Bewegungsalarme zu verwalten.</string>
+    <string name="viewer_movement_disabled">Bis zur erneuten Aktivierung deaktiviert</string>
+    <string name="viewer_movement_snoozed">Stumm bis %1$s</string>
+    <string name="viewer_movement_enabled">Aktiviert</string>
+    <string name="viewer_movement_enable">Alarme aktivieren</string>
+    <string name="viewer_movement_mute_hour">Für 1 Stunde stummschalten</string>
+    <string name="viewer_movement_disable">Bis zur erneuten Aktivierung deaktivieren</string>
+    <string name="viewer_close">Schließen</string>
+    <string name="viewer_command_reconnecting">Änderung bestätigt. Das Video ist noch nicht wieder verbunden.</string>
 </resources>

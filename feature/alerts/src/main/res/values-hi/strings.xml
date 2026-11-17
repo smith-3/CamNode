@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generated from the CamNode string table. -->
 <resources>
+    <string name="alerts_settings_title">अलर्ट सेटिंग</string>
+    <string name="alerts_back">वापस</string>
+    <string name="alerts_settings_empty_title">अभी कोई कैमरा नहीं है</string>
+    <string name="alerts_settings_empty_body">आपके कैमरे यहाँ दिखाई देंगे, ताकि आप चुन सकें कि किन कैमरों की गतिविधि की सूचनाएँ चाहिए।</string>
     <string name="alerts_title">चेतावनियाँ</string>
     <string name="alerts_clear">साफ़ करें</string>
     <string name="alerts_muted_title">इस फ़ोन पर चेतावनियाँ बंद हैं</string>
@@ -30,4 +34,13 @@
     <string name="alert_dismissed">अलर्ट हटाया गया</string>
     <string name="alert_undo">पूर्ववत करें</string>
     <string name="alert_dismiss">अलर्ट हटाएं</string>
+    <string name="alerts_camera_preferences">हर कैमरे के हिलने की सूचनाएँ</string>
+    <string name="alerts_local_scope">केवल इस फ़ोन की सूचनाओं पर असर पड़ता है। घटनाएँ इतिहास में बनी रहती हैं।</string>
+    <string name="alerts_camera_enabled">हिलने की सूचनाएँ चालू हैं</string>
+    <string name="alerts_camera_muted">दोबारा चालू करने तक मौन</string>
+    <string name="alerts_camera_muted_until">%1$s तक मौन</string>
+    <string name="alerts_configure">सेट करें</string>
+    <string name="alerts_camera_receive">सूचनाएँ प्राप्त करें</string>
+    <string name="alerts_camera_mute_hour">1 घंटे के लिए मौन करें</string>
+    <string name="alerts_camera_mute_forever">दोबारा चालू करने तक मौन करें</string>
 </resources>

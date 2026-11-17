@@ -58,4 +58,20 @@
     <string name="viewer_image_monochrome">Noir et blanc</string>
     <string name="viewer_image_night">Nuit</string>
     <string name="viewer_audio_unavailable">Le son de cette caméra n’arrive pas ; il a été coupé pour que la vidéo continue</string>
+    <string name="viewer_command_pending">En attente de la caméra…</string>
+    <string name="viewer_command_confirmed">État de la caméra confirmé</string>
+    <string name="viewer_command_unconfirmed">Impossible de confirmer la modification. Vérifiez la caméra avant de réessayer.</string>
+    <string name="viewer_command_denied">La caméra a refusé l’accès. Vérifiez vos autorisations du foyer.</string>
+    <string name="viewer_command_check">Vérifier l’état</string>
+    <string name="viewer_movement_alerts">Alertes de mouvement</string>
+    <string name="viewer_movement_all_receivers">Ces changements concernent tous les destinataires des alertes de cette caméra. La vidéo et l’enregistrement restent actifs.</string>
+    <string name="viewer_movement_update_camera">Mettez CamNode à jour sur cette caméra pour gérer ses alertes de mouvement.</string>
+    <string name="viewer_movement_disabled">Désactivées jusqu’à réactivation</string>
+    <string name="viewer_movement_snoozed">En sourdine jusqu’au %1$s</string>
+    <string name="viewer_movement_enabled">Activées</string>
+    <string name="viewer_movement_enable">Activer les alertes</string>
+    <string name="viewer_movement_mute_hour">Couper pendant 1 heure</string>
+    <string name="viewer_movement_disable">Désactiver jusqu’à réactivation</string>
+    <string name="viewer_close">Fermer</string>
+    <string name="viewer_command_reconnecting">Modification confirmée. La vidéo ne s’est pas encore reconnectée.</string>
 </resources>

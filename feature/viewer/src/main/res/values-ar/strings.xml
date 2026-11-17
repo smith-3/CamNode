@@ -58,4 +58,20 @@
     <string name="viewer_image_monochrome">أبيض وأسود</string>
     <string name="viewer_image_night">ليلي</string>
     <string name="viewer_audio_unavailable">صوت هذه الكاميرا لا يصل؛ تم إيقافه ليستمر الفيديو</string>
+    <string name="viewer_command_pending">بانتظار الكاميرا…</string>
+    <string name="viewer_command_confirmed">تم تأكيد حالة الكاميرا</string>
+    <string name="viewer_command_unconfirmed">تعذر تأكيد التغيير. تحقق من الكاميرا قبل المحاولة مجددًا.</string>
+    <string name="viewer_command_denied">رفضت الكاميرا الوصول. تحقق من أذوناتك في المنزل.</string>
+    <string name="viewer_command_check">التحقق من الحالة</string>
+    <string name="viewer_movement_alerts">تنبيهات الحركة</string>
+    <string name="viewer_movement_all_receivers">تؤثر التغييرات على جميع مستلمي تنبيهات هذه الكاميرا. يظل الفيديو والتسجيل نشطين.</string>
+    <string name="viewer_movement_update_camera">حدّث CamNode على هذه الكاميرا لإدارة تنبيهات الحركة.</string>
+    <string name="viewer_movement_disabled">معطلة حتى إعادة تفعيلها</string>
+    <string name="viewer_movement_snoozed">صامتة حتى %1$s</string>
+    <string name="viewer_movement_enabled">مفعلة</string>
+    <string name="viewer_movement_enable">تفعيل التنبيهات</string>
+    <string name="viewer_movement_mute_hour">كتم لمدة ساعة</string>
+    <string name="viewer_movement_disable">تعطيل حتى إعادة التفعيل</string>
+    <string name="viewer_close">إغلاق</string>
+    <string name="viewer_command_reconnecting">تم تأكيد التغيير. لم يتصل الفيديو مجددًا بعد.</string>
 </resources>

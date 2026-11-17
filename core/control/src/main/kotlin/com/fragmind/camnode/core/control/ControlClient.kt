@@ -21,15 +21,16 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 /**
  * Calls another node's control API. [target] is the callee's node id when known;
  * privileged calls (camera commands, stream tickets) require it.
  */
-class ControlClient @Inject constructor(private val http: OkHttpClient) {
+class ControlClient @Inject constructor(http: OkHttpClient) {
+    private val http = http.newBuilder().callTimeout(10, TimeUnit.SECONDS).retryOnConnectionFailure(false).build()
 
     suspend fun status(endpoint: NodeEndpoint, auth: ControlAuth, target: NodeId? = null): ControlResult<NodeStatus> =
         call(endpoint, "GET", ControlProtocol.STATUS_PATH, auth, target, body = null) { decode(it, NodeStatus.serializer()) }
@@ -58,7 +59,7 @@ class ControlClient @Inject constructor(private val http: OkHttpClient) {
         target: NodeId?,
         body: ByteArray?,
         parse: (String) -> T,
-    ): ControlResult<T> {
+    ): ControlResult<T> = withContext(Dispatchers.IO) {
         val builder = Request.Builder()
             .url("http://${endpoint.urlHost}:${endpoint.controlPort}$path")
             .header("Authorization", ControlProtocol.bearer(auth.secret))
@@ -74,7 +75,7 @@ class ControlClient @Inject constructor(private val http: OkHttpClient) {
                 .header(ControlProtocol.HEADER_SIGNATURE, signature)
         }
         val request = if (body == null) builder.get().build() else builder.method(method, body.toRequestBody(JSON)).build()
-        return execute(request, parse)
+        execute(request, parse)
     }
 
     private fun <T> encode(value: T, serializer: KSerializer<T>): ByteArray =
@@ -82,30 +83,34 @@ class ControlClient @Inject constructor(private val http: OkHttpClient) {
 
     private fun <T> decode(body: String, serializer: KSerializer<T>): T = ControlProtocol.json.decodeFromString(serializer, body)
 
-    private suspend fun <T> execute(request: Request, parse: (String) -> T): ControlResult<T> = withContext(Dispatchers.IO) {
-        try {
-            http.newCall(request).await().use { response ->
-                when {
-                    response.code == 401 -> ControlResult.Unauthorized
-                    response.code == 403 -> ControlResult.Forbidden
-                    !response.isSuccessful -> ControlResult.Unreachable("HTTP ${response.code}")
-                    else -> ControlResult.Success(parse(response.body.string()))
+    private suspend fun <T> execute(request: Request, parse: (String) -> T): ControlResult<T> =
+        suspendCancellableCoroutine { continuation ->
+            val call = http.newCall(request)
+            continuation.invokeOnCancellation { call.cancel() }
+            call.enqueue(object : Callback {
+                override fun onResponse(call: Call, response: Response) {
+                    val result = try {
+                        response.use {
+                            when {
+                                it.code == 401 -> ControlResult.Unauthorized
+                                it.code == 403 -> ControlResult.Forbidden
+                                !it.isSuccessful -> ControlResult.Unreachable("HTTP ${it.code}")
+                                else -> ControlResult.Success(parse(it.body.string()))
+                            }
+                        }
+                    } catch (e: IOException) {
+                        ControlResult.Unreachable(e.message ?: e.javaClass.simpleName)
+                    } catch (e: SerializationException) {
+                        ControlResult.Unreachable("Invalid response: ${e.message}")
+                    }
+                    continuation.resume(result)
                 }
-            }
-        } catch (e: IOException) {
-            ControlResult.Unreachable(e.message ?: e.javaClass.simpleName)
-        } catch (e: SerializationException) {
-            ControlResult.Unreachable("Invalid response: ${e.message}")
-        }
-    }
 
-    private suspend fun Call.await(): Response = suspendCancellableCoroutine { continuation ->
-        continuation.invokeOnCancellation { cancel() }
-        enqueue(object : Callback {
-            override fun onResponse(call: Call, response: Response) = continuation.resume(response) { _, _, _ -> response.close() }
-            override fun onFailure(call: Call, e: IOException) = continuation.resumeWithException(e)
-        })
-    }
+                override fun onFailure(call: Call, e: IOException) {
+                    continuation.resume(ControlResult.Unreachable(e.message ?: e.javaClass.simpleName))
+                }
+            })
+        }
 
     private companion object {
         val JSON = "application/json".toMediaType()

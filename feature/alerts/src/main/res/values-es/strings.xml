@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generated from the CamNode string table. -->
 <resources>
+    <string name="alerts_settings_title">Configuración de alertas</string>
+    <string name="alerts_back">Volver</string>
+    <string name="alerts_settings_empty_title">Todavía no hay cámaras</string>
+    <string name="alerts_settings_empty_body">Aquí aparecerán tus cámaras para elegir qué avisos de movimiento recibir.</string>
+    <string name="alerts_camera_preferences">Movimiento por cámara</string>
+    <string name="alerts_local_scope">Solo afecta las notificaciones en este teléfono. Los eventos siguen en el historial.</string>
+    <string name="alerts_camera_enabled">Avisos de movimiento activos</string>
+    <string name="alerts_camera_muted">Silenciada hasta que vuelvas a activarla</string>
+    <string name="alerts_camera_muted_until">Silenciada hasta %1$s</string>
+    <string name="alerts_configure">Configurar</string>
+    <string name="alerts_camera_receive">Recibir notificaciones</string>
+    <string name="alerts_camera_mute_hour">Silenciar por 1 hora</string>
+    <string name="alerts_camera_mute_forever">Silenciar hasta reactivar</string>
     <string name="alerts_title">Alertas</string>
     <string name="alerts_clear">Borrar</string>
     <string name="alerts_muted_title">Las alertas están silenciadas en este teléfono</string>

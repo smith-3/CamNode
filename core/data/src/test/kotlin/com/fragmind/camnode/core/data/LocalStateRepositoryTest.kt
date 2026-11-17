@@ -213,6 +213,101 @@ class LocalStateRepositoryTest {
     }
 
     @Test
+    fun mutedCameraStillRecordsHistoryAndDoesNotReplayAfterRestoring() = runTest {
+        val repository = repository()
+        repository.create("Casa", "Samsung")
+        val camera = NodeId("entrance")
+        repository.setCameraMuted(camera, Long.MAX_VALUE)
+        val muted = CameraEvent.new(camera, "Entrada", CameraEventType.MOVED, atMillis = 1)
+        val other = CameraEvent.new(NodeId("patio"), "Patio", CameraEventType.MOVED, atMillis = 1)
+
+        assertFalse(repository.recordForNotification(muted))
+        assertTrue(repository.recordForNotification(other))
+        assertEquals(listOf(other, muted), repository.alerts.first())
+        repository.setCameraMuted(camera, null)
+        assertFalse(repository.recordForNotification(muted))
+        assertTrue(repository.recordForNotification(muted.copy(id = "new")))
+    }
+
+    @Test
+    fun cameraMuteExpiresAtReceiptTimeAndSurvivesRestart() = runTest {
+        val firstRun = CoroutineScope(coroutineContext + Job())
+        val repository = repository(scope = firstRun)
+        repository.create("Casa", "Samsung")
+        val camera = NodeId("entrance")
+        repository.setCameraMuted(camera, 2_000)
+        firstRun.cancel()
+        advanceUntilIdle()
+        val reopened = repository()
+        assertEquals(mapOf(camera to 2_000L), reopened.cameraMutes.first())
+        val event = CameraEvent.new(camera, "Entrada", CameraEventType.MOVED, atMillis = 99_999)
+        assertFalse(reopened.recordForNotification(event))
+
+        now = 2_000
+        assertTrue(reopened.recordForNotification(event.copy(id = "after-expiry", atMillis = 1)))
+        assertFalse(reopened.recordForNotification(event))
+        reopened.setCameraMuted(camera, null)
+        assertTrue(reopened.cameraMutes.first().isEmpty())
+    }
+
+    @Test
+    fun cameraMutesStayWithinTheirHousehold() = runTest {
+        val repository = repository()
+        val household = repository.create("Casa", "Samsung")
+        val camera = NodeId("entrance")
+        repository.setCameraMuted(camera, Long.MAX_VALUE)
+        repository.join(household.invite(), "Samsung")
+        assertEquals(mapOf(camera to Long.MAX_VALUE), repository.cameraMutes.first())
+
+        repository.join(Invite(Household(HouseholdId("other"), "Other", HouseholdSecret.generate()), emptyList()), "Samsung")
+        assertTrue(repository.cameraMutes.first().isEmpty())
+        repository.setCameraMuted(camera, Long.MAX_VALUE)
+        repository.leave()
+        assertTrue(repository.cameraMutes.first().isEmpty())
+    }
+
+    @Test
+    fun globalMuteAlsoSuppressesInFlightNotificationsWithoutLosingHistory() = runTest {
+        val repository = repository()
+        repository.create("Casa", "Samsung")
+        repository.setAlertsMuted(true)
+        val event = CameraEvent.new(NodeId("camera"), "Entrada", CameraEventType.MOVED, atMillis = 1)
+        assertFalse(repository.recordForNotification(event))
+        assertEquals(listOf(event), repository.alerts.first())
+        repository.setAlertsMuted(false)
+        assertFalse(repository.recordForNotification(event))
+    }
+
+    @Test
+    fun aRevokedReceiverDoesNotNotifyAnAlreadyArrivingEvent() = runTest {
+        val owner = repository("owner.json")
+        val receiver = repository("receiver.json")
+        val joined = receiver.join(owner.create("Casa", "Owner").invite(), "Receiver")
+        owner.mergeDirectory(receiver.currentSession()!!.directory)
+        now += 1
+        owner.assignRole(joined.self.id, AccessRole.VIEWER)
+        receiver.mergeDirectory(owner.currentSession()!!.directory)
+        val event = CameraEvent.new(NodeId("camera"), "Entrada", CameraEventType.MOVED, atMillis = 1)
+        assertTrue(receiver.recordForNotification(event))
+
+        now += 1
+        owner.assignRole(joined.self.id, AccessRole.REVOKED)
+        receiver.mergeDirectory(owner.currentSession()!!.directory)
+        assertFalse(receiver.recordForNotification(event.copy(id = "revoked")))
+    }
+
+    @Test
+    fun olderStoredStateHasNoCameraMutesAndMovementSnoozePersists() = runTest {
+        val old = StoredStateSerializer.readFrom("{}".byteInputStream())
+        assertTrue(old.cameraMutes.isEmpty())
+        val repository = repository()
+        repository.update { it.copy(movementAlerts = true, movementAlertsMutedUntilMillis = 4_000) }
+        val persisted = folder.root.resolve("state.json").inputStream().use { StoredStateSerializer.readFrom(it) }
+        assertEquals(4_000L, persisted.cameraSettings!!.movementAlertsMutedUntilMillis)
+        assertTrue(persisted.cameraSettings.movementAlerts)
+    }
+
+    @Test
     fun announcingAddressesKeepsTheCurrentRole() = runTest {
         val repository = repository()
         val session = repository.create("Casa", "Moto G")

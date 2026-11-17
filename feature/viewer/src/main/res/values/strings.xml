@@ -58,4 +58,20 @@
     <string name="viewer_image_monochrome">Black and white</string>
     <string name="viewer_image_night">Night</string>
     <string name="viewer_audio_unavailable">This camera\'s audio isn\'t arriving, so it was turned off to keep the video moving</string>
+    <string name="viewer_command_pending">Waiting for the camera…</string>
+    <string name="viewer_command_confirmed">Camera state confirmed</string>
+    <string name="viewer_command_unconfirmed">Could not confirm the change. Check the camera before trying again.</string>
+    <string name="viewer_command_denied">The camera denied access. Check your home permissions.</string>
+    <string name="viewer_command_check">Check status</string>
+    <string name="viewer_movement_alerts">Movement alerts</string>
+    <string name="viewer_movement_all_receivers">Changes affect everyone receiving alerts from this camera. Video and recording stay active.</string>
+    <string name="viewer_movement_update_camera">Update CamNode on this camera to manage its movement alerts.</string>
+    <string name="viewer_movement_disabled">Disabled until reactivated</string>
+    <string name="viewer_movement_snoozed">Silenced until %1$s</string>
+    <string name="viewer_movement_enabled">Enabled</string>
+    <string name="viewer_movement_enable">Activate alerts</string>
+    <string name="viewer_movement_mute_hour">Silence for 1 hour</string>
+    <string name="viewer_movement_disable">Disable until reactivated</string>
+    <string name="viewer_close">Close</string>
+    <string name="viewer_command_reconnecting">Change confirmed. Video has not reconnected yet.</string>
 </resources>

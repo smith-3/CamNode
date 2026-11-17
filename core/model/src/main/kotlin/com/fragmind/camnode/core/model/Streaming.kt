@@ -50,6 +50,7 @@ data class CameraSettings(
     val movementAlerts: Boolean = true,
     /** Black and white by default: it encodes with fewer bits (the camera lowers its bitrate for it). */
     val imageMode: ImageMode = ImageMode.MONOCHROME,
+    val movementAlertsMutedUntilMillis: Long = 0,
 )
 
 /** What a streaming camera reports. Absent from [NodeStatus] when the node is not streaming. */
@@ -69,6 +70,8 @@ data class CameraStatus(
     val torchAvailable: Boolean = false,
     /** Camera and encoder are off (to cool down or save battery); the node still answers and can resume. */
     val paused: Boolean = false,
+    val movementAlerts: Boolean? = null,
+    val movementAlertsMutedUntilMillis: Long? = null,
 ) {
     val portrait: Boolean get() = rotationDegrees == 90 || rotationDegrees == 270
 }
@@ -92,6 +95,8 @@ data class CameraCommand(
     val imageMode: ImageMode? = null,
     val torch: Boolean? = null,
     val paused: Boolean? = null,
+    val movementAlerts: Boolean? = null,
+    val movementAlertsMutedUntilMillis: Long? = null,
 )
 
 object RtspCredentials {
@@ -103,3 +108,6 @@ object RtspCredentials {
  * Purely visual: the camera keeps streaming the same video, so nothing reconnects.
  */
 fun nextDisplayRotation(degrees: Int): Int = Math.floorMod(degrees + 90, 360)
+
+fun CameraSettings.movementAlertsEnabledAt(nowMillis: Long): Boolean =
+    movementAlerts && movementAlertsMutedUntilMillis <= nowMillis

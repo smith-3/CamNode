@@ -58,4 +58,20 @@
     <string name="viewer_image_monochrome">Blanco y negro</string>
     <string name="viewer_image_night">Nocturno</string>
     <string name="viewer_audio_unavailable">El audio de esta cámara no está llegando; se desactivó para que el video siga</string>
+    <string name="viewer_command_pending">Esperando a la cámara…</string>
+    <string name="viewer_command_confirmed">Estado de la cámara confirmado</string>
+    <string name="viewer_command_unconfirmed">No pudimos confirmar el cambio. Consulta la cámara antes de intentarlo otra vez.</string>
+    <string name="viewer_command_denied">La cámara denegó el acceso. Revisa tus permisos del hogar.</string>
+    <string name="viewer_command_check">Consultar estado</string>
+    <string name="viewer_movement_alerts">Alertas de movimiento</string>
+    <string name="viewer_movement_all_receivers">Los cambios afectan a todos los que reciben alertas de esta cámara. El video y la grabación siguen activos.</string>
+    <string name="viewer_movement_update_camera">Actualiza CamNode en esta cámara para gestionar sus alertas de movimiento.</string>
+    <string name="viewer_movement_disabled">Desactivadas hasta volver a activarlas</string>
+    <string name="viewer_movement_snoozed">Silenciadas hasta %1$s</string>
+    <string name="viewer_movement_enabled">Activadas</string>
+    <string name="viewer_movement_enable">Activar alertas</string>
+    <string name="viewer_movement_mute_hour">Silenciar durante 1 hora</string>
+    <string name="viewer_movement_disable">Desactivar hasta volver a activar</string>
+    <string name="viewer_close">Cerrar</string>
+    <string name="viewer_command_reconnecting">Cambio confirmado. El video todavía no se ha reconectado.</string>
 </resources>

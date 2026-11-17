@@ -226,7 +226,7 @@ fun NodeScreen(
             VideoCard(state.settings, live != null, micGranted, onRequestMic, onSettingsChange, onSelectFacing, onSelectImageMode, onSelectOrientation)
 
             SectionHeader(stringResource(R.string.node_security))
-            SecurityCard(state.settings, live != null, onSettingsChange)
+            SecurityCard(state.settings, onSettingsChange)
 
             SectionHeader(stringResource(R.string.node_continuous))
             ContinuousCard(state.continuous, onRequestBatteryExemption, onOpenVendorSettings)
@@ -450,17 +450,17 @@ private fun VideoCard(
 }
 
 @Composable
-private fun SecurityCard(settings: CameraSettings, live: Boolean, onSettingsChange: ((CameraSettings) -> CameraSettings) -> Unit) {
+private fun SecurityCard(settings: CameraSettings, onSettingsChange: ((CameraSettings) -> CameraSettings) -> Unit) {
     CamNodeCard {
         SettingRow(
             icon = CamNodeIcons.Alarm,
             iconTint = CamNodeTheme.status.live,
             title = stringResource(R.string.node_motion_alert),
-            subtitle = stringResource(if (live) R.string.node_applies_on_restart else R.string.node_motion_alert_body),
+            subtitle = stringResource(R.string.node_motion_alert_body),
             trailing = {
                 Switch(
                     checked = settings.movementAlerts,
-                    onCheckedChange = { enabled -> onSettingsChange { it.copy(movementAlerts = enabled) } },
+                    onCheckedChange = { enabled -> onSettingsChange { it.copy(movementAlerts = enabled, movementAlertsMutedUntilMillis = 0) } },
                 )
             },
         )

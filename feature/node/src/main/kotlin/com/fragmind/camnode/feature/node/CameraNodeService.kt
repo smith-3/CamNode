@@ -23,6 +23,7 @@ import com.fragmind.camnode.core.data.CameraSettingsRepository
 import com.fragmind.camnode.core.data.DirectorySync
 import com.fragmind.camnode.core.data.HouseholdRepository
 import com.fragmind.camnode.core.data.HouseholdSession
+import com.fragmind.camnode.core.model.HouseholdId
 import com.fragmind.camnode.core.model.NodeId
 import com.fragmind.camnode.core.model.Permission
 import com.fragmind.camnode.core.model.StreamTicket
@@ -33,6 +34,8 @@ import com.fragmind.camnode.core.data.node.LocalNodeServer
 import com.fragmind.camnode.core.model.CameraCommand
 import com.fragmind.camnode.core.model.CameraEvent
 import com.fragmind.camnode.core.model.CameraEventType
+import com.fragmind.camnode.core.model.CameraSettings
+import com.fragmind.camnode.core.model.movementAlertsEnabledAt
 import com.fragmind.camnode.core.model.CameraStatus
 import com.fragmind.camnode.core.model.NodeRole
 import com.fragmind.camnode.core.model.WallClock
@@ -44,6 +47,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -74,6 +80,11 @@ class CameraNodeService : LifecycleService() {
     @Inject lateinit var clock: WallClock
     @Inject @ApplicationScope lateinit var appScope: CoroutineScope
 
+    private val settingsMutex = Mutex()
+    @Volatile private var movementSettings = CameraSettings()
+    private var movementEnabled = false
+    private var streamingHouseholdId: HouseholdId? = null
+
     private var advertisement: Advertisement? = null
     private var runtime: Job? = null
     private var wakeLock: PowerManager.WakeLock? = null
@@ -83,19 +94,69 @@ class CameraNodeService : LifecycleService() {
     @Volatile private var session: HouseholdSession? = null
 
     private val camera = object : CameraCapability {
-        override fun status(): CameraStatus? = controller.cameraStatus()
+        override fun status(): CameraStatus? = controller.cameraStatus()?.withMovementSettings()
         override fun issueTicket(viewer: NodeId): StreamTicket? = controller.issueTicket(viewer)
-        override suspend fun apply(command: CameraCommand): CameraStatus? {
-            val status = withContext(Dispatchers.Main) { controller.apply(command) }
+        override suspend fun apply(command: CameraCommand): CameraStatus? = settingsMutex.withLock {
+            val status = withContext(Dispatchers.Main) {
+                if (command.facing != null || command.orientation != null || command.zoom != null ||
+                    command.imageMode != null || command.torch != null || command.paused != null
+                ) controller.apply(command) else controller.cameraStatus()
+            } ?: return@withLock null
             cameraSettings.update { settings ->
                 settings.copy(
                     facing = command.facing ?: settings.facing,
                     orientation = command.orientation ?: settings.orientation,
                     imageMode = command.imageMode ?: settings.imageMode,
+                    movementAlerts = command.movementAlerts ?: settings.movementAlerts,
+                    movementAlertsMutedUntilMillis = command.movementAlertsMutedUntilMillis
+                        ?: settings.movementAlertsMutedUntilMillis,
                 )
             }
-            return status
+            refreshMovement()
+            status.withMovementSettings()
         }
+    }
+
+    private fun CameraStatus.withMovementSettings(): CameraStatus {
+        val settings = movementSettings
+        return copy(
+            movementAlerts = settings.movementAlerts,
+            movementAlertsMutedUntilMillis = settings.movementAlertsMutedUntilMillis,
+        )
+    }
+
+    private suspend fun refreshMovement() {
+        val settings = cameraSettings.settings.first()
+        withContext(Dispatchers.Main) {
+            movementSettings = settings
+            val enabled = settings.movementAlertsEnabledAt(clock.nowMillis())
+            if (enabled == movementEnabled) return@withContext
+            movementEnabled = enabled
+            if (!enabled) movement.stop() else movement.start {
+                lifecycleScope.launch {
+                    if (!cameraSettings.settings.first().movementAlertsEnabledAt(clock.nowMillis())) return@launch
+                    val current = households.currentSession() ?: return@launch
+                    if (current.household.id == streamingHouseholdId) {
+                        events.dispatch(CameraEvent.new(current.self.id, current.self.name, CameraEventType.MOVED, clock.nowMillis()))
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun observeMovementSettings() {
+        cameraSettings.settings
+            .map { it.movementAlerts to it.movementAlertsMutedUntilMillis }
+            .distinctUntilChanged()
+            .collectLatest {
+                while (true) {
+                    settingsMutex.withLock { refreshMovement() }
+                    val settings = movementSettings
+                    val now = clock.nowMillis()
+                    if (!settings.movementAlerts || settings.movementAlertsMutedUntilMillis <= now) break
+                    delay(minOf(settings.movementAlertsMutedUntilMillis - now, 60_000L))
+                }
+            }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -128,6 +189,8 @@ class CameraNodeService : LifecycleService() {
         val stored = cameraSettings.settings.first()
         val settings = stored.copy(audioEnabled = stored.audioEnabled && hasPermission(Manifest.permission.RECORD_AUDIO))
         this.session = session
+        movementSettings = settings
+        streamingHouseholdId = session.household.id
         lifecycleScope.launch { households.session.collect { this@CameraNodeService.session = it } }
         if (!controller.start(settings, streamAccess(session))) return stopSelf()
         cameraSettings.setCameraShouldRun(true)
@@ -140,16 +203,7 @@ class CameraNodeService : LifecycleService() {
         lifecycleScope.launch { reflectStateInNotification() }
         nodeServer.attachCamera(camera)
         advertisement = lanDiscovery.advertise(session.self.id, session.household)
-        if (settings.movementAlerts) {
-            movement.start {
-                lifecycleScope.launch {
-                    val current = households.currentSession() ?: return@launch
-                    if (current.household.id == session.household.id) {
-                        events.dispatch(CameraEvent.new(current.self.id, current.self.name, CameraEventType.MOVED, clock.nowMillis()))
-                    }
-                }
-            }
-        }
+        lifecycleScope.launch { observeMovementSettings() }
         while (lifecycleScope.isActive) {
             wakeLock?.acquire(WAKE_LOCK_TIMEOUT_MILLIS)
             val endpoints = addresses.current().endpoints

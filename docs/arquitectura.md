@@ -183,6 +183,13 @@ Autenticación:
 Los cambios incompatibles van en `/v2/...`. Los campos nuevos de JSON deben ser
 opcionales, porque el decodificador ignora claves desconocidas.
 
+`CameraCommand` permite cambiar `movementAlerts` y `movementAlertsMutedUntilMillis`
+sin reiniciar el video. Son campos opcionales y requieren el mismo permiso de
+control que los demás comandos de cámara. `CameraStatus` los devuelve como
+opcionales; `movementAlerts == null` identifica una cámara anterior que todavía
+no admite este control. Activar usa `true` y fecha `0`; silenciar una hora usa
+`true` y una fecha futura; desactivar hasta reactivar usa `false` y fecha `0`.
+
 ## Roles y permisos
 
 Todos los dispositivos entran como **Cámara**; un administrador decide quién ve o
@@ -254,6 +261,16 @@ marcados en cada archivo:
   12 horas (le pasó al grabador). `ServerCommandManagerAuthTest`.
 
 ## Pausa y navegación
+
+- **Órdenes remotas**: cada cámara admite una petición pendiente. La UI muestra
+  el envío y evita acumular toques mientras conserva la navegación y los
+  controles locales. HTTP tiene un plazo total de 10 s, incluido el cuerpo de
+  respuesta. Si no se confirma una orden, se conserva el último estado conocido
+  y se ofrece consultar la cámara; no se reenvía automáticamente una mutación
+  cuyo efecto podría haberse aplicado. Las consultas iniciadas antes de una
+  orden no pueden sobrescribir su resultado.
+- Las comprobaciones de salud publican cada cámara cuando responde, sin esperar
+  a las demás ni al intercambio del directorio.
 
 - **Pausa** (`CameraCommand.paused`, solo administradores): libera cámara, codificador
   y servidor RTSP; el servicio y la API siguen vivos para reanudar a distancia, porque
@@ -427,7 +444,9 @@ en la cámara, así que todos los visores y grabaciones ven la imagen derecha.
 
 - `MovementAnalyzer` (lógica pura, probada) aprende la posición en reposo durante
   15 s y alerta si el teléfono se inclina más de 15° o recibe un tirón de más de
-  2 m/s², como máximo una vez por minuto.
+  2 m/s², como máximo una vez por minuto. Tras avisar, espera 15 s sin tirones
+  ni cambios de inclinación mayores de 5° para aprender la nueva posición y
+  rearmarse. Así, manipular el teléfono de forma continua genera un solo aviso.
 - **Quién recibe**: todo el que puede ver (administrador, visor y grabador). No hay
   interruptor de "teléfono maestro". Cada teléfono anuncia `receivesAlerts` cuando su
   rol puede ver y no las silenció en Hogar → Este teléfono (`StoredState.alertsMuted`).
@@ -443,8 +462,22 @@ en la cámara, así que todos los visores y grabaciones ven la imagen derecha.
   reiniciar el teléfono (`BootReceiver`). Se detiene solo cuando el indicador se apaga
   (silenciado o rol sin permiso para ver). Android no deja iniciarlo desde segundo
   plano: un rol recién concedido empieza a recibir al abrir la app o al reiniciar.
-- La pestaña Alertas solo lista avisos y señala lo que impediría recibirlos:
-  silenciadas, notificaciones desactivadas o ahorro de batería (Doze puede retrasarlas).
+- La pestaña Alertas muestra el historial. El botón de configuración abre una
+  segunda vista con las preferencias por cámara; la flecha y Atrás vuelven al
+  historial conservando su desplazamiento. Solo esa vista observa los silencios
+  y su vencimiento. Permite silenciar el movimiento por cámara solo en este
+  teléfono, durante una hora o hasta reactivarlo. Los silencios se
+  guardan por `NodeId` en `StoredState.cameraMutes` y se borran al abandonar o
+  cambiar de hogar. Los eventos silenciados conservan su historial y su
+  deduplicación, pero no generan notificación. La recepción evalúa el silencio y
+  guarda el evento en una misma transacción. La pantalla también señala las
+  notificaciones desactivadas y el ahorro de batería (Doze puede retrasarlas).
+- En el detalle del visor, un administrador puede silenciar el movimiento para
+  todos los receptores de una cámara. `CameraNodeService` observa los ajustes y
+  activa o detiene únicamente el detector, sin reiniciar el stream. Los silencios
+  temporales guardan su vencimiento y programan la reactivación aunque no cambie
+  DataStore. Los teléfonos antiguos siguen entregando alertas que se pueden
+  silenciar localmente, pero deben actualizarse para admitir el control global.
 
 ## Batería
 

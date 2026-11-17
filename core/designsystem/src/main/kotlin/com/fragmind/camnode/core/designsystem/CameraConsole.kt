@@ -60,9 +60,10 @@ fun CameraConsole(
 
 /** A secondary control over video: torch, picture mode, rotation, sound. */
 @Composable
-fun ConsoleIconButton(icon: ImageVector, description: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun ConsoleIconButton(icon: ImageVector, description: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
     FilledTonalIconButton(
         onClick = onClick,
+        enabled = enabled,
         modifier = modifier.size(44.dp),
         shape = CircleShape,
         colors = IconButtonDefaults.filledTonalIconButtonColors(containerColor = Color.Black.copy(alpha = 0.35f), contentColor = Color.White),
@@ -74,7 +75,7 @@ fun ConsoleIconButton(icon: ImageVector, description: String, onClick: () -> Uni
  * exact zoom, so a camera left at 2.5x reads "2.5x" on the 2x step.
  */
 @Composable
-fun ZoomStops(zoom: Float, min: Float, max: Float, onSelect: (Float) -> Unit, modifier: Modifier = Modifier) {
+fun ZoomStops(zoom: Float, min: Float, max: Float, onSelect: (Float) -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
     val stops = zoomStops(min, max)
     if (stops.size < 2) return
     val active = activeZoomStop(zoom, stops)
@@ -91,7 +92,7 @@ fun ZoomStops(zoom: Float, min: Float, max: Float, onSelect: (Float) -> Unit, mo
                     .size(if (selected) 42.dp else 36.dp)
                     .clip(CircleShape)
                     .background(if (selected) Color.Black.copy(alpha = 0.6f) else Color.Transparent)
-                    .clickable(role = Role.Button) { onSelect(stop) }
+                    .clickable(enabled = enabled, role = Role.Button) { onSelect(stop) }
                     .semantics {
                         contentDescription = description
                         this.selected = selected
@@ -121,7 +122,7 @@ fun ShutterBar(
 ) {
     Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(SIDE_SLOT), contentAlignment = Alignment.Center) {
-            switchLens?.let { ConsoleIconButton(CamNodeIcons.SwitchCamera, it.description, it.onClick, Modifier.size(52.dp)) }
+            switchLens?.let { ConsoleIconButton(CamNodeIcons.SwitchCamera, it.description, it.onClick, Modifier.size(52.dp), enabled = it.enabled) }
         }
         Box(Modifier.size(SHUTTER), contentAlignment = Alignment.Center) {
             shutter?.let { action ->
@@ -155,7 +156,7 @@ fun ShutterBar(
     }
 }
 
-class ConsoleAction(val description: String, val onClick: () -> Unit)
+class ConsoleAction(val description: String, val enabled: Boolean = true, val onClick: () -> Unit)
 
 /** [enabled] is false until there is a picture to capture. */
 class ShutterAction(val description: String, val enabled: Boolean, val onClick: () -> Unit)

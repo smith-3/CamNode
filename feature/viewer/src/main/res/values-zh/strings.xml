@@ -58,4 +58,20 @@
     <string name="viewer_image_monochrome">黑白</string>
     <string name="viewer_image_night">夜间</string>
     <string name="viewer_audio_unavailable">此摄像头的音频未到达，已关闭音频以保持视频流畅</string>
+    <string name="viewer_command_pending">正在等待摄像头…</string>
+    <string name="viewer_command_confirmed">已确认摄像头状态</string>
+    <string name="viewer_command_unconfirmed">无法确认更改。请先检查摄像头再重试。</string>
+    <string name="viewer_command_denied">摄像头拒绝访问。请检查您的家庭权限。</string>
+    <string name="viewer_command_check">查询状态</string>
+    <string name="viewer_movement_alerts">移动提醒</string>
+    <string name="viewer_movement_all_receivers">更改会影响接收此摄像头提醒的所有人。视频和录像将保持开启。</string>
+    <string name="viewer_movement_update_camera">请在此摄像头上更新 CamNode，以管理移动提醒。</string>
+    <string name="viewer_movement_disabled">已停用，直到重新启用</string>
+    <string name="viewer_movement_snoozed">静音至 %1$s</string>
+    <string name="viewer_movement_enabled">已启用</string>
+    <string name="viewer_movement_enable">启用提醒</string>
+    <string name="viewer_movement_mute_hour">静音 1 小时</string>
+    <string name="viewer_movement_disable">停用直到重新启用</string>
+    <string name="viewer_close">关闭</string>
+    <string name="viewer_command_reconnecting">更改已确认。视频尚未重新连接。</string>
 </resources>

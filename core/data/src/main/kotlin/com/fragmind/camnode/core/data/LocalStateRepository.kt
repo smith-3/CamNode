@@ -119,6 +119,18 @@ internal class LocalStateRepository @Inject constructor(
 
     override val alertsMuted: Flow<Boolean> = store.data.map { it.alertsMuted }.distinctUntilChanged()
 
+    override val cameraMutes: Flow<Map<NodeId, Long>> = store.data
+        .map { state -> state.cameraMutes.mapKeys { (id, _) -> NodeId(id) } }
+        .distinctUntilChanged()
+
+    override suspend fun setCameraMuted(cameraId: NodeId, untilMillis: Long?) {
+        store.updateData { state ->
+            val mutes = if (untilMillis == null) state.cameraMutes - cameraId.value
+            else state.cameraMutes + (cameraId.value to untilMillis)
+            state.copy(cameraMutes = mutes)
+        }
+    }
+
     override val alerts: Flow<List<CameraEvent>> = store.data.map { it.alerts }.distinctUntilChanged()
 
     override suspend fun currentSession(): HouseholdSession? = session.first()
@@ -137,7 +149,10 @@ internal class LocalStateRepository @Inject constructor(
             val self = LocalNode(state.self?.id ?: NodeId.random(), deviceName.trim(), state.nodeKeys?.publicKey)
             val directory = if (state.household?.id == household.id) state.directory else Directory()
             val previous = directory[self.id]
-            val joined = state.copy(self = self, household = household, directory = directory, bootstrapSeeds = invite.seeds)
+            val joined = state.copy(
+                self = self, household = household, directory = directory, bootstrapSeeds = invite.seeds,
+                cameraMutes = if (state.household?.id == household.id) state.cameraMutes else emptyMap(),
+            )
             val me = Member(
                 id = self.id,
                 name = self.name,
@@ -153,7 +168,7 @@ internal class LocalStateRepository @Inject constructor(
     }
 
     override suspend fun leave() {
-        store.updateData { it.copy(household = null, directory = Directory(), bootstrapSeeds = emptyList()) }
+        store.updateData { it.copy(household = null, directory = Directory(), bootstrapSeeds = emptyList(), cameraMutes = emptyMap()) }
     }
 
     override suspend fun mergeDirectory(remote: Directory): Directory =
@@ -190,13 +205,19 @@ internal class LocalStateRepository @Inject constructor(
         store.updateData { state -> state.copy(alertsMuted = muted).withSelf() }
     }
 
-    override suspend fun record(event: CameraEvent): Boolean {
-        var isNew = false
+    override suspend fun record(event: CameraEvent): Boolean = recordReceipt(event, notification = false)
+
+    override suspend fun recordForNotification(event: CameraEvent): Boolean = recordReceipt(event, notification = true)
+
+    private suspend fun recordReceipt(event: CameraEvent, notification: Boolean): Boolean {
+        var accepted = false
         store.updateData { state ->
-            isNew = event.id !in state.dismissedAlertIds && state.alerts.none { it.id == event.id }
+            val isNew = event.id !in state.dismissedAlertIds && state.alerts.none { it.id == event.id }
+            accepted = isNew && (!notification || (state.wantsAlerts &&
+                (state.cameraMutes[event.cameraId.value] ?: 0L) <= clock.nowMillis()))
             if (!isNew) state else state.copy(alerts = (listOf(event) + state.alerts).take(MAX_ALERTS))
         }
-        return isNew
+        return accepted
     }
 
     override suspend fun dismiss(id: String) {

@@ -58,4 +58,20 @@
     <string name="viewer_image_monochrome">Hitam putih</string>
     <string name="viewer_image_night">Malam</string>
     <string name="viewer_audio_unavailable">Audio kamera ini tidak sampai; dimatikan agar video tetap berjalan</string>
+    <string name="viewer_command_pending">Menunggu kamera…</string>
+    <string name="viewer_command_confirmed">Status kamera dikonfirmasi</string>
+    <string name="viewer_command_unconfirmed">Perubahan belum dapat dikonfirmasi. Periksa kamera sebelum mencoba lagi.</string>
+    <string name="viewer_command_denied">Kamera menolak akses. Periksa izin rumah Anda.</string>
+    <string name="viewer_command_check">Periksa status</string>
+    <string name="viewer_movement_alerts">Peringatan gerakan</string>
+    <string name="viewer_movement_all_receivers">Perubahan berlaku untuk semua penerima peringatan kamera ini. Video dan perekaman tetap aktif.</string>
+    <string name="viewer_movement_update_camera">Perbarui CamNode pada kamera ini untuk mengelola peringatan gerakan.</string>
+    <string name="viewer_movement_disabled">Dinonaktifkan sampai diaktifkan kembali</string>
+    <string name="viewer_movement_snoozed">Dibisukan sampai %1$s</string>
+    <string name="viewer_movement_enabled">Aktif</string>
+    <string name="viewer_movement_enable">Aktifkan peringatan</string>
+    <string name="viewer_movement_mute_hour">Bisukan selama 1 jam</string>
+    <string name="viewer_movement_disable">Nonaktifkan sampai diaktifkan kembali</string>
+    <string name="viewer_close">Tutup</string>
+    <string name="viewer_command_reconnecting">Perubahan dikonfirmasi. Video belum tersambung kembali.</string>
 </resources>

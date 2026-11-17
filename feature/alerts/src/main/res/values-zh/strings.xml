@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generated from the CamNode string table. -->
 <resources>
+    <string name="alerts_settings_title">提醒设置</string>
+    <string name="alerts_back">返回</string>
+    <string name="alerts_settings_empty_title">暂无摄像头</string>
+    <string name="alerts_settings_empty_body">您的摄像头将显示在这里，您可以选择接收哪些移动通知。</string>
     <string name="alerts_title">提醒</string>
     <string name="alerts_clear">清除</string>
     <string name="alerts_muted_title">此手机上的提醒已静音</string>
@@ -30,4 +34,13 @@
     <string name="alert_dismissed">提醒已移除</string>
     <string name="alert_undo">撤销</string>
     <string name="alert_dismiss">移除提醒</string>
+    <string name="alerts_camera_preferences">各摄像头的移动提醒</string>
+    <string name="alerts_local_scope">仅影响此手机上的通知。事件仍保留在历史记录中。</string>
+    <string name="alerts_camera_enabled">移动通知已开启</string>
+    <string name="alerts_camera_muted">已静音，直到重新开启</string>
+    <string name="alerts_camera_muted_until">静音至 %1$s</string>
+    <string name="alerts_configure">设置</string>
+    <string name="alerts_camera_receive">接收通知</string>
+    <string name="alerts_camera_mute_hour">静音 1 小时</string>
+    <string name="alerts_camera_mute_forever">静音直到重新开启</string>
 </resources>

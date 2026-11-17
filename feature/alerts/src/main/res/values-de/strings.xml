@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generated from the CamNode string table. -->
 <resources>
+    <string name="alerts_settings_title">Alarmeinstellungen</string>
+    <string name="alerts_back">Zurück</string>
+    <string name="alerts_settings_empty_title">Noch keine Kameras</string>
+    <string name="alerts_settings_empty_body">Hier erscheinen deine Kameras. Du kannst auswählen, welche Bewegungsmeldungen du erhalten möchtest.</string>
     <string name="alerts_title">Warnungen</string>
     <string name="alerts_clear">Löschen</string>
     <string name="alerts_muted_title">Warnungen sind auf diesem Telefon stummgeschaltet</string>
@@ -30,4 +34,13 @@
     <string name="alert_dismissed">Warnung entfernt</string>
     <string name="alert_undo">Rückgängig</string>
     <string name="alert_dismiss">Warnung entfernen</string>
+    <string name="alerts_camera_preferences">Bewegung je Kamera</string>
+    <string name="alerts_local_scope">Betrifft nur Benachrichtigungen auf diesem Telefon. Ereignisse bleiben im Verlauf.</string>
+    <string name="alerts_camera_enabled">Bewegungsmeldungen aktiv</string>
+    <string name="alerts_camera_muted">Bis zur erneuten Aktivierung stumm</string>
+    <string name="alerts_camera_muted_until">Stumm bis %1$s</string>
+    <string name="alerts_configure">Konfigurieren</string>
+    <string name="alerts_camera_receive">Benachrichtigungen empfangen</string>
+    <string name="alerts_camera_mute_hour">Für 1 Stunde stummschalten</string>
+    <string name="alerts_camera_mute_forever">Bis zur Aktivierung stummschalten</string>
 </resources>

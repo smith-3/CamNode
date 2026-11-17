@@ -15,6 +15,7 @@ import kotlin.math.sqrt
  * Decides from accelerometer samples whether a resting phone was picked up or moved.
  * It learns the resting position during [armDelayMillis], then alerts on a tilt beyond
  * [tiltThresholdDegrees] or a jolt beyond [joltThreshold] m/s², at most once per cooldown.
+ * After an alert, the phone must settle for [armDelayMillis] before another movement can alert.
  */
 class MovementAnalyzer(
     private val armDelayMillis: Long = 15_000,
@@ -26,6 +27,9 @@ class MovementAnalyzer(
     private var gravity: DoubleArray? = null
     private var resting: DoubleArray? = null
     private var lastAlertAt: Long? = null
+    private var settling: Settling? = null
+
+    private data class Settling(val position: DoubleArray, val sinceMillis: Long)
 
     fun onSample(x: Float, y: Float, z: Float, atMillis: Long): Boolean {
         val start = startedAt ?: atMillis.also { startedAt = it }
@@ -36,13 +40,22 @@ class MovementAnalyzer(
             resting = smoothed
             return false
         }
-        val restingPosition = resting ?: smoothed.also { resting = it }
         val jolt = magnitude(DoubleArray(3) { sample[it] - smoothed[it] })
+        settling?.let { quiet ->
+            if (jolt > joltThreshold || angleDegrees(smoothed, quiet.position) > SETTLE_THRESHOLD_DEGREES) {
+                settling = Settling(smoothed, atMillis)
+            } else if (atMillis - quiet.sinceMillis >= armDelayMillis) {
+                resting = smoothed
+                settling = null
+            }
+            return false
+        }
+        val restingPosition = resting ?: smoothed.also { resting = it }
         val moved = angleDegrees(smoothed, restingPosition) > tiltThresholdDegrees || jolt > joltThreshold
         val coolingDown = lastAlertAt?.let { atMillis - it < cooldownMillis } == true
         if (!moved || coolingDown) return false
         lastAlertAt = atMillis
-        resting = smoothed
+        settling = Settling(smoothed, atMillis)
         return true
     }
 
@@ -55,6 +68,7 @@ class MovementAnalyzer(
 
     private companion object {
         const val SMOOTHING = 0.8
+        const val SETTLE_THRESHOLD_DEGREES = 5.0
     }
 }
 

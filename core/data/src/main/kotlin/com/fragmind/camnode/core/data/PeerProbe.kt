@@ -8,7 +8,6 @@ import com.fragmind.camnode.core.model.NodeEndpoint
 import com.fragmind.camnode.core.model.NodeStatus
 import com.fragmind.camnode.core.model.byPreference
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
@@ -23,11 +22,21 @@ class PeerProbe @Inject constructor(private val client: ControlClient) {
     /** Probes every address at once and keeps the most preferred one that answered. */
     /** [target] is the node expected at these addresses, so its answer can't be confused with another's. */
     suspend fun probe(candidates: List<NodeEndpoint>, auth: ControlAuth, target: NodeId? = null): PeerReachability = coroutineScope {
-        val results = candidates.byPreference()
-            .map { endpoint -> async { endpoint to client.status(endpoint, auth, target) } }
-            .awaitAll()
-        results.firstNotNullOfOrNull { (endpoint, result) ->
-            (result as? ControlResult.Success)?.let { PeerReachability.Online(it.value, endpoint) }
-        } ?: if (results.any { it.second == ControlResult.Unauthorized }) PeerReachability.Unauthorized else PeerReachability.Offline
+        val attempts = candidates.byPreference().map { endpoint ->
+            endpoint to async { client.status(endpoint, auth, target) }
+        }
+        var unauthorized = false
+        try {
+            for ((endpoint, attempt) in attempts) {
+                when (val result = attempt.await()) {
+                    is ControlResult.Success -> return@coroutineScope PeerReachability.Online(result.value, endpoint)
+                    ControlResult.Unauthorized -> unauthorized = true
+                    else -> Unit
+                }
+            }
+            if (unauthorized) PeerReachability.Unauthorized else PeerReachability.Offline
+        } finally {
+            attempts.forEach { (_, attempt) -> attempt.cancel() }
+        }
     }
 }

@@ -41,4 +41,32 @@ class MovementAnalyzerTest {
         assertFalse(analyzer.onSample(0f, 0f, g, 2_050))
         assertEquals(true, analyzer.onSample(4f, 0f, g + 4f, 2_100))
     }
+
+    @Test
+    fun usingThePhoneContinuouslyProducesOnlyOneAlert() {
+        feed(0, 2_000)
+        val alerts = (2_000L until 182_000L step 50).count { t ->
+            val degrees = 40.0 + 40.0 * sin(t * Math.PI / 1_000)
+            val radians = Math.toRadians(degrees)
+            analyzer.onSample(0f, (g * sin(radians)).toFloat(), (g * cos(radians)).toFloat(), t)
+        }
+        assertEquals(1, alerts)
+    }
+
+    @Test
+    fun repeatedJoltsWithoutRestProduceOnlyOneAlert() {
+        feed(0, 2_000)
+        val alerts = (2_000L until 32_000L step 50).count { t ->
+            val jolt = if (t % 100 == 0L) 5f else -5f
+            analyzer.onSample(jolt, 0f, g, t)
+        }
+        assertEquals(1, alerts)
+    }
+
+    @Test
+    fun leavingThePhoneInANewPositionDoesNotRepeatTheAlert() {
+        feed(0, 2_000)
+        assertEquals(1, feed(2_000, 32_000, degrees = 80.0))
+        assertEquals(1, feed(32_000, 35_000, degrees = 0.0))
+    }
 }

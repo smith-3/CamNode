@@ -34,6 +34,8 @@ import com.fragmind.camnode.core.designsystem.ZoomStops
 import kotlinx.coroutines.launch
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.calculatePan
@@ -60,6 +62,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -98,6 +102,8 @@ internal class CameraActions(
     val imageMode: (NodeId, ImageMode) -> Unit,
     val toggleTorch: (NodeId) -> Unit,
     val setPaused: (NodeId, Boolean) -> Unit,
+    val movementAlerts: (NodeId, Boolean, Long) -> Unit,
+    val refresh: (NodeId) -> Unit,
 )
 
 @Composable
@@ -118,6 +124,8 @@ fun CameraDetailRoute(cameraId: NodeId, onBack: () -> Unit, viewModel: ViewerVie
                 imageMode = viewModel::setImageMode,
                 toggleTorch = viewModel::toggleTorch,
                 setPaused = viewModel::setPaused,
+                movementAlerts = viewModel::setMovementAlerts,
+                refresh = viewModel::refreshCamera,
             )
         },
     )
@@ -208,6 +216,7 @@ private fun CameraPage(
     // Viewers without the control permission keep only what affects their own screen.
     val streaming = (camera.health as? CameraHealth.Online)?.camera
     val controllable = streaming?.takeIf { canControl }
+    val pending = camera.commandState == CameraCommandState.PENDING
     val live = controllable?.takeIf { !it.paused }
     val grabber = remember { FrameGrabber() }
     val takePhoto = rememberPhotoTaker(camera, grabber, onPhotoSaved)
@@ -227,7 +236,8 @@ private fun CameraPage(
                         }
                     }
                     if (controllable != null) {
-                        IconButton(onClick = { actions.setPaused(camera.id, !controllable.paused) }) {
+                        MovementAlertsButton(camera, pending, actions)
+                        IconButton(onClick = { actions.setPaused(camera.id, !controllable.paused) }, enabled = !pending) {
                             Icon(
                                 if (controllable.paused) CamNodeIcons.VideocamFilled else CamNodeIcons.VideocamOff,
                                 contentDescription = stringResource(if (controllable.paused) R.string.viewer_resume_camera else R.string.viewer_pause_camera),
@@ -246,12 +256,13 @@ private fun CameraPage(
                         ConsoleIconButton(CamNodeIcons.Rotate, stringResource(R.string.viewer_rotate), { actions.rotate(camera.id) })
                     }
                     if (live != null) {
-                        ImageModeButton(live.imageMode) { mode -> actions.imageMode(camera.id, mode) }
+                        ImageModeButton(live.imageMode, enabled = !pending) { mode -> actions.imageMode(camera.id, mode) }
                         if (live.torchAvailable) {
                             ConsoleIconButton(
                                 if (live.torch) CamNodeIcons.TorchOn else CamNodeIcons.TorchOff,
                                 stringResource(if (live.torch) R.string.viewer_torch_off else R.string.viewer_torch_on),
                                 { actions.toggleTorch(camera.id) },
+                                enabled = !pending,
                             )
                         }
                     }
@@ -261,13 +272,14 @@ private fun CameraPage(
                         onToggleMuted,
                     )
                 }
+                CommandFeedback(camera.commandState) { actions.refresh(camera.id) }
             }
         },
         bottom = {
             // Watching needs no buttons; capture controls belong to those who control cameras.
             if (live != null) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    ZoomStops(live.zoom, live.zoomMin, live.zoomMax, onSelect = { zoom -> actions.setZoom(camera.id, zoom) })
+                    ZoomStops(live.zoom, live.zoomMin, live.zoomMax, onSelect = { zoom -> actions.setZoom(camera.id, zoom) }, enabled = !pending)
                     ShutterBar(
                         shutter = ShutterAction(stringResource(R.string.viewer_take_photo), enabled = grabber.ready, onClick = takePhoto),
                         lastPhoto = lastPhoto?.let { photo ->
@@ -275,6 +287,7 @@ private fun CameraPage(
                         },
                         switchLens = ConsoleAction(
                             stringResource(if (live.facing == CameraFacing.BACK) R.string.viewer_switch_front else R.string.viewer_switch_back),
+                            enabled = !pending,
                         ) { actions.switchLens(camera.id) },
                     )
                 }
@@ -333,7 +346,7 @@ private fun CameraPage(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 NoSignal(camera.health)
-                if (canControl) CamNodeButton(stringResource(R.string.viewer_resume_camera), { actions.setPaused(camera.id, false) }, icon = CamNodeIcons.VideocamFilled)
+                if (canControl) CamNodeButton(stringResource(R.string.viewer_resume_camera), { actions.setPaused(camera.id, false) }, icon = CamNodeIcons.VideocamFilled, enabled = !pending)
             }
             else -> NoSignal(camera.health, Modifier.align(Alignment.Center))
         }
@@ -413,10 +426,10 @@ private fun openPhoto(context: Context, uri: Uri) {
 
 /** Mode switch for the camera's picture; the menu shows which mode is active. */
 @Composable
-private fun ImageModeButton(current: ImageMode, onSelect: (ImageMode) -> Unit) {
+private fun ImageModeButton(current: ImageMode, enabled: Boolean, onSelect: (ImageMode) -> Unit) {
     var open by remember { mutableStateOf(false) }
     Box {
-        ConsoleIconButton(current.icon, stringResource(R.string.viewer_image_mode, current.label), { open = true })
+        ConsoleIconButton(current.icon, stringResource(R.string.viewer_image_mode, current.label), { open = true }, enabled = enabled)
         DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
             ImageMode.entries.forEach { mode ->
                 DropdownMenuItem(
@@ -427,6 +440,7 @@ private fun ImageModeButton(current: ImageMode, onSelect: (ImageMode) -> Unit) {
                         open = false
                         onSelect(mode)
                     },
+                    enabled = enabled,
                 )
             }
         }
@@ -452,3 +466,70 @@ private val ImageMode.icon: ImageVector
 /** Screen zoom is instant and free for the camera; sensor zoom gives real detail. */
 private const val MAX_SCREEN_ZOOM = 5f
 private const val THUMBNAIL_WIDTH = 160
+
+@Composable
+private fun CommandFeedback(state: CameraCommandState?, onRefresh: () -> Unit) {
+    if (state == null) return
+    Row(
+        Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        if (state == CameraCommandState.PENDING) CircularProgressIndicator(Modifier.size(16.dp))
+        Text(
+            stringResource(when (state) {
+                CameraCommandState.PENDING -> R.string.viewer_command_pending
+                CameraCommandState.CONFIRMED -> R.string.viewer_command_confirmed
+                CameraCommandState.UNCONFIRMED -> R.string.viewer_command_unconfirmed
+                CameraCommandState.DENIED -> R.string.viewer_command_denied
+                CameraCommandState.RECONNECTING -> R.string.viewer_command_reconnecting
+            }),
+            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.labelMedium,
+            color = Color.White,
+        )
+        if (state == CameraCommandState.UNCONFIRMED || state == CameraCommandState.DENIED || state == CameraCommandState.RECONNECTING) {
+            TextButton(onClick = onRefresh) { Text(stringResource(R.string.viewer_command_check)) }
+        }
+    }
+}
+
+@Composable
+private fun MovementAlertsButton(camera: CameraTile, pending: Boolean, actions: CameraActions) {
+    var open by remember(camera.id) { mutableStateOf(false) }
+    val status = (camera.health as? CameraHealth.Online)?.camera ?: return
+    ConsoleIconButton(CamNodeIcons.Notifications, stringResource(R.string.viewer_movement_alerts), { open = true })
+    if (open) {
+        AlertDialog(
+            onDismissRequest = { open = false },
+            title = { Text(stringResource(R.string.viewer_movement_alerts)) },
+            text = {
+                Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(stringResource(R.string.viewer_movement_all_receivers))
+                    val enabled = status.movementAlerts
+                    val until = status.movementAlertsMutedUntilMillis
+                    if (enabled == null || until == null) {
+                        Text(stringResource(R.string.viewer_movement_update_camera))
+                    } else {
+                        Text(stringResource(when {
+                            !enabled -> R.string.viewer_movement_disabled
+                            until > System.currentTimeMillis() -> R.string.viewer_movement_snoozed
+                            else -> R.string.viewer_movement_enabled
+                        }, java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.SHORT, java.text.DateFormat.SHORT).format(java.util.Date(until))))
+                        TextButton(enabled = !pending, onClick = {
+                            actions.movementAlerts(camera.id, true, 0)
+                        }) { Text(stringResource(R.string.viewer_movement_enable)) }
+                        TextButton(enabled = !pending, onClick = {
+                            actions.movementAlerts(camera.id, true, System.currentTimeMillis() + 3_600_000)
+                        }) { Text(stringResource(R.string.viewer_movement_mute_hour)) }
+                        TextButton(enabled = !pending, onClick = {
+                            actions.movementAlerts(camera.id, false, 0)
+                        }) { Text(stringResource(R.string.viewer_movement_disable)) }
+                        CommandFeedback(camera.commandState) { actions.refresh(camera.id) }
+                    }
+                }
+            },
+            confirmButton = { TextButton(onClick = { open = false }) { Text(stringResource(R.string.viewer_close)) } },
+        )
+    }
+}
